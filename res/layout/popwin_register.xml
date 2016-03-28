@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:id="@+id/relate"
+    android:background="@drawable/denglubg" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/shezhimima" />
+
+    <ImageView
+        android:id="@+id/popwin_register_pwd_iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/imageView1"
+        android:paddingRight="10dp"
+        android:src="@drawable/d_close" />
+    
+    <LinearLayout 
+        android:id="@+id/linearlayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/popwin_register_pwd_iv_close"
+        >
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/d_shoujihaoma"
+            android:paddingRight="8dp"
+            />
+          <EditText
+            android:id="@+id/popwin_register_pwd_et_mobile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:phoneNumber="true"
+            android:textColor="#864600"
+             android:gravity="center_vertical"
+         	android:background="@drawable/d_sjikuang1" />
+        
+        
+    </LinearLayout>
+    <LinearLayout 
+        android:id="@+id/linearlayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:layout_below="@id/linearlayout1"
+        >
+          
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/d_yzm"
+            android:paddingRight="28dp"
+            />
+          <EditText
+            android:id="@+id/popwin_register_pwd_et_code"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:phoneNumber="true"
+            android:textColor="#864600"
+             android:gravity="center_vertical"
+            android:layout_marginRight="5dp"
+         	android:background="@drawable/d_sjikuang1" 
+         	/>
+          
+          <Button 
+            android:id="@+id/popwin_register_pwd_btn_send_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/loading_send_code"
+            />
+        
+    </LinearLayout>
+    
+      <LinearLayout 
+        android:id="@+id/linearlayout3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/linearlayout2"
+        >
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/d_shezhi"
+            android:paddingRight="8dp"
+            />
+          <EditText
+            android:id="@+id/popwin_register_pwd_et_pwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:phoneNumber="true"
+            android:textColor="#864600"
+            android:gravity="center_vertical"
+         	android:background="@drawable/d_sjikuang1" />
+        
+        
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:id="@+id/linearlayout4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_alignLeft="@+id/linearlayout3"
+        android:layout_below="@+id/linearlayout3"
+        >
+        <CheckBox 
+             android:id="@+id/popwin_register_cbox_agree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/loading_choose"
+            android:padding="8dp"
+            />
+          <ImageView
+            android:id="@+id/popwin_register_iv_agree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+         	android:src="@drawable/tongyi"/>
+        
+        
+    </LinearLayout>
+    
+    <Button 
+        android:id="@+id/popwin_register_pwd_btn_ensure_change"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/loading_ensure_submit"
+        android:layout_below="@id/linearlayout4"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        />
+    
+
+</RelativeLayout>

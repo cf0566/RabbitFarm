@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="no_back">#00000000</color>
+    <color name="set_pay_pwd">#83541b</color>
+    <color name="set_pay_pwd_et">#a45817</color>
+    <color name="form_num">#573608</color>
+    <color name="get_form_time">#7c5701</color>
+    <color name="tubi_price">#623c08</color>
+    <color name="total_money">#5a3806</color>
+    <color name="tubi_total_money">#961212</color>
+    <color name="tubi_introd">#84551d</color>
+    <color name="friend_request_name">#593609</color>
+    <color name="friend_request_content">#ac7305</color>
+    <color name="add_friend_name">#5a370a</color>
+    <color name="add_friend_vip">#7d5604</color>
+    <color name="message_toast">#5b3509</color>
+    <color name="message_toast_content">#593607</color>
+    <color name="user_info">#835419</color>
+    <color name="my_shopping">#623c08</color>
+</resources>

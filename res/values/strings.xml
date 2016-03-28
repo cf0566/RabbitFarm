@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">兔窝农场</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="account">账号</string>
+    <string name="pwd">密码</string>
+    <string name="mobile">手机号码</string>
+    <string name="code">验证码</string>
+    <string name="set_pwd">设置密码</string>
+    <string name="forget_pwd">忘记密码</string>
+    <string name="send_code">发送验证码</string>
+    <string name="i_agree">我同意</string>
+    <string name="user_agree">用户协议</string>
+    <string name="ensure_submit">确认提交</string>
+    <string name="submit">提交</string>
+    <string name="ensure_change">确认修改</string>
+    <string name="seed">播种</string>
+    <string name="disinsection">除虫</string>
+    <string name="fertilize">施肥</string>
+    <string name="storeroom">储藏室</string>
+    <string name="my_friend">我的好友</string>
+    <string name="no_seed">您还没有已购买的种子，</string>
+    <string name="count">合计</string>
+    <string name="ensure_form">确认订单</string>
+    <string name="money_less">您当前的账户余额不足，请充值！</string>
+
+</resources>
