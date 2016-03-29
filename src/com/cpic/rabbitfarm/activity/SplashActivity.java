@@ -35,8 +35,8 @@ public class SplashActivity extends Activity {
 					Thread.sleep(sleepTime);
 				} catch (InterruptedException e) {
 				}
-				finish();
 				startActivity(new Intent(SplashActivity.this,LoginActivity.class));
+				finish();
 			}
 		}).start();
 	}

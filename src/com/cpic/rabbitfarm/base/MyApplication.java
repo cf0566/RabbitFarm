@@ -1,7 +1,10 @@
 package com.cpic.rabbitfarm.base;
 
+import com.umeng.socialize.PlatformConfig;
+
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 public class MyApplication extends Application{
 	/**
@@ -28,5 +31,7 @@ public class MyApplication extends Application{
 	public void onCreate() {
 		super.onCreate();
 		mContext = getApplicationContext();
+		PlatformConfig.setWeixin("wx967daebe835fbeac", "5bb696d9ccd75a38c8a0bfe0675559b3");
+		PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba"); 
 	}
 }
