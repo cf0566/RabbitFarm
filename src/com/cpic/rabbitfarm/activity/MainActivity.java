@@ -4,9 +4,11 @@ import android.os.Bundle;
 
 import com.cpic.rabbitfarm.R;
 import com.cpic.rabbitfarm.base.BaseActivity;
+import com.cpic.rabbitfarm.view.HVScrollView;
 
 public class MainActivity extends BaseActivity {
 
+	HVScrollView view;
 	// 记录上次点击返回键的时间
 	private long lastTime;
 	@Override
@@ -21,7 +23,6 @@ public class MainActivity extends BaseActivity {
 
 	@Override
 	protected void initView() {
-		
 	}
 
 	@Override

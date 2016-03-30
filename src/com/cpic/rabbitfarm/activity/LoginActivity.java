@@ -646,7 +646,7 @@ public class LoginActivity extends BaseActivity {
                           current_progress+=1;  
                           sbar.incrementProgressBy(1);  
                             
-                          handler.sendEmptyMessageDelayed(PRO, 10);  
+                          handler.sendEmptyMessageDelayed(PRO, 1);  
                       }  
                     break;  
   

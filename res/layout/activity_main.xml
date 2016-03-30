@@ -1,14 +1,129 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
-    <com.cpic.rabbitfarm.fonts.AdvTextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/account" 
-        android:textSize="20sp"/>
-   
-</LinearLayout>
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/ll_icon"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/i_photobg"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="3dp" >
+
+            <ImageView
+                android:id="@+id/activity_main_iv_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/message" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/ll_seekbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/energyicon_bg"
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="29dp"
+                android:paddingTop="5dp" >
+
+                <SeekBar
+                    android:id="@+id/activity_main_seekbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
+                    android:indeterminateOnly="false"
+                    android:max="10"
+                    android:progressDrawable="@drawable/progress_loading2"
+                    android:thumb="@null" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/activity_main_tv_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_seekbar"
+                android:layout_toRightOf="@+id/ll_icon"
+                android:text="天使遇到鬼"
+                android:textColor="@color/user_name"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <com.cpic.rabbitfarm.fonts.NormalTextView
+            android:id="@+id/activity_main_tv_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="8dp"
+            android:text="2级"
+            android:textColor="@color/user_name"
+            android:textSize="18sp" />
+
+        <com.cpic.rabbitfarm.fonts.BoildTextView
+            android:id="@+id/activity_main_tv_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/coins"
+            android:text="99"
+            android:gravity="center|right"
+            android:paddingTop="6dp"
+            android:paddingRight="30dp"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp" >
+
+            <ImageView
+                android:id="@+id/activity_iv_video"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/video" />
+
+            <ImageView
+                android:id="@+id/activity_iv_message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"  
+                android:src="@drawable/message" />
+
+            <ImageView
+                android:id="@+id/activity_iv_buy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/buy" />
+
+            <ImageView
+                android:id="@+id/activity_iv_shop"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/shop" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

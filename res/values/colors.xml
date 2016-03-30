@@ -17,4 +17,5 @@
     <color name="message_toast_content">#593607</color>
     <color name="user_info">#835419</color>
     <color name="my_shopping">#623c08</color>
+    <color name="user_name">#EF4141</color>
 </resources>
