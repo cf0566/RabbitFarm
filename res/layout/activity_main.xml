@@ -4,6 +4,7 @@
     android:layout_height="match_parent" >
 
     <LinearLayout
+        android:id="@+id/ll_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -42,7 +43,7 @@
                 android:paddingBottom="10dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="29dp"
-                android:paddingTop="5dp" >
+                android:paddingTop="6dp" >
 
                 <SeekBar
                     android:id="@+id/activity_main_seekbar"
@@ -91,6 +92,7 @@
             android:textSize="12sp" />
 
         <LinearLayout
+            android:id="@+id/ll_title_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -125,5 +127,52 @@
                 android:src="@drawable/shop" />
         </LinearLayout>
     </LinearLayout>
+    
+    
+    <LinearLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        >
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/bozhong"
+            />
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/chuchong"
+            />
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/shifei"
+            />
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/chucang"
+            />
+        
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/i_haoyoubg"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="70dp"
+        >
+        
+        
+        
+        
+    </LinearLayout>
+    
+    
 
 </RelativeLayout>

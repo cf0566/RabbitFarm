@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.cpic.rabbitfarm.R;
 import com.cpic.rabbitfarm.base.BaseActivity;
 import com.cpic.rabbitfarm.bean.LoginUser;
+import com.cpic.rabbitfarm.utils.DensityUtil;
 import com.cpic.rabbitfarm.utils.UrlUtils;
 import com.cpic.rabbitfarm.view.ProgressDialogHandle;
 import com.lidroid.xutils.HttpUtils;
@@ -94,8 +95,12 @@ public class LoginActivity extends BaseActivity {
 	private RelativeLayout relate;
 	private static final int MAX_PROGRESS = 100;
 	private int current_progress = 10;
+	private int current_padding = 10;
 	private static final int PRO = 1;
+	private static final int PADING = 2;
 	private Handler handler;
+	private ImageView ivRabbit,ivCarrot;
+	
 
 	/**
 	 * 网络请求
@@ -139,6 +144,8 @@ public class LoginActivity extends BaseActivity {
 		dialog = ProgressDialogHandle.getProgressDialog(LoginActivity.this, null);
 		sbar = (SeekBar) findViewById(R.id.activity_login_sbar_loading);
 		relate = (RelativeLayout) findViewById(R.id.activity_login_relate);
+		ivRabbit = (ImageView) findViewById(R.id.activity_login_iv_rabbit);
+		ivCarrot = (ImageView) findViewById(R.id.activity_login_iv_carrot);		
 	}
 
 	@Override
@@ -631,6 +638,8 @@ public class LoginActivity extends BaseActivity {
 	 */
 	private void loadingPagerAction() {
 		relate.setVisibility(View.VISIBLE);
+		ivCarrot.setVisibility(View.VISIBLE);
+		ivRabbit.setVisibility(View.VISIBLE);
 		handler = new Handler(){  
              @Override  
             public void handleMessage(Message msg) {  
@@ -644,9 +653,14 @@ public class LoginActivity extends BaseActivity {
               			finish();
                       }else{  
                           current_progress+=1;  
-                          sbar.incrementProgressBy(1);  
-                            
-                          handler.sendEmptyMessageDelayed(PRO, 1);  
+                          current_padding+=2;
+                          sbar.incrementProgressBy(1);
+                          if (current_padding>170) {
+                  			ivRabbit.setPadding(DensityUtil.dip2px(LoginActivity.this, 170), 0, 0, 0);
+                  		}else{
+                  			ivRabbit.setPadding(DensityUtil.dip2px(LoginActivity.this, current_padding), 0, 0, 0);
+                  		}
+                        handler.sendEmptyMessageDelayed(PRO, 1);  
                       }  
                     break;  
   
@@ -655,9 +669,10 @@ public class LoginActivity extends BaseActivity {
                 }  
             }  
         };  
-		 current_progress=current_progress>0?current_progress:0;  
-	     sbar.setProgress(current_progress);  
-	     handler.sendEmptyMessage(PRO);
+		current_progress=current_progress>0?current_progress:0;  
+	    sbar.setProgress(current_progress);  
+	    ivRabbit.setPadding(DensityUtil.dip2px(LoginActivity.this, current_padding), 0, 0, 0);
+	    handler.sendEmptyMessage(PRO);
 	    
 	}
 	
@@ -680,6 +695,8 @@ public class LoginActivity extends BaseActivity {
             Toast.makeText( getApplicationContext(), "Authorize cancel", Toast.LENGTH_SHORT).show();
         }
     };
+    
+    
     /** delauth callback interface**/
     private UMAuthListener umdelAuthListener = new UMAuthListener() {
         @Override
