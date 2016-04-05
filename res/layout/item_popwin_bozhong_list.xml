@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:padding="3dp"
+    android:orientation="horizontal" >
+    
+    <com.cpic.rabbitfarm.fonts.CarttonTextView 
+        android:id="@+id/item_popwin_bozhong_tv_seed"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:text="小麦"
+        android:gravity="center"
+        android:shadowColor="#442204"
+        android:shadowRadius="4"
+        android:textSize="17sp"
+        />
+    
+    <ImageView 
+        android:id="@+id/item_popwin_bozhong_iv_del"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/b_jian"
+        />
+    <com.cpic.rabbitfarm.fonts.CatTextView 
+        android:id="@+id/item_popwin_bozhong_tv_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       android:background="@drawable/b_medium" 
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:textSize="15sp"
+        />
+    
+    <ImageView 
+        android:id="@+id/item_popwin_bozhong_iv_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/b_jia"
+        />
+    
+    <com.cpic.rabbitfarm.fonts.CarttonTextView 
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:text="块地"
+         android:gravity="center"
+        android:shadowColor="#442204"
+        android:shadowRadius="4"
+        android:textSize="17sp"
+        />
+    
+
+</LinearLayout>

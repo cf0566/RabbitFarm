@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+     >
+	
+    <ImageView 
+        android:id="@+id/popwin_seed_success_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/b_bgsmall"
+        android:layout_centerInParent="true"
+        android:padding="10dp"
+        />
+    
+    
+    <ImageView
+         android:id="@+id/popwin_seed_success_iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/popwin_seed_success_bg"
+        android:layout_alignRight="@+id/popwin_seed_success_bg"
+        android:src="@drawable/close" />
+    
+    <ImageView 
+         android:id="@+id/popwin_seed_success_iv_buy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/b_qdbz"
+        android:layout_centerInParent="true"
+        />
+
+</RelativeLayout>

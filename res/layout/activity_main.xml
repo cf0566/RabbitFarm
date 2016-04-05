@@ -19,13 +19,13 @@
             android:background="@drawable/i_photobg"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="3dp" >
+            android:padding="6dp" >
 
-            <ImageView
+            <com.cpic.rabbitfarm.utils.RoundImageView
                 android:id="@+id/activity_main_iv_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/message" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -43,7 +43,7 @@
                 android:paddingBottom="10dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="29dp"
-                android:paddingTop="6dp" >
+                android:paddingTop="6.5dp" >
 
                 <SeekBar
                     android:id="@+id/activity_main_seekbar"
@@ -52,6 +52,8 @@
                     android:layout_centerHorizontal="true"
                     android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
                     android:indeterminateOnly="false"
+                    android:focusable="false"
+                    android:clickable="false"
                     android:max="10"
                     android:progressDrawable="@drawable/progress_loading2"
                     android:thumb="@null" />
@@ -138,34 +140,39 @@
         android:layout_marginBottom="20dp"
         >
         <ImageView 
+            android:id="@+id/activity_main_iv_bozhong"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/bozhong"
             />
         <ImageView 
+              android:id="@+id/activity_main_iv_chuchong"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/chuchong"
             />
         <ImageView 
+              android:id="@+id/activity_main_iv_shifei"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/shifei"
             />
         <ImageView 
+              android:id="@+id/activity_main_iv_chucang"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/chucang"
             />
-        
     </LinearLayout>
     
     <LinearLayout 
+        android:id="@+id/activity_main_ll_friends"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/i_haoyoubg"
         android:layout_alignParentRight="true"
         android:layout_marginTop="70dp"
+        android:orientation="vertical"
         >
         
         
