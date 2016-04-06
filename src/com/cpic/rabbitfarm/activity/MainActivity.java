@@ -12,6 +12,7 @@ import com.cpic.rabbitfarm.bean.Seed;
 import com.cpic.rabbitfarm.bean.SeedInfo;
 import com.cpic.rabbitfarm.fonts.CarttonTextView;
 import com.cpic.rabbitfarm.fonts.CatTextView;
+import com.cpic.rabbitfarm.popwindow.ChuChongPopwindow;
 import com.cpic.rabbitfarm.utils.GlideRoundTransform;
 import com.cpic.rabbitfarm.utils.RoundImageView;
 import com.cpic.rabbitfarm.utils.UrlUtils;
@@ -75,7 +76,9 @@ public class MainActivity extends BaseActivity {
 	private RequestParams params;
 	private Dialog dialog;
 	private String token;
-
+	
+	private int ChuChongCount = 0;
+	
 	@Override
 	protected void getIntentData(Bundle savedInstanceState) {
 		DisplayMetrics metrics = new DisplayMetrics();
@@ -108,7 +111,17 @@ public class MainActivity extends BaseActivity {
 		sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
 		token = sp.getString("token", "");
 		sbLevel.setEnabled(false);
+		/**
+		 * 获取土地状态
+		 */
 		loadLandList();
+		/**
+		 * 获取种子以及除虫版数量
+		 */
+		loadSeeds();
+		/**
+		 * 加载个人信息
+		 */
 		loadDatas();
 	}
 
@@ -138,6 +151,20 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				showHaveseedPopup();
+			}
+		});
+		
+		ivChuchong.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				loadSeeds();
+				ChuChongPopwindow pop = new ChuChongPopwindow(pwChuchong, screenWidth, MainActivity.this,ChuChongCount,token);
+				if (ChuChongCount == 0) {
+					pop.showNoBanPop();
+				}else{
+					pop.showChooseBanPop();
+				}
 			}
 		});
 	}
@@ -196,6 +223,28 @@ public class MainActivity extends BaseActivity {
 		});
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	/*********************************************************************************************
+	 * 以下是播种弹出框，由于第一次做功能性弹出框，将第一类弹出框写在了主界面里进行测试，之后的功能模块封装成类放在popwin文件夹下
+	 */
+	
 	/**
 	 * 播种没有种子弹出框
 	 */
@@ -249,7 +298,7 @@ public class MainActivity extends BaseActivity {
 		pwChooseSeed.setOutsideTouchable(false);
 		pwChooseSeed.showAtLocation(view, Gravity.CENTER, 0, 0);
 		pwChooseSeed.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-		loadSeeds();
+		
 		pwChooseSeed.setOnDismissListener(new OnDismissListener() {
 			@Override
 			public void onDismiss() {
@@ -293,6 +342,10 @@ public class MainActivity extends BaseActivity {
 				}
 			}
 		});
+		adapter = new SeedAdapter();
+		adapter.setDatas(datas);
+		lvSeed.setAdapter(adapter);
+		
 	}
 	/**
 	 * 确认播种
@@ -440,13 +493,16 @@ public class MainActivity extends BaseActivity {
 				Seed obj = JSONObject.parseObject(arg0.result, Seed.class);
 				int code = obj.getCode();
 				if (code == 1) {
-					adapter = new SeedAdapter();
 					datas = JSONObject.parseObject(arg0.result, Seed.class).getData();
 					itemCount = new ArrayList<Integer>();
 					if (datas.size() == 0) {
 						showBozhongPop();
 					}
 					for (int i = 0; i < datas.size(); i++) {
+						
+						if ("2".equals(datas.get(i).getStore_type())) {
+							ChuChongCount = Integer.parseInt(datas.get(i).getGoods_number());
+						}
 						if (datas.size() != 0 && !"1".equals(datas.get(i).getStore_type())) {
 							datas.remove(i);
 						}
@@ -454,8 +510,6 @@ public class MainActivity extends BaseActivity {
 					for (int j = 0; j < datas.size(); j++) {
 						itemCount.add(0);
 					}
-					adapter.setDatas(datas);
-					lvSeed.setAdapter(adapter);
 				} else {
 					showShortToast("无法获取数据" + obj.getMsg());
 				}

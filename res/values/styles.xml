@@ -37,5 +37,15 @@
         <item name="android:minWidth">108dip</item>
         <item name="android:minHeight">104dip</item>
     </style>
+    
+     <style name="popwin_chuchong_cbox">
+         <item name="android:layout_width">90dp</item>
+         <item name="android:layout_height">28dp</item>
+         <item name="android:button">@drawable/shifei_check_box</item>
+         <item name="android:layout_gravity">center</item>
+     </style>       
+            
+            
+    
 
 </resources>
