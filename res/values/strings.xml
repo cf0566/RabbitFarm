@@ -24,5 +24,7 @@
     <string name="count">合计</string>
     <string name="ensure_form">确认订单</string>
     <string name="money_less">您当前的账户余额不足，请充值！</string>
-
+    <string name="message_activity_toast">平台优惠信息、优惠详情、邀请好友奖励升级，平台优惠信息、邀请好友奖励...</string>
+    <string name="message_plant_toast">庄家长势通知，成熟通知，采摘通知，庄家长势通知，成熟通知，采摘通知</string>
+    <string name="message_friend_toast">好友聊天信息，交友信息，好友聊天信息，交友信息，好友聊天信息。</string>
 </resources>

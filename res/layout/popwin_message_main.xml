@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center" >
+
+    <LinearLayout
+        android:id="@+id/popwin_message_main_iv_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        android:background="@drawable/hyxbg"
+        android:layout_centerInParent="true"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/popwin_message_main_ll_activity"
+            style="@style/message_item_bg"
+            android:layout_marginTop="45dp" >
+
+       <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical" >
+
+                <ImageView
+                    style="@style/message_item_img"
+                    android:src="@drawable/icon1" />
+
+                <ImageView
+                    android:id="@+id/popwin_message_main_iv_activity_tis"
+                    style="@style/message_item_img_tis" />
+            </FrameLayout>
+            <LinearLayout
+                 android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    style="@style/message_item_tv_title"
+                    android:text="活动" />
+
+                <TextView
+                    style="@style/message_item_tv_content"
+                    android:text="@string/message_activity_toast" 
+                   />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/popwin_message_main_ll_plant"
+            style="@style/message_item_bg"
+            android:layout_marginTop="5dp" >
+
+               <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical" >
+
+                <ImageView
+                    style="@style/message_item_img"
+                    android:src="@drawable/icon2" />
+
+                <ImageView
+                    android:id="@+id/popwin_message_main_iv_plant_tis"
+                    style="@style/message_item_img_tis" />
+            </FrameLayout>
+
+            <LinearLayout
+               android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    style="@style/message_item_tv_title"
+                    android:text="庄家成熟通知" />
+
+                <TextView
+                    style="@style/message_item_tv_content"
+                    android:text="@string/message_plant_toast" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/popwin_message_main_ll_friends"
+            style="@style/message_item_bg"
+            android:layout_marginBottom="25dp"
+            android:layout_marginTop="5dp" >
+
+         <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical" >
+
+                <ImageView
+                    style="@style/message_item_img"
+                    android:src="@drawable/icon3" />
+
+                <ImageView
+                    android:id="@+id/popwin_message_main_iv_friend_tis"
+                    style="@style/message_item_img_tis"
+                    />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    style="@style/message_item_tv_title"
+                    android:text="好友信息" />
+
+                <TextView
+                    style="@style/message_item_tv_content"
+                    android:text="@string/message_friend_toast" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/popwin_message_main_iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/popwin_message_main_iv_bg"
+        android:layout_toRightOf="@+id/popwin_message_main_iv_message"
+        android:layout_marginLeft="115dp"
+        android:src="@drawable/close" />
+    
+    <ImageView
+        android:id="@+id/popwin_message_main_iv_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignTop="@+id/popwin_message_main_iv_bg"
+        android:layout_marginTop="7dp"
+        android:src="@drawable/xiaoxi" />
+
+</RelativeLayout>

@@ -9,6 +9,10 @@ public class UrlUtils {
 	//请求头
 	public static final String postUrl="http://wx.cpioc.com/rf/index.php?m=Api&c=api&a=";
 	//环信获取用户ID:
+	public static final String path_getMessageCount="getMessageCount";
+	//环信获取用户ID:
+	public static final String path_read="read";
+	//环信获取用户ID:
 	public static final String path_getEaseInfo="getEaseInfo";
 	//注册接口:
 	public static final String path_register="register";

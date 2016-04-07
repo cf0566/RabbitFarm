@@ -12,7 +12,10 @@ import com.cpic.rabbitfarm.bean.Seed;
 import com.cpic.rabbitfarm.bean.SeedInfo;
 import com.cpic.rabbitfarm.fonts.CarttonTextView;
 import com.cpic.rabbitfarm.fonts.CatTextView;
+import com.cpic.rabbitfarm.popwindow.CameraPop;
 import com.cpic.rabbitfarm.popwindow.ChuChongPopwindow;
+import com.cpic.rabbitfarm.popwindow.MessageMainPop;
+import com.cpic.rabbitfarm.popwindow.ShiFeiPopwindow;
 import com.cpic.rabbitfarm.utils.GlideRoundTransform;
 import com.cpic.rabbitfarm.utils.RoundImageView;
 import com.cpic.rabbitfarm.utils.UrlUtils;
@@ -54,8 +57,17 @@ public class MainActivity extends BaseActivity {
 	private SeekBar sbLevel;
 	private TextView tvLevel, tvName;
 	private SharedPreferences sp;
+	/**
+	 * 除虫播种施肥储藏室
+	 */
 	private ImageView ivBozhong, ivChuchong, ivShifei, ivChucang;
 	private PopupWindow pwBozhong, pwChuchong, pwShifei, pwChucang;
+
+	/**
+	 * 监控消息商城
+	 */
+	private ImageView ivCamera, ivMessage, ivMarket;
+	private PopupWindow pwCamera, pwMessage, pwMarket;
 	private int screenWidth, screenHight;
 
 	private ArrayList<LandListInfo> landDatas;
@@ -76,9 +88,17 @@ public class MainActivity extends BaseActivity {
 	private RequestParams params;
 	private Dialog dialog;
 	private String token;
-	
+
 	private int ChuChongCount = 0;
-	
+
+	/**
+	 * 消息未读提示以及数量
+	 */
+	private ImageView ivTis;
+	private int messageUnread = 0;
+	private int activityUnread = 0;
+
+
 	@Override
 	protected void getIntentData(Bundle savedInstanceState) {
 		DisplayMetrics metrics = new DisplayMetrics();
@@ -103,6 +123,11 @@ public class MainActivity extends BaseActivity {
 		ivChuchong = (ImageView) findViewById(R.id.activity_main_iv_chuchong);
 		ivShifei = (ImageView) findViewById(R.id.activity_main_iv_shifei);
 		ivChucang = (ImageView) findViewById(R.id.activity_main_iv_chucang);
+		ivCamera = (ImageView) findViewById(R.id.activity_main_iv_video);
+		ivMessage = (ImageView) findViewById(R.id.activity_main_iv_message);
+		ivMarket = (ImageView) findViewById(R.id.activity_main_iv_shop);
+		ivTis = (ImageView) findViewById(R.id.activity_main_message_iv_tis);
+
 		dialog = ProgressDialogHandle.getProgressDialog(MainActivity.this, null);
 	}
 
@@ -123,6 +148,11 @@ public class MainActivity extends BaseActivity {
 		 * 加载个人信息
 		 */
 		loadDatas();
+		/**
+		 * 获取Message的未读消息
+		 */
+		loadUnreadMsg();
+
 	}
 
 	private void loadDatas() {
@@ -153,18 +183,50 @@ public class MainActivity extends BaseActivity {
 				showHaveseedPopup();
 			}
 		});
-		
+
 		ivChuchong.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				loadSeeds();
-				ChuChongPopwindow pop = new ChuChongPopwindow(pwChuchong, screenWidth, MainActivity.this,ChuChongCount,token);
+				ChuChongPopwindow pop = new ChuChongPopwindow(pwChuchong, screenWidth, MainActivity.this, ChuChongCount,
+						token);
 				if (ChuChongCount == 0) {
 					pop.showNoBanPop();
-				}else{
+				} else {
 					pop.showChooseBanPop();
 				}
+			}
+		});
+		ivShifei.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				ShiFeiPopwindow pop = new ShiFeiPopwindow(pwShifei, screenWidth, MainActivity.this, token);
+				pop.showGiveFeiPop();
+			}
+		});
+
+		/**
+		 * 摄像头点击事件
+		 */
+		ivCamera.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				CameraPop pop = new CameraPop(pwCamera, screenWidth, MainActivity.this, token);
+				pop.showLookCameraPop();
+			}
+		});
+		/**
+		 * 消息点击事件
+		 */
+		ivMessage.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				MessageMainPop pop = new MessageMainPop(pwMessage, screenWidth, MainActivity.this, token,activityUnread,messageUnread);
+				pop.showMessageMainPop();
 			}
 		});
 	}
@@ -180,6 +242,41 @@ public class MainActivity extends BaseActivity {
 			showShortToast("再按一次退出程序");
 			lastTime = currentTime;
 		}
+	}
+
+	private void loadUnreadMsg() {
+		post = new HttpUtils();
+		params = new RequestParams();
+		String url = UrlUtils.postUrl + UrlUtils.path_getMessageCount;
+		params.addBodyParameter("token", token);
+		post.send(HttpMethod.POST, url, params, new RequestCallBack<String>() {
+
+			@Override
+			public void onFailure(HttpException arg0, String arg1) {
+				showShortToast("获取未读消息失败，请检查网络连接");
+			}
+
+			@Override
+			public void onSuccess(ResponseInfo<String> arg0) {
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+				JSONObject obj = JSONObject.parseObject(arg0.result);
+				int code = obj.getIntValue("code");
+				if (code == 1) {
+					JSONObject data = obj.getJSONObject("data");
+					messageUnread = data.getIntValue("message");
+					activityUnread = data.getIntValue("activity");
+					if (messageUnread != 0 || activityUnread != 0) {
+						ivTis.setVisibility(View.VISIBLE);
+					}else{
+						ivTis.setVisibility(View.INVISIBLE);
+					}
+				} else {
+					showShortToast("获取未读消息失败");
+				}
+			}
+		});
 	}
 
 	/**
@@ -207,6 +304,7 @@ public class MainActivity extends BaseActivity {
 				}
 				showShortToast("获取土地状态失败，请检查网络连接");
 			}
+
 			@Override
 			public void onSuccess(ResponseInfo<String> arg0) {
 				if (dialog != null) {
@@ -223,28 +321,10 @@ public class MainActivity extends BaseActivity {
 		});
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 	/*********************************************************************************************
 	 * 以下是播种弹出框，由于第一次做功能性弹出框，将第一类弹出框写在了主界面里进行测试，之后的功能模块封装成类放在popwin文件夹下
 	 */
-	
+
 	/**
 	 * 播种没有种子弹出框
 	 */
@@ -298,7 +378,7 @@ public class MainActivity extends BaseActivity {
 		pwChooseSeed.setOutsideTouchable(false);
 		pwChooseSeed.showAtLocation(view, Gravity.CENTER, 0, 0);
 		pwChooseSeed.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-		
+
 		pwChooseSeed.setOnDismissListener(new OnDismissListener() {
 			@Override
 			public void onDismiss() {
@@ -333,7 +413,7 @@ public class MainActivity extends BaseActivity {
 				}
 				if (count == 0) {
 					showFaluirePop();
-				}else{
+				} else {
 					if (6 - landDatas.size() < count) {
 						showFaluirePop();
 					} else {
@@ -345,8 +425,9 @@ public class MainActivity extends BaseActivity {
 		adapter = new SeedAdapter();
 		adapter.setDatas(datas);
 		lvSeed.setAdapter(adapter);
-		
+
 	}
+
 	/**
 	 * 确认播种
 	 */
@@ -389,6 +470,7 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 	}
+
 	/**
 	 * 播种失败弹出框
 	 */
@@ -428,6 +510,7 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 	}
+
 	/**
 	 * 播种成功弹出框
 	 */
@@ -499,7 +582,7 @@ public class MainActivity extends BaseActivity {
 						showBozhongPop();
 					}
 					for (int i = 0; i < datas.size(); i++) {
-						
+
 						if ("2".equals(datas.get(i).getStore_type())) {
 							ChuChongCount = Integer.parseInt(datas.get(i).getGoods_number());
 						}

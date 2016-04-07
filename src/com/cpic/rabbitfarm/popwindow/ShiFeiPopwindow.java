@@ -10,6 +10,7 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
+import com.umeng.socialize.utils.Log;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -29,7 +30,7 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ChuChongPopwindow {
+public class ShiFeiPopwindow {
 	
 	private PopupWindow pw;
 	private int screenWidth;
@@ -40,12 +41,16 @@ public class ChuChongPopwindow {
 	private ImageView ivClose;
 	private ImageView ivBack;
 	
-	private int ChuChongCount;
 	
 	private String token;
+	/**
+	 * 赠送土地的控件
+	 */
+	private Button btnGive;
+	
 	
 	/**
-	 * 除虫版的控件
+	 *	施肥的控件
 	 */
 	private ImageView ivAdd,ivDel;
 	private TextView tvCount;
@@ -55,7 +60,7 @@ public class ChuChongPopwindow {
 	 * 土地选择控件
 	 */
 	private CheckBox cbox1,cbox2,cbox3,cbox4,cbox5,cbox6,cbox7;
-	private Button btnChu;
+	private Button btnShi;
 	private int count = 0;//选择土地的数量
 	
 	/**
@@ -65,31 +70,31 @@ public class ChuChongPopwindow {
 	private RequestParams params;
 	private Dialog dialog;
 	
-	public ChuChongPopwindow( PopupWindow pw, int screenWidth, Activity activity,int ChuChongCount,String token) {
+	public ShiFeiPopwindow( PopupWindow pw, int screenWidth, Activity activity,String token) {
 		this.pw = pw;
 		this.screenWidth = screenWidth;
 		this.activity = activity;
-		this.ChuChongCount = ChuChongCount;
 		this.token = token;
 	}
 	
 	/**
 	 * 弹出土地选择
 	 */
-	public void showChooseLandPop() {
-		View view = View.inflate(activity, R.layout.popwin_chuchong_choose_land, null);
+	public void showChoose2Pop() {
+		View view = View.inflate(activity, R.layout.popwin_shifei_choose2, null);
 		pw = new PopupWindow(view, screenWidth, LayoutParams.WRAP_CONTENT);
 		pw.setFocusable(true);
-		ivClose = (ImageView) view.findViewById(R.id.popwin_chuchong_choose_land_iv_close);
-		cbox1 = (CheckBox) view.findViewById(R.id.popwin_chuchong_choose_land_cbox1);
-		cbox2 = (CheckBox) view.findViewById(R.id.popwin_chuchong_choose_land_cbox2);
-		cbox3 = (CheckBox) view.findViewById(R.id.popwin_chuchong_choose_land_cbox3);
-		cbox4 = (CheckBox) view.findViewById(R.id.popwin_chuchong_choose_land_cbox4);
-		cbox5 = (CheckBox) view.findViewById(R.id.popwin_chuchong_choose_land_cbox5);
-		cbox6 = (CheckBox) view.findViewById(R.id.popwin_chuchong_choose_land_cbox6);
-		cbox7 = (CheckBox) view.findViewById(R.id.popwin_chuchong_choose_land_cbox7);
-		btnChu = (Button) view.findViewById(R.id.popwin_chuchong_choose_land_btn_chu);
 		count = 0;
+		ivClose = (ImageView) view.findViewById(R.id.popwin_shifei_choose2_iv_close);
+		cbox1 = (CheckBox) view.findViewById(R.id.popwin_shifei_choose2_cbox1);
+		cbox2 = (CheckBox) view.findViewById(R.id.popwin_shifei_choose2_cbox2);
+		cbox3 = (CheckBox) view.findViewById(R.id.popwin_shifei_choose2_cbox3);
+		cbox4 = (CheckBox) view.findViewById(R.id.popwin_shifei_choose2_cbox4);
+		cbox5 = (CheckBox) view.findViewById(R.id.popwin_shifei_choose2_cbox5);
+		cbox6 = (CheckBox) view.findViewById(R.id.popwin_shifei_choose2_cbox6);
+		cbox7 = (CheckBox) view.findViewById(R.id.popwin_shifei_choose2_cbox7);
+		btnShi = (Button) view.findViewById(R.id.popwin_shifei_choose2_btn_shi);
+		
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
 		params.alpha = 1f;
 		activity.getWindow().setAttributes(params);
@@ -113,20 +118,19 @@ public class ChuChongPopwindow {
 			}
 		});
 		
-		btnChu.setOnClickListener(new OnClickListener() {
+		btnShi.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
+//				Log.i("oye",tvCount.getText().toString()+"-----"+count);
 				if (Integer.parseInt(tvCount.getText().toString()) == count) {
 					ensureChuchong();
 				}else{
 					pw.dismiss();
-					showMissMatchBanPop();
+					showLessFei();
 				}
 			}
-
 		});
-		
 		/**
 		 * 全选监听
 		 */
@@ -219,15 +223,13 @@ public class ChuChongPopwindow {
 	}
 	
 	/**
-	 * 确定除虫
+	 * 确定施肥
 	 */
 	private void ensureChuchong() {
 		dialog = ProgressDialogHandle.getProgressDialog(activity, null);
 		post = new HttpUtils();
 		params = new RequestParams();
-		String url = UrlUtils.postUrl+UrlUtils.path_weeding;
-		params.addBodyParameter("token", token);
-		params.addBodyParameter("count", count+"");
+		String url = UrlUtils.postUrl+UrlUtils.path_fertilization;
 		post.send(HttpMethod.POST, url, params, new RequestCallBack<String>() {
 
 			@Override
@@ -254,7 +256,7 @@ public class ChuChongPopwindow {
 				int code = obj.getIntValue("code");
 				if (code == 1) {
 					pw.dismiss();
-					showChuchongSuccessPop();
+					showShiFeiSuccessPop();
 				}else{
 					Toast.makeText(activity, "除虫失败", 0).show();
 				}
@@ -262,17 +264,17 @@ public class ChuChongPopwindow {
 		});
 	}
 	/**
-	 * 弹出除虫版选择
+	 * 弹出农家肥选择
 	 */
-	public void showChooseBanPop() {
-		View view = View.inflate(activity, R.layout.popwin_chuchong_choose_ban, null);
+	public void showChoose1Pop() {
+		View view = View.inflate(activity, R.layout.popwin_shifei_choose1, null);
 		pw = new PopupWindow(view, screenWidth, LayoutParams.WRAP_CONTENT);
 		pw.setFocusable(true);
-		ivClose = (ImageView) view.findViewById(R.id.popwin_chuchong_choose_ban_iv_close);
-		ivAdd =  (ImageView) view.findViewById(R.id.popwin_chuchong_choose_ban_iv_add);
-		ivDel =  (ImageView) view.findViewById(R.id.popwin_chuchong_choose_ban_iv_del);
-		tvCount = (TextView) view.findViewById(R.id.popwin_chuchong_choose_ban_tv_count);
-		btnEnsure = (Button) view.findViewById(R.id.popwin_chuchong_choose_ban_btn_ensure);
+		ivClose = (ImageView) view.findViewById(R.id.popwin_shifei_choose1_iv_close);
+		ivAdd =  (ImageView) view.findViewById(R.id.popwin_shifei_choose1_iv_add);
+		ivDel =  (ImageView) view.findViewById(R.id.popwin_shifei_choose1_iv_del);
+		tvCount = (TextView) view.findViewById(R.id.popwin_shifei_choose1_tv_count);
+		btnEnsure = (Button) view.findViewById(R.id.popwin_shifei_choose1_btn_ensure);
 		
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
 		params.alpha = 1f;
@@ -327,26 +329,99 @@ public class ChuChongPopwindow {
 			
 			@Override
 			public void onClick(View v) {
-				if (ChuChongCount >= Integer.parseInt(tvCount.getText().toString())&&Integer.parseInt(tvCount.getText().toString())>0) {
+//				Log.i("oye",tvCount.getText().toString());
+				if (Integer.parseInt(tvCount.getText().toString())>0&&Integer.parseInt(tvCount.getText().toString())<=6) {
 					pw.dismiss();
-					showChooseLandPop();
+					showChoose2Pop();
 				}else{
 					pw.dismiss();
-					showLessBanPop();
+					showMissLandPop();
 				}
 			}
 		});
 	}
-	
 	/**
-	 * 灭虫板不足情况
+	 * 农家肥数量选择不足施肥数量情况
 	 */
-	private void showMissMatchBanPop() {
-		View view = View.inflate(activity, R.layout.popwin_chuchong_lessban, null);
+	private void showLessFei() {
+		View view = View.inflate(activity, R.layout.popwin_shifei_lessfei, null);
 		pw = new PopupWindow(view, screenWidth, LayoutParams.WRAP_CONTENT);
 		pw.setFocusable(true);
-		ivClose = (ImageView) view.findViewById(R.id.popwin_chuchong_lessban_iv_close);
-		ivBack = (ImageView) view.findViewById(R.id.popwin_chuchong_lessban_iv_back);
+		ivClose = (ImageView) view.findViewById(R.id.popwin_shifei_lessfei_iv_close);
+		ivBack = (ImageView) view.findViewById(R.id.popwin_shifei_lessfei_iv_back);
+		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
+		params.alpha = 1f;
+		activity.getWindow().setAttributes(params);
+		pw.setBackgroundDrawable(new ColorDrawable());
+		pw.setOutsideTouchable(false);
+		pw.showAtLocation(view, Gravity.CENTER, 0, 0);
+		pw.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+		pw.setOnDismissListener(new OnDismissListener() {
+			@Override
+			public void onDismiss() {
+				WindowManager.LayoutParams params = activity.getWindow().getAttributes();
+				params.alpha = 1f;
+				activity.getWindow().setAttributes(params);
+			}
+		});
+		
+		ivClose.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				pw.dismiss();
+			}
+		});
+		
+		ivBack.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				pw.dismiss();
+				showChoose1Pop();
+			}
+		});
+	}
+	/**
+	 * 施肥成功Pop
+	 */
+	private void showShiFeiSuccessPop() {
+		View view = View.inflate(activity, R.layout.popwin_shifei_success, null);
+		pw = new PopupWindow(view, screenWidth, LayoutParams.WRAP_CONTENT);
+		pw.setFocusable(true);
+		ivClose = (ImageView) view.findViewById(R.id.popwin_shifei_success_iv_close);
+		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
+		params.alpha = 1f;
+		activity.getWindow().setAttributes(params);
+		pw.setBackgroundDrawable(new ColorDrawable());
+		pw.setOutsideTouchable(false);
+		pw.showAtLocation(view, Gravity.CENTER, 0, 0);
+		pw.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+		pw.setOnDismissListener(new OnDismissListener() {
+			@Override
+			public void onDismiss() {
+				WindowManager.LayoutParams params = activity.getWindow().getAttributes();
+				params.alpha = 1f;
+				activity.getWindow().setAttributes(params);
+			}
+		});
+		ivClose.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				pw.dismiss();
+			}
+		});
+	}
+	/**
+	 * 土地与施肥不符合情况
+	 */
+	private void showMissLandPop() {
+		View view = View.inflate(activity, R.layout.popwin_shifei_missland, null);
+		pw = new PopupWindow(view, screenWidth, LayoutParams.WRAP_CONTENT);
+		pw.setFocusable(true);
+		ivClose = (ImageView) view.findViewById(R.id.popwin_shifei_miss_iv_close);
+		ivBack = (ImageView) view.findViewById(R.id.popwin_shifei_miss_iv_back);
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
 		params.alpha = 1f;
 		activity.getWindow().setAttributes(params);
@@ -374,90 +449,20 @@ public class ChuChongPopwindow {
 			@Override
 			public void onClick(View v) {
 				pw.dismiss();
-				showChooseBanPop();
-			}
-		});
-	}
-	/**
-	 * 除虫成功Pop
-	 */
-	private void showChuchongSuccessPop() {
-		View view = View.inflate(activity, R.layout.popwin_chuchong_success, null);
-		pw = new PopupWindow(view, screenWidth, LayoutParams.WRAP_CONTENT);
-		pw.setFocusable(true);
-		ivClose = (ImageView) view.findViewById(R.id.popwin_chuchong_success_iv_close);
-		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
-		params.alpha = 1f;
-		activity.getWindow().setAttributes(params);
-		pw.setBackgroundDrawable(new ColorDrawable());
-		pw.setOutsideTouchable(false);
-		pw.showAtLocation(view, Gravity.CENTER, 0, 0);
-		pw.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-		pw.setOnDismissListener(new OnDismissListener() {
-			@Override
-			public void onDismiss() {
-				WindowManager.LayoutParams params = activity.getWindow().getAttributes();
-				params.alpha = 1f;
-				activity.getWindow().setAttributes(params);
-			}
-		});
-		ivClose.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				pw.dismiss();
-			}
-		});
-	}
-	/**
-	 * 土地与灭虫版不符合情况
-	 */
-	private void showLessBanPop() {
-		View view = View.inflate(activity, R.layout.popwin_chuchong_moreban, null);
-		pw = new PopupWindow(view, screenWidth, LayoutParams.WRAP_CONTENT);
-		pw.setFocusable(true);
-		ivClose = (ImageView) view.findViewById(R.id.popwin_chuchong_moreban_iv_close);
-		ivBack = (ImageView) view.findViewById(R.id.popwin_chuchong_moreban_iv_back);
-		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
-		params.alpha = 1f;
-		activity.getWindow().setAttributes(params);
-		pw.setBackgroundDrawable(new ColorDrawable());
-		pw.setOutsideTouchable(false);
-		pw.showAtLocation(view, Gravity.CENTER, 0, 0);
-		pw.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-		pw.setOnDismissListener(new OnDismissListener() {
-			@Override
-			public void onDismiss() {
-				WindowManager.LayoutParams params = activity.getWindow().getAttributes();
-				params.alpha = 1f;
-				activity.getWindow().setAttributes(params);
-			}
-		});
-		ivClose.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				pw.dismiss();
-			}
-		});
-		ivBack.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				pw.dismiss();
-				showChooseBanPop();
+				showChoose1Pop();
 			}
 		});
 	}
 	
 	/**
-	 * 弹出没有除虫版
+	 * 赠送农家肥
 	 */
-	public void showNoBanPop(){
-		View view = View.inflate(activity, R.layout.popwin_chuchong_nochuchongban, null);
+	public void showGiveFeiPop(){
+		View view = View.inflate(activity, R.layout.popwin_shifei_givefei, null);
 		pw = new PopupWindow(view, screenWidth, LayoutParams.WRAP_CONTENT);
 		pw.setFocusable(true);
-		ivClose = (ImageView) view.findViewById(R.id.popwin_noban_iv_close);
+		btnGive = (Button) view.findViewById(R.id.popwin_shifei_give_btn_ensure);
+		ivClose = (ImageView) view.findViewById(R.id.popwin_shifei_give_iv_close);
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
 		params.alpha = 1f;
 		activity.getWindow().setAttributes(params);
@@ -478,6 +483,14 @@ public class ChuChongPopwindow {
 			@Override
 			public void onClick(View v) {
 				pw.dismiss();
+			}
+		});
+		btnGive.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				pw.dismiss();
+				showChoose1Pop();
 			}
 		});
 	}

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center" >
+
+    <ImageView
+        android:id="@+id/popwin_shifei_choose2_iv_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:padding="8dp"
+        android:src="@drawable/b_bg" />
+
+    <ImageView
+        android:id="@+id/popwin_shifei_choose2_iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/popwin_shifei_choose2_iv_bg"
+        android:layout_alignTop="@+id/popwin_shifei_choose2_iv_bg"
+        android:src="@drawable/close" />
+
+    <ImageView
+        android:id="@+id/popwin_shifei_choose2_iv_choose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/popwin_shifei_choose2_iv_bg"
+        android:layout_alignTop="@+id/popwin_shifei_choose2_iv_bg"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/s_xzdd" />
+
+    <GridLayout
+        android:id="@+id/popwin_shifei_choose2_gl"
+        android:layout_width="200dp"
+        android:layout_height="110dp"
+        android:layout_below="@+id/popwin_shifei_choose2_iv_choose"
+        android:layout_centerHorizontal="true"
+        android:columnCount="2"
+        android:orientation="vertical"
+        android:rowCount="4" >
+
+        <CheckBox
+            android:id="@+id/popwin_shifei_choose2_cbox1"
+            style="@style/popwin_chuchong_cbox"
+            android:drawableRight="@drawable/c_1" />
+
+        <CheckBox
+            android:id="@+id/popwin_shifei_choose2_cbox2"
+            style="@style/popwin_chuchong_cbox"
+            android:drawableRight="@drawable/c_2" />
+
+        <CheckBox
+            android:id="@+id/popwin_shifei_choose2_cbox3"
+            style="@style/popwin_chuchong_cbox"
+            android:drawableRight="@drawable/c_3" />
+
+        <CheckBox
+            android:id="@+id/popwin_shifei_choose2_cbox7"
+            android:button="@drawable/shifei_check_box"
+            android:layout_width="61dp"
+            android:layout_height="28dp"
+            android:drawableRight="@drawable/c_7"
+            />
+
+        <CheckBox
+            android:id="@+id/popwin_shifei_choose2_cbox4"
+            style="@style/popwin_chuchong_cbox"
+            android:drawableRight="@drawable/c_4" />
+
+        <CheckBox
+            android:id="@+id/popwin_shifei_choose2_cbox5"
+            style="@style/popwin_chuchong_cbox"
+            android:drawableRight="@drawable/c_5" />
+
+        <CheckBox
+            android:id="@+id/popwin_shifei_choose2_cbox6"
+            style="@style/popwin_chuchong_cbox"
+            android:drawableRight="@drawable/c_6" />
+    </GridLayout>
+    
+    <Button 
+        android:id="@+id/popwin_shifei_choose2_btn_shi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shifei_ensure_shifei"
+        android:layout_below="@+id/popwin_shifei_choose2_gl"
+        android:layout_centerHorizontal="true"
+        />
+    
+    
+
+</RelativeLayout>
