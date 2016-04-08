@@ -24,22 +24,24 @@ public class MessageMainPop {
 	private Activity activity;
 	private ImageView ivClose;
 	private ImageView ivMessage;
+	private String token;
 	
 	private ImageView ivActivity,ivPlant,ivFriend;
 	private LinearLayout llActivity,llPlant,llFriend;
 	
 	private int activityUnread,MessageUnread;
 	
-	public MessageMainPop( PopupWindow pw, int screenWidth, Activity activity,String token,int activityUnread,int MessageUnread) {
+	public MessageMainPop(PopupWindow pw, int screenWidth, Activity activity,String token,int activityUnread,int MessageUnread) {
 		this.pw = pw;
 		this.screenWidth = screenWidth;
 		this.activity = activity;
+		this.token = token;
 		this.activityUnread = activityUnread;
 		this.MessageUnread = MessageUnread;
 	}
 	
 	/**
-	 * 弹出土地选择
+	 * 弹出消息选择
 	 */
 	public void showMessageMainPop() {
 		View view = View.inflate(activity, R.layout.popwin_message_main, null);
@@ -47,7 +49,6 @@ public class MessageMainPop {
 		pw.setFocusable(true);
 		
 		ivClose = (ImageView) view.findViewById(R.id.popwin_message_main_iv_close);
-		ivMessage = (ImageView) view.findViewById(R.id.popwin_message_main_iv_message);
 		ivActivity = (ImageView) view.findViewById(R.id.popwin_message_main_iv_activity_tis);
 		ivPlant = (ImageView) view.findViewById(R.id.popwin_message_main_iv_plant_tis);
 		ivFriend = (ImageView) view.findViewById(R.id.popwin_message_main_iv_friend_tis);
@@ -61,9 +62,9 @@ public class MessageMainPop {
 			ivActivity.setVisibility(View.INVISIBLE);
 		}
 		if (MessageUnread != 0) {
-			ivMessage.setVisibility(View.VISIBLE);
+			ivPlant.setVisibility(View.VISIBLE);
 		}else{
-			ivMessage.setVisibility(View.INVISIBLE);
+			ivPlant.setVisibility(View.INVISIBLE);
 		}
 		
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
@@ -89,18 +90,14 @@ public class MessageMainPop {
 			}
 		});
 		
-		ivMessage.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-			}
-		});
 		
 		llActivity.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(activity, "活动", 0).show();
+				pw.dismiss();
+				ActivityPop pop = new ActivityPop(pw, screenWidth, activity, token);
+				pop.showActivityMainPop();
 			}
 		});
 		llPlant.setOnClickListener(new OnClickListener() {

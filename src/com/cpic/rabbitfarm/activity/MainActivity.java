@@ -98,7 +98,6 @@ public class MainActivity extends BaseActivity {
 	private int messageUnread = 0;
 	private int activityUnread = 0;
 
-
 	@Override
 	protected void getIntentData(Bundle savedInstanceState) {
 		DisplayMetrics metrics = new DisplayMetrics();
@@ -140,10 +139,12 @@ public class MainActivity extends BaseActivity {
 		 * 获取土地状态
 		 */
 		loadLandList();
+		
 		/**
-		 * 获取种子以及除虫版数量
+		 * 加载种子
 		 */
 		loadSeeds();
+		
 		/**
 		 * 加载个人信息
 		 */
@@ -180,7 +181,16 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				showHaveseedPopup();
+				if (datas.size() == 0) {
+					showNoSeedsPop();
+				} else {
+					
+					showHaveseedPopup();
+					
+					adapter = new SeedAdapter();
+					adapter.setDatas(datas);
+					lvSeed.setAdapter(adapter);
+				}
 			}
 		});
 
@@ -189,8 +199,7 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				loadSeeds();
-				ChuChongPopwindow pop = new ChuChongPopwindow(pwChuchong, screenWidth, MainActivity.this, ChuChongCount,
-						token);
+				ChuChongPopwindow pop = new ChuChongPopwindow(pwChuchong, screenWidth, MainActivity.this, ChuChongCount,token);
 				if (ChuChongCount == 0) {
 					pop.showNoBanPop();
 				} else {
@@ -225,7 +234,8 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				MessageMainPop pop = new MessageMainPop(pwMessage, screenWidth, MainActivity.this, token,activityUnread,messageUnread);
+				MessageMainPop pop = new MessageMainPop(pwMessage, screenWidth, MainActivity.this, token,
+						activityUnread, messageUnread);
 				pop.showMessageMainPop();
 			}
 		});
@@ -269,7 +279,7 @@ public class MainActivity extends BaseActivity {
 					activityUnread = data.getIntValue("activity");
 					if (messageUnread != 0 || activityUnread != 0) {
 						ivTis.setVisibility(View.VISIBLE);
-					}else{
+					} else {
 						ivTis.setVisibility(View.INVISIBLE);
 					}
 				} else {
@@ -320,6 +330,17 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	/*********************************************************************************************
 	 * 以下是播种弹出框，由于第一次做功能性弹出框，将第一类弹出框写在了主界面里进行测试，之后的功能模块封装成类放在popwin文件夹下
@@ -328,7 +349,7 @@ public class MainActivity extends BaseActivity {
 	/**
 	 * 播种没有种子弹出框
 	 */
-	private void showBozhongPop() {
+	private void showNoSeedsPop() {
 		View view = View.inflate(MainActivity.this, R.layout.popwin_noseed, null);
 		pwBozhong = new PopupWindow(view, screenWidth / 2, LayoutParams.WRAP_CONTENT);
 		pwBozhong.setFocusable(true);
@@ -342,6 +363,7 @@ public class MainActivity extends BaseActivity {
 		pwBozhong.setOutsideTouchable(false);
 		pwBozhong.showAtLocation(view, Gravity.CENTER, 0, 0);
 		pwBozhong.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+
 		pwBozhong.setOnDismissListener(new OnDismissListener() {
 			@Override
 			public void onDismiss() {
@@ -422,9 +444,6 @@ public class MainActivity extends BaseActivity {
 				}
 			}
 		});
-		adapter = new SeedAdapter();
-		adapter.setDatas(datas);
-		lvSeed.setAdapter(adapter);
 
 	}
 
@@ -578,9 +597,7 @@ public class MainActivity extends BaseActivity {
 				if (code == 1) {
 					datas = JSONObject.parseObject(arg0.result, Seed.class).getData();
 					itemCount = new ArrayList<Integer>();
-					if (datas.size() == 0) {
-						showBozhongPop();
-					}
+					
 					for (int i = 0; i < datas.size(); i++) {
 
 						if ("2".equals(datas.get(i).getStore_type())) {
@@ -590,9 +607,11 @@ public class MainActivity extends BaseActivity {
 							datas.remove(i);
 						}
 					}
+
 					for (int j = 0; j < datas.size(); j++) {
 						itemCount.add(0);
 					}
+
 				} else {
 					showShortToast("无法获取数据" + obj.getMsg());
 				}
