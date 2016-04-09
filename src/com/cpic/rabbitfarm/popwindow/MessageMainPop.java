@@ -21,19 +21,21 @@ public class MessageMainPop {
 
 	private PopupWindow pw;
 	private int screenWidth;
+	private int screenHight;
 	private Activity activity;
 	private ImageView ivClose;
-	private ImageView ivMessage;
 	private String token;
+	private ImageView ivMessage;
 	
 	private ImageView ivActivity,ivPlant,ivFriend;
 	private LinearLayout llActivity,llPlant,llFriend;
 	
 	private int activityUnread,MessageUnread;
 	
-	public MessageMainPop(PopupWindow pw, int screenWidth, Activity activity,String token,int activityUnread,int MessageUnread) {
+	public MessageMainPop(PopupWindow pw, int screenWidth,int screenHight, Activity activity,String token,int activityUnread,int MessageUnread) {
 		this.pw = pw;
 		this.screenWidth = screenWidth;
+		this.screenHight = screenHight;
 		this.activity = activity;
 		this.token = token;
 		this.activityUnread = activityUnread;
@@ -96,7 +98,7 @@ public class MessageMainPop {
 			@Override
 			public void onClick(View v) {
 				pw.dismiss();
-				ActivityPop pop = new ActivityPop(pw, screenWidth, activity, token);
+				ActivityPop pop = new ActivityPop(pw, screenWidth,screenHight, activity, token);
 				pop.showActivityMainPop();
 			}
 		});
@@ -104,7 +106,9 @@ public class MessageMainPop {
 			
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(activity, "庄家成熟通知", 0).show();
+				pw.dismiss();
+				ZhuanjiaPop pop = new ZhuanjiaPop(pw, screenWidth,screenHight, activity, token);
+				pop.showZhuanjiaMainPop();
 			}
 		});
 		llFriend.setOnClickListener(new OnClickListener() {

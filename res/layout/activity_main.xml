@@ -45,7 +45,7 @@
                 android:paddingRight="29dp"
                 android:paddingTop="6.5dp" >
 
-                <SeekBar
+                <com.cpic.rabbitfarm.utils.MySeekBar
                     android:id="@+id/activity_main_seekbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

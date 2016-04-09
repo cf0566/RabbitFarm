@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center" >
+
+    <LinearLayout
+        android:id="@+id/popwin_user_info_iv_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/wjxx_bg"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="35dp"
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="5dp" >
+
+            <LinearLayout
+                android:id="@+id/ll_icon"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/i_photobg"
+                android:gravity="center"
+                android:padding="6dp"
+                android:orientation="vertical" >
+
+                <com.cpic.rabbitfarm.utils.RoundImageView
+                    android:id="@+id/popwin_userinfo_iv_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/popwin_userinfo_ivsound"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/g_open" />
+
+                <ImageView
+                    android:id="@+id/popwin_userinfo_ivnosound"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/g_close" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/popwin_userinfo_iv_safe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/g_anquan" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="42dp"
+            android:background="@drawable/gr_tmbj"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/popwin_userinfo_tv_name"
+                style="@style/mine_info_tvstyle"
+                android:text="昵称： 张晓敏" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="6dp"
+                    android:text="等级： "
+                    android:textColor="#855319"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:id="@+id/ll_seekbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/energyicon_bg"
+                    android:orientation="vertical"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="29dp"
+                    android:paddingTop="6dp" >
+
+                    <com.cpic.rabbitfarm.utils.MySeekBar
+                        android:id="@+id/popwin_userinfo_seekbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
+                        android:indeterminateOnly="false"
+                        android:max="10"
+                        android:progressDrawable="@drawable/progress_loading2"
+                        android:thumb="@null" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/popwin_userinfo_tv_level"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="6dp"
+                    android:text="2级"
+                    android:textColor="#855319"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/popwin_userinfo_tv_farm_name"
+                style="@style/mine_info_tvstyle"
+                android:text="农场名称: 快乐之家" />
+
+            <TextView
+                 android:id="@+id/popwin_userinfo_tv_userid"
+                style="@style/mine_info_tvstyle"
+                android:text="账号ID: 20151231" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <Button
+                      android:id="@+id/popwin_userinfo_btn_record"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/mine_btn_record" />
+
+                <Button
+                      android:id="@+id/popwin_userinfo_btn_logout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/mine_btn_loginout" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/popwin_user_info_iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/popwin_user_info_iv_bg"
+        android:layout_marginLeft="85dp"
+        android:layout_toRightOf="@+id/popwin_user_info_iv_title"
+        android:src="@drawable/close" />
+
+    <ImageView
+        android:id="@+id/popwin_user_info_iv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/popwin_user_info_iv_bg"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/wanjiaxinxi" />
+
+</RelativeLayout>

@@ -84,6 +84,7 @@
             android:paddingRight="20dp" >
 
             <TextView
+                 android:id="@+id/popwin_share_tv_copy"
                 style="@style/activity_share_tv"
                 android:drawableTop="@drawable/fuzhi"
                 android:text="复制链接" />
@@ -98,6 +99,7 @@
 
     
     <ImageView
+        android:id="@+id/popwin_share_iv_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

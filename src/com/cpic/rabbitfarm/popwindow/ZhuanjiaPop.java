@@ -7,6 +7,8 @@ import com.bumptech.glide.Glide;
 import com.cpic.rabbitfarm.R;
 import com.cpic.rabbitfarm.bean.ActivityData;
 import com.cpic.rabbitfarm.bean.ActivityInfo;
+import com.cpic.rabbitfarm.bean.ZhuanjiaData;
+import com.cpic.rabbitfarm.bean.ZhuanjiaInfo;
 import com.cpic.rabbitfarm.utils.DensityUtil;
 import com.cpic.rabbitfarm.utils.GlideRoundTransform;
 import com.cpic.rabbitfarm.utils.UrlUtils;
@@ -47,7 +49,7 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ActivityPop {
+public class ZhuanjiaPop {
 
 	private PopupWindow pw;
 	private PopupWindow pwShare;
@@ -58,7 +60,7 @@ public class ActivityPop {
 	private String token;
 	private RequestParams params;
 	private Dialog dialog;
-	private ArrayList<ActivityData> datas;
+	private ArrayList<ZhuanjiaData> datas;
 	/**
 	 * 复用的控件
 	 */
@@ -68,7 +70,7 @@ public class ActivityPop {
 	 * 活动列表的控件
 	 */
 	private ListView lv;
-	private ActivityAdapter adapter;
+	private ZhuanjiaAdapter adapter;
 	private int messageUnread;
 	private int activityUnread;
 	
@@ -77,17 +79,11 @@ public class ActivityPop {
 	 */
 	private ImageView ivIcon;
 	private TextView tvTitle,tvContent;
-	private Button btnShared;
 	
-	/**
-	 * 分享控件
-	 */
-	private TextView tvWeixin,tvPengyou,tvQQ,tvZone,tvCopy;
-	private ImageView ivShareClose;
+
 	
 	
-	
-	public ActivityPop(PopupWindow pw, int screenWidth,int screenHight ,Activity activity,String token) {
+	public ZhuanjiaPop(PopupWindow pw, int screenWidth,int screenHight ,Activity activity,String token) {
 		this.pw = pw;
 		this.screenWidth = screenWidth;
 		this.activity = activity;
@@ -96,16 +92,16 @@ public class ActivityPop {
 	}
 
 	/**
-	 * 弹出活动主界面
+	 * 弹出庄家主界面
 	 */
-	public void showActivityMainPop() {
-		View view = View.inflate(activity, R.layout.popwin_activity_main, null);
+	public void showZhuanjiaMainPop() {
+		View view = View.inflate(activity, R.layout.popwin_zhuanjia_main, null);
 		pw = new PopupWindow(view, screenWidth*4/5, LayoutParams.WRAP_CONTENT);
 		pw.setFocusable(true);
 		
-		ivClose = (ImageView) view.findViewById(R.id.popwin_activity_main_iv_close);
-		ivBack = (ImageView) view.findViewById(R.id.popwin_activity_main_iv_back);
-		lv = (ListView) view.findViewById(R.id.popwin_activity_main_lv);
+		ivClose = (ImageView) view.findViewById(R.id.popwin_zhuanjia_main_iv_close);
+		ivBack = (ImageView) view.findViewById(R.id.popwin_zhuanjia_main_iv_back);
+		lv = (ListView) view.findViewById(R.id.popwin_zhuanjia_main_lv);
 		
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
 		params.alpha = 1f;
@@ -135,10 +131,10 @@ public class ActivityPop {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				pw.dismiss();
-				showActivityDetailsPop(datas.get(position).getActivity_title(),
-						datas.get(position).getActivity_img(),
-						datas.get(position).getActivity_content(),
-						datas.get(position).getUrl());
+				showZhuanjiaDetailsPop(datas.get(position).getMessage_id(),
+						datas.get(position).getMessage_img(),
+						datas.get(position).getMessage_content()
+						);
 				
 			}
 		});
@@ -153,8 +149,8 @@ public class ActivityPop {
 	/**
 	 * 获取活动详情的pop
 	 */
-	public void showActivityDetailsPop(final String title,final String img_url,final String content,final String url) {
-		View view = View.inflate(activity, R.layout.popwin_activity_details, null);
+	public void showZhuanjiaDetailsPop(final String title,final String img_url,final String content) {
+		View view = View.inflate(activity, R.layout.popwin_zhuanjia_details, null);
 		pw = new PopupWindow(view, screenWidth, LayoutParams.WRAP_CONTENT);
 		pw.setFocusable(true);
 		
@@ -163,7 +159,6 @@ public class ActivityPop {
 		ivIcon = (ImageView) view.findViewById(R.id.pop_activity_details_iv_icon);
 		tvTitle = (TextView) view.findViewById(R.id.pop_activity_details_tv_title);
 		tvContent = (TextView) view.findViewById(R.id.pop_activity_details_tv_content);
-		btnShared = (Button) view.findViewById(R.id.popwin_activity_details_btn_share);
 		
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
 		params.alpha = 1f;
@@ -196,189 +191,11 @@ public class ActivityPop {
 			@Override
 			public void onClick(View v) {
 				pw.dismiss();
-				showActivityMainPop();
+				showZhuanjiaMainPop();
 			}
 		});
-		btnShared.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				showSharePop(title,img_url,content,url);
-			}
-		});
-	}
 	
-	/**
-	 * 分享
-	 */
-	public void showSharePop(final String title,final String img_url,final String content,final String url) {
-		View view = View.inflate(activity, R.layout.popwin_activity_details_share, null);
-		pwShare = new PopupWindow(view, screenWidth, screenHight*5/6);
-		pwShare.setFocusable(true);
-		ivShareClose = (ImageView) view.findViewById(R.id.popwin_share_iv_close);
-		tvWeixin = (TextView) view.findViewById(R.id.popwin_share_tv_weixin);
-		tvPengyou = (TextView) view.findViewById(R.id.popwin_share_tv_pengyou);
-		tvQQ = (TextView) view.findViewById(R.id.popwin_share_tv_qq);
-		tvZone = (TextView) view.findViewById(R.id.popwin_share_tv_kongjian);
-		tvCopy = (TextView) view.findViewById(R.id.popwin_share_tv_copy);
-		
-		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
-		params.alpha = 1f;
-		activity.getWindow().setAttributes(params);
-		pwShare.setBackgroundDrawable(new ColorDrawable());
-		pwShare.setOutsideTouchable(false);
-		pwShare.showAtLocation(view, Gravity.CENTER,0, -DensityUtil.dip2px(activity,70));
-		
-		pwShare.setOnDismissListener(new OnDismissListener() {
-			@Override
-			public void onDismiss() {
-				WindowManager.LayoutParams params = activity.getWindow().getAttributes();
-				params.alpha = 1f;
-				activity.getWindow().setAttributes(params);
-			}
-		});
-		final UMImage image = new UMImage(activity,
-                BitmapFactory.decodeResource(activity.getResources(), R.drawable.app_icon));
-		ivShareClose.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				pwShare.dismiss();
-			}
-		});
-		tvWeixin.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				pw.dismiss();
-				new ShareAction(activity)
-				.setPlatform(SHARE_MEDIA.WEIXIN)
-				.setCallback(new UMShareListener() {
-			        @Override
-			        public void onResult(SHARE_MEDIA platform) {
-			            Toast.makeText(activity,platform + " 分享成功啦", Toast.LENGTH_SHORT).show();
-			        }
-
-			        @Override
-			        public void onError(SHARE_MEDIA platform, Throwable t) {
-			            Toast.makeText(activity,platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
-			        }
-
-			        @Override
-			        public void onCancel(SHARE_MEDIA platform) {
-			            Toast.makeText(activity,platform + " 分享取消了", Toast.LENGTH_SHORT).show();
-			        }
-			    })
-				.withTitle(title)
-				.withText(content)
-				.withTargetUrl(url)
-				.withMedia(image)
-				.share();
-			}
-		});
-		tvPengyou.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				pw.dismiss();
-				new ShareAction(activity)
-				.setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE)
-				.setCallback(new UMShareListener() {
-			        @Override
-			        public void onResult(SHARE_MEDIA platform) {
-			            Toast.makeText(activity,platform + " 分享成功啦", Toast.LENGTH_SHORT).show();
-			        }
-
-			        @Override
-			        public void onError(SHARE_MEDIA platform, Throwable t) {
-			            Toast.makeText(activity,platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
-			        }
-
-			        @Override
-			        public void onCancel(SHARE_MEDIA platform) {
-			            Toast.makeText(activity,platform + " 分享取消了", Toast.LENGTH_SHORT).show();
-			        }
-			    })
-				.withTitle(title)
-				.withText(content)
-				.withTargetUrl(url)
-				.withMedia(image)
-				.share();
-			}
-		});
-		
-		tvQQ.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				pw.dismiss();
-				new ShareAction(activity)
-				.setPlatform(SHARE_MEDIA.QQ)
-				.setCallback(new UMShareListener() {
-			        @Override
-			        public void onResult(SHARE_MEDIA platform) {
-			            Toast.makeText(activity,platform + " 分享成功啦", Toast.LENGTH_SHORT).show();
-			        }
-
-			        @Override
-			        public void onError(SHARE_MEDIA platform, Throwable t) {
-			            Toast.makeText(activity,platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
-			        }
-
-			        @Override
-			        public void onCancel(SHARE_MEDIA platform) {
-			            Toast.makeText(activity,platform + " 分享取消了", Toast.LENGTH_SHORT).show();
-			        }
-			    })
-				.withTitle(title)
-				.withText(content)
-				.withTargetUrl(url)
-				.withMedia(image)
-				.share();
-			}
-		});
-		
-		tvZone.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				pw.dismiss();
-				new ShareAction(activity)
-				.setPlatform(SHARE_MEDIA.QZONE)
-				.setCallback(new UMShareListener() {
-			        @Override
-			        public void onResult(SHARE_MEDIA platform) {
-			            Toast.makeText(activity,platform + " 分享成功啦", Toast.LENGTH_SHORT).show();
-			        }
-
-			        @Override
-			        public void onError(SHARE_MEDIA platform, Throwable t) {
-			            Toast.makeText(activity,platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
-			        }
-
-			        @Override
-			        public void onCancel(SHARE_MEDIA platform) {
-			            Toast.makeText(activity,platform + " 分享取消了", Toast.LENGTH_SHORT).show();
-			        }
-			    })
-				.withTitle(title)
-				.withText(content)
-				.withTargetUrl(url)
-				.withMedia(image)
-				.share();
-			}
-		});
-		
-		tvCopy.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				ClipboardManager cmb = (ClipboardManager)activity.getSystemService(Context.CLIPBOARD_SERVICE);  
-				cmb.setText(url);
-				Toast.makeText(activity,"复制成功", Toast.LENGTH_SHORT).show();
-			}
-		});
-	 }
+	}
 	
 	private void loadUnreadMsg() {
 		post = new HttpUtils();
@@ -418,8 +235,10 @@ public class ActivityPop {
 		post = new HttpUtils();
 		params = new RequestParams();
 		dialog = ProgressDialogHandle.getProgressDialog(activity, null);
-		String url = UrlUtils.postUrl+UrlUtils.path_activityList;
+		String url = UrlUtils.postUrl+UrlUtils.path_messageList;
 		params.addBodyParameter("token", token);
+		params.addBodyParameter("type", "1");
+		
 		post.send(HttpMethod.POST, url , params, new RequestCallBack<String>() {
 			
 			@Override
@@ -443,10 +262,10 @@ public class ActivityPop {
 				if (dialog != null) {
 					dialog.dismiss();
 				}
-				ActivityInfo info = JSONObject.parseObject(arg0.result, ActivityInfo.class);
+				ZhuanjiaInfo info = JSONObject.parseObject(arg0.result, ZhuanjiaInfo.class);
 				if (info.getCode() == 1) {
 					datas = info.getData();
-					adapter = new ActivityAdapter();
+					adapter = new ZhuanjiaAdapter();
 					adapter.setDatas(datas);
 					lv.setAdapter(adapter);
 				}else{
@@ -455,11 +274,11 @@ public class ActivityPop {
 			}
 		});
 	}
-	public class ActivityAdapter extends BaseAdapter {
+	public class ZhuanjiaAdapter extends BaseAdapter {
 		
-		private ArrayList<ActivityData> datas;
+		private ArrayList<ZhuanjiaData> datas;
 
-		public void setDatas(ArrayList<ActivityData> datas) {
+		public void setDatas(ArrayList<ZhuanjiaData> datas) {
 			this.datas = datas;
 		}
 
@@ -487,24 +306,27 @@ public class ActivityPop {
 				holder = new ViewHolder();
 				holder.tvTitle = (TextView) convertView.findViewById(R.id.item_activity_main_tv_title);
 				holder.tvContent = (TextView) convertView.findViewById(R.id.item_activity_main_tv_content);
+				holder.ivIcon = (ImageView) convertView.findViewById(R.id.item_activity_main_iv);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-			if (datas.get(position).getIs_read() == 0) {
+			if ("0".equals(datas.get(position))) {
 				holder.tvTitle.setTextColor(Color.parseColor("#77FF0000"));
 				holder.tvContent.setTextColor(Color.parseColor("#77FF0000"));
-			}else if (datas.get(position).getIs_read() == 1) {
+			}else if ("1".equals(datas.get(position))) {
 				holder.tvTitle.setTextColor(Color.parseColor("#5b3509"));
 				holder.tvContent.setTextColor(Color.parseColor("#593607"));
 			}
 			
-			holder.tvTitle.setText(datas.get(position).getActivity_title());
-			holder.tvContent.setText(datas.get(position).getActivity_content());
+			holder.tvTitle.setText(datas.get(position).getMessage_id());
+			holder.tvContent.setText(datas.get(position).getMessage_content());
+			holder.ivIcon.setImageResource(R.drawable.icon2);
 			return convertView;
 		}
 		class ViewHolder {
 			TextView tvTitle,tvContent;
+			ImageView ivIcon;
 		}
 	}
 	

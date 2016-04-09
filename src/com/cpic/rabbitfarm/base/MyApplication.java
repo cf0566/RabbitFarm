@@ -31,7 +31,7 @@ public class MyApplication extends Application{
 	public void onCreate() {
 		super.onCreate();
 		mContext = getApplicationContext();
-		PlatformConfig.setWeixin("wxd930ea5d5a258f4f", "db426a9829e4b49a0dcac7b4162da6b6");
+		PlatformConfig.setWeixin("wx9171a7f85ecfea3a", "7f37ec0f3f2dfb278ebf7f9e5d631237");
 		PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba"); 
 	}
 }

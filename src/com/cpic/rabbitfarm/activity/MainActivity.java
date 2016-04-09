@@ -15,8 +15,10 @@ import com.cpic.rabbitfarm.fonts.CatTextView;
 import com.cpic.rabbitfarm.popwindow.CameraPop;
 import com.cpic.rabbitfarm.popwindow.ChuChongPopwindow;
 import com.cpic.rabbitfarm.popwindow.MessageMainPop;
+import com.cpic.rabbitfarm.popwindow.MinePop;
 import com.cpic.rabbitfarm.popwindow.ShiFeiPopwindow;
 import com.cpic.rabbitfarm.utils.GlideRoundTransform;
+import com.cpic.rabbitfarm.utils.MySeekBar;
 import com.cpic.rabbitfarm.utils.RoundImageView;
 import com.cpic.rabbitfarm.utils.UrlUtils;
 import com.cpic.rabbitfarm.view.ProgressDialogHandle;
@@ -26,11 +28,13 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
-import com.umeng.socialize.utils.Log;
+import com.umeng.socialize.UMShareAPI;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
@@ -54,14 +58,24 @@ public class MainActivity extends BaseActivity {
 	private RoundImageView ivUser;
 	private long lastTime;
 	private TextView tvMoney;
-	private SeekBar sbLevel;
+	private MySeekBar sbLevel;
 	private TextView tvLevel, tvName;
 	private SharedPreferences sp;
+
+	/**
+	 * 背景音乐播放
+	 */
+	private MediaPlayer mp;
 	/**
 	 * 除虫播种施肥储藏室
 	 */
 	private ImageView ivBozhong, ivChuchong, ivShifei, ivChucang;
 	private PopupWindow pwBozhong, pwChuchong, pwShifei, pwChucang;
+
+	/**
+	 * 个人中心
+	 */
+	private PopupWindow pwMine;
 
 	/**
 	 * 监控消息商城
@@ -98,6 +112,8 @@ public class MainActivity extends BaseActivity {
 	private int messageUnread = 0;
 	private int activityUnread = 0;
 
+	private boolean isfirst = true;
+
 	@Override
 	protected void getIntentData(Bundle savedInstanceState) {
 		DisplayMetrics metrics = new DisplayMetrics();
@@ -117,7 +133,7 @@ public class MainActivity extends BaseActivity {
 		tvMoney = (TextView) findViewById(R.id.activity_main_tv_money);
 		tvName = (TextView) findViewById(R.id.activity_main_tv_user_name);
 		tvLevel = (TextView) findViewById(R.id.activity_main_tv_level);
-		sbLevel = (SeekBar) findViewById(R.id.activity_main_seekbar);
+		sbLevel = (MySeekBar) findViewById(R.id.activity_main_seekbar);
 		ivBozhong = (ImageView) findViewById(R.id.activity_main_iv_bozhong);
 		ivChuchong = (ImageView) findViewById(R.id.activity_main_iv_chuchong);
 		ivShifei = (ImageView) findViewById(R.id.activity_main_iv_shifei);
@@ -134,17 +150,21 @@ public class MainActivity extends BaseActivity {
 	protected void initData() {
 		sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
 		token = sp.getString("token", "");
-		sbLevel.setEnabled(false);
+
+		mp = MediaPlayer.create(MainActivity.this, R.raw.test);
+		mp.setLooping(true);
+		mp.start();
+
 		/**
 		 * 获取土地状态
 		 */
 		loadLandList();
-		
+
 		/**
 		 * 加载种子
 		 */
 		loadSeeds();
-		
+
 		/**
 		 * 加载个人信息
 		 */
@@ -153,7 +173,6 @@ public class MainActivity extends BaseActivity {
 		 * 获取Message的未读消息
 		 */
 		loadUnreadMsg();
-
 	}
 
 	private void loadDatas() {
@@ -184,9 +203,9 @@ public class MainActivity extends BaseActivity {
 				if (datas.size() == 0) {
 					showNoSeedsPop();
 				} else {
-					
+
 					showHaveseedPopup();
-					
+
 					adapter = new SeedAdapter();
 					adapter.setDatas(datas);
 					lvSeed.setAdapter(adapter);
@@ -199,7 +218,8 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				loadSeeds();
-				ChuChongPopwindow pop = new ChuChongPopwindow(pwChuchong, screenWidth, MainActivity.this, ChuChongCount,token);
+				ChuChongPopwindow pop = new ChuChongPopwindow(pwChuchong, screenWidth, MainActivity.this, ChuChongCount,
+						token);
 				if (ChuChongCount == 0) {
 					pop.showNoBanPop();
 				} else {
@@ -234,9 +254,21 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				MessageMainPop pop = new MessageMainPop(pwMessage, screenWidth, MainActivity.this, token,
+				MessageMainPop pop = new MessageMainPop(pwMessage, screenWidth, screenHight, MainActivity.this, token,
 						activityUnread, messageUnread);
 				pop.showMessageMainPop();
+			}
+		});
+		/**
+		 * 个人中心pop
+		 */
+		ivUser.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				MinePop pop = new MinePop(pwMine, screenWidth, screenHight, MainActivity.this, token, mp);
+				pop.showMineMainPop();
+
 			}
 		});
 	}
@@ -330,17 +362,21 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (mp != null) {
+			mp.release();
+			mp = null;
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+	}
 
 	/*********************************************************************************************
 	 * 以下是播种弹出框，由于第一次做功能性弹出框，将第一类弹出框写在了主界面里进行测试，之后的功能模块封装成类放在popwin文件夹下
@@ -597,7 +633,7 @@ public class MainActivity extends BaseActivity {
 				if (code == 1) {
 					datas = JSONObject.parseObject(arg0.result, Seed.class).getData();
 					itemCount = new ArrayList<Integer>();
-					
+
 					for (int i = 0; i < datas.size(); i++) {
 
 						if ("2".equals(datas.get(i).getStore_type())) {
