@@ -96,7 +96,7 @@ public class ShiFeiPopwindow {
 		btnShi = (Button) view.findViewById(R.id.popwin_shifei_choose2_btn_shi);
 		
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
-		params.alpha = 1f;
+		params.alpha = 0.6f;
 		activity.getWindow().setAttributes(params);
 		pw.setBackgroundDrawable(new ColorDrawable());
 		pw.setOutsideTouchable(false);
@@ -277,7 +277,7 @@ public class ShiFeiPopwindow {
 		btnEnsure = (Button) view.findViewById(R.id.popwin_shifei_choose1_btn_ensure);
 		
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
-		params.alpha = 1f;
+		params.alpha = 0.6f;
 		activity.getWindow().setAttributes(params);
 		pw.setBackgroundDrawable(new ColorDrawable());
 		pw.setOutsideTouchable(false);

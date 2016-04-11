@@ -474,6 +474,9 @@ public class LoginActivity extends BaseActivity {
 				editor.putString("level", user.getData().getLevel());
 				editor.putString("balance", user.getData().getBalance());
 				editor.putString("user_id", user.getData().getUser_id());
+				editor.putString("alias_name", user.getData().getAlias_name());
+				editor.putString("identified_card", user.getData().getIdentified_card());
+				editor.putString("is_identified", user.getData().getIs_identified());
 				editor.apply();
 				pwLogin.dismiss();
 				ll.setVisibility(View.GONE);

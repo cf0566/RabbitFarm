@@ -11,6 +11,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:background="@drawable/wjxx_bg"
+         android:focusableInTouchMode="true"
         android:orientation="horizontal" >
 
         <LinearLayout
@@ -29,13 +30,14 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/i_photobg"
                 android:gravity="center"
-                android:padding="6dp"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:padding="6dp" >
 
                 <com.cpic.rabbitfarm.utils.RoundImageView
                     android:id="@+id/popwin_userinfo_iv_icon"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY" />
             </LinearLayout>
 
             <TextView
@@ -79,10 +81,24 @@
             android:background="@drawable/gr_tmbj"
             android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/popwin_userinfo_tv_name"
-                style="@style/mine_info_tvstyle"
-                android:text="昵称： 张晓敏" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    style="@style/mine_info_tvstyle"
+                    android:text="昵称： " />
+
+                <EditText
+                    android:id="@+id/popwin_userinfo_tv_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:focusable="true"
+                    android:textColor="#855319"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -134,13 +150,27 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/popwin_userinfo_tv_farm_name"
-                style="@style/mine_info_tvstyle"
-                android:text="农场名称: 快乐之家" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    style="@style/mine_info_tvstyle"
+                    android:text="农场名称: " />
+
+                <EditText
+                    android:id="@+id/popwin_userinfo_tv_farm_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:textColor="#855319"
+                    android:focusable="true"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
             <TextView
-                 android:id="@+id/popwin_userinfo_tv_userid"
+                android:id="@+id/popwin_userinfo_tv_userid"
                 style="@style/mine_info_tvstyle"
                 android:text="账号ID: 20151231" />
 
@@ -152,7 +182,7 @@
                 android:orientation="horizontal" >
 
                 <Button
-                      android:id="@+id/popwin_userinfo_btn_record"
+                    android:id="@+id/popwin_userinfo_btn_record"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -160,7 +190,7 @@
                     android:background="@drawable/mine_btn_record" />
 
                 <Button
-                      android:id="@+id/popwin_userinfo_btn_logout"
+                    android:id="@+id/popwin_userinfo_btn_logout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"

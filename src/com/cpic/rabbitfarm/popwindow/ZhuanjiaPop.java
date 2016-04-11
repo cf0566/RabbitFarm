@@ -104,7 +104,7 @@ public class ZhuanjiaPop {
 		lv = (ListView) view.findViewById(R.id.popwin_zhuanjia_main_lv);
 		
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
-		params.alpha = 1f;
+		params.alpha = 0.6f;
 		activity.getWindow().setAttributes(params);
 		pw.setBackgroundDrawable(new ColorDrawable());
 		pw.setOutsideTouchable(false);
@@ -161,7 +161,7 @@ public class ZhuanjiaPop {
 		tvContent = (TextView) view.findViewById(R.id.pop_activity_details_tv_content);
 		
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
-		params.alpha = 1f;
+		params.alpha = 0.6f;
 		activity.getWindow().setAttributes(params);
 		pw.setBackgroundDrawable(new ColorDrawable());
 		pw.setOutsideTouchable(false);

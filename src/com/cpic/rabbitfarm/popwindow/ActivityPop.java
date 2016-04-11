@@ -108,7 +108,7 @@ public class ActivityPop {
 		lv = (ListView) view.findViewById(R.id.popwin_activity_main_lv);
 		
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
-		params.alpha = 1f;
+		params.alpha = 0.6f;
 		activity.getWindow().setAttributes(params);
 		pw.setBackgroundDrawable(new ColorDrawable());
 		pw.setOutsideTouchable(false);
@@ -166,7 +166,7 @@ public class ActivityPop {
 		btnShared = (Button) view.findViewById(R.id.popwin_activity_details_btn_share);
 		
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
-		params.alpha = 1f;
+		params.alpha = 0.6f;
 		activity.getWindow().setAttributes(params);
 		pw.setBackgroundDrawable(new ColorDrawable());
 		pw.setOutsideTouchable(false);
@@ -223,7 +223,7 @@ public class ActivityPop {
 		tvCopy = (TextView) view.findViewById(R.id.popwin_share_tv_copy);
 		
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
-		params.alpha = 1f;
+		params.alpha = 0.6f;
 		activity.getWindow().setAttributes(params);
 		pwShare.setBackgroundDrawable(new ColorDrawable());
 		pwShare.setOutsideTouchable(false);

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center" >
+
+    <LinearLayout
+        android:id="@+id/popwin_user_info_safe_iv_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="300dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/wjxx_bg"
+        android:orientation="vertical" >
+
+        <RadioGroup
+            android:id="@+id/popwin_user_info_safe_rg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="50dp"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/popwin_user_info_safe_rb_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/mine_cbox_id"
+                android:button="@null"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/popwin_user_info_safe_rb_pwd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/mine_cbox_pwd"
+                android:button="@null" />
+        </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/popwin_user_info_safe_ll_input"
+            android:layout_width="290dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="15dp"
+            android:orientation="vertical"
+             >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/gr_tmbj"
+                android:orientation="vertical"
+                android:padding="5dp" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="请填写您的真实信息"
+                    android:textColor="#83521A"
+                    android:textSize="13sp" />
+
+                <EditText
+                    android:id="@+id/popwin_user_info_safe_et_name"
+                    style="@style/userinfo_safe_edit_style"
+                    android:hint="姓名" />
+
+                <EditText
+                    android:id="@+id/popwin_user_info_safe_et_idnum"
+                    style="@style/userinfo_safe_edit_style"
+                    android:hint="身份证号" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/popwin_user_info_safe_btn_ensure_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/mine_btn_ensure_submit" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/popwin_user_info_safe_pwd_ll_change"
+            android:layout_width="290dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="15dp"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/gr_tmbj"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="5dp" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/cgszzfmm" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/popwin_user_info_safe_pwd_btn_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/mine_btn_changpwd" />
+        </LinearLayout>
+        
+         <LinearLayout
+            android:id="@+id/popwin_user_info_safe_set_pwd_ll"
+            android:layout_width="290dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="15dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/gr_tmbj"
+                android:orientation="vertical"
+                android:padding="5dp" >
+
+                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="请填写您的真实信息"
+                    android:textColor="#83521A"
+                    android:textSize="13sp" />
+
+                <EditText
+                    android:id="@+id/popwin_user_info_safe_set_pwd_et_mobile"
+                    style="@style/userinfo_safe_edit_style"
+                    android:hint="设置您的支付密码" />
+				<LinearLayout 
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:orientation="horizontal"
+				    android:background="@drawable/shurukuang_g"
+				    android:layout_marginTop="3dp"
+				    >
+                <EditText
+                    android:id="@+id/popwin_user_info_safe_set_pwd_et_code"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:paddingLeft="20dp"
+                    android:layout_weight="1"
+                    android:textColorHint="#A65718"
+                    android:textColor="#A65718"
+                    android:textSize="12sp"
+                    android:layout_gravity="center_vertical"
+                    android:hint="输入收到的6位验证码" />
+           			
+                <ImageView 
+                     android:id="@+id/popwin_user_info_safe_set_pwd_iv_sendcode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/gr_fasyzm"
+                    android:layout_gravity="center_vertical"
+                    android:paddingRight="5dp"
+                    />
+                </LinearLayout>
+                
+				   <EditText
+                    android:id="@+id/popwin_user_info_safe_set_pwd_et_pwd"
+                    style="@style/userinfo_safe_edit_style"
+                    android:hint="请输入6-12位字符密码" />
+				      <EditText
+                    android:id="@+id/popwin_user_info_safe_set_pwd_et_again"
+                    style="@style/userinfo_safe_edit_style"
+                    android:hint="再次输入密码" />
+				
+            
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/popwin_user_info_safe_set_pwd_btn_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/mine_btn_ensure_submit" />
+        </LinearLayout>
+        
+        
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/popwin_user_info_safe_iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/popwin_user_info_safe_iv_bg"
+        android:layout_marginLeft="85dp"
+        android:layout_toRightOf="@+id/popwin_user_info_safe_iv_title"
+        android:src="@drawable/close" />
+
+    <ImageView
+        android:id="@+id/popwin_user_info_safe_iv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/popwin_user_info_safe_iv_bg"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/aqzx" />
+
+</RelativeLayout>

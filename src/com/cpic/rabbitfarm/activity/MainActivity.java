@@ -1,5 +1,6 @@
 package com.cpic.rabbitfarm.activity;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import com.alibaba.fastjson.JSONObject;
@@ -29,14 +30,25 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.utils.Log;
 
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
@@ -50,7 +62,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class MainActivity extends BaseActivity {
@@ -113,6 +124,13 @@ public class MainActivity extends BaseActivity {
 	private int activityUnread = 0;
 
 	private boolean isfirst = true;
+	
+	/**
+	 * fragment管理类
+	 */
+	private FragmentManager fm;
+	private FragmentTransaction trans;
+	
 
 	@Override
 	protected void getIntentData(Bundle savedInstanceState) {
@@ -179,7 +197,7 @@ public class MainActivity extends BaseActivity {
 		sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
 		String user_img = sp.getString("user_img", "");
 		String farm_name = sp.getString("farm_name", "");
-		String user_name = sp.getString("user_name", "");
+		String user_name = sp.getString("alias_name", "");
 		String level = sp.getString("level", "");
 		String balance = sp.getString("balance", "");
 		tvName.setText(user_name);
@@ -266,6 +284,7 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
+				fm = getSupportFragmentManager();
 				MinePop pop = new MinePop(pwMine, screenWidth, screenHight, MainActivity.this, token, mp);
 				pop.showMineMainPop();
 
@@ -376,7 +395,63 @@ public class MainActivity extends BaseActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+		if (requestCode == 0) {
+			String path = Environment.getExternalStorageDirectory().getAbsolutePath()+ "/userIcon.jpg";
+			if (!new File(path).getPath().isEmpty()) {
+				MinePop pop = new MinePop(pwMine, screenWidth, screenHight, MainActivity.this, token);
+				pop.showMineMainPop();
+				pop.loadIcon(path,ivUser);
+			}
+			
+			// upLoadUserIcon(new File(Environment.getExternalStorageDirectory()
+			// .getAbsolutePath() + "/usericon.PNG"));
+		} else if (requestCode == 1) {
+			if (data != null) {
+				Uri uri = data.getData();
+				String path = "";
+				MinePop pop = new MinePop(pwMine, screenWidth, screenHight, MainActivity.this, token);
+				// 因为相册出返回的uri路径是ContentProvider开放的路径，不是直接的sd卡具体路径
+				// 因此无法通过decodeFile方法解析图片
+				// 必须通过ContentResolver对象读取图片
+				ContentResolver cr = MainActivity.this.getContentResolver();
+				try {
+					Bitmap b = MediaStore.Images.Media.getBitmap(cr, uri);
+					Bitmap bitmap = big(b, 60, 60);
+					bitmap.getByteCount();
+					// 这里开始的第二部分，获取图片的路径：
+					String[] proj = { MediaStore.Images.Media.DATA };
+					// 好像是android多媒体数据库的封装接口，具体的看Android文档
+					Cursor cursor =  MainActivity.this.managedQuery(uri, proj, null, null, null);
+					// 按我个人理解 这个是获得用户选择的图片的索引值
+					int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+					// 将光标移至开头 ，这个很重要，不小心很容易引起越界
+					cursor.moveToFirst();
+					// 最后根据索引值获取图片路径
+					path = cursor.getString(column_index);
+					// Log.i("oye", path);
+					// 上传头像
+					// upLoadUserIcon(new File(path));
+					pop.showMineMainPop();
+					pop.loadIcon(path,ivUser);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
+
+	public Bitmap big(Bitmap b, float x, float y) {
+		int w = b.getWidth();
+		int h = b.getHeight();
+		float sx = (float) x / w;// 要强制转换，不转换我的在这总是死掉。
+		float sy = (float) y / h;
+		Matrix matrix = new Matrix();
+		matrix.postScale(sx, sy); // 长和宽放大缩小的比例
+		Bitmap resizeBmp = Bitmap.createBitmap(b, 0, 0, w, h, matrix, true);
+		return resizeBmp;
+	}
+
 
 	/*********************************************************************************************
 	 * 以下是播种弹出框，由于第一次做功能性弹出框，将第一类弹出框写在了主界面里进行测试，之后的功能模块封装成类放在popwin文件夹下
@@ -393,7 +468,7 @@ public class MainActivity extends BaseActivity {
 		ivBuy = (ImageView) view.findViewById(R.id.popwin_noseed_iv_buy);
 
 		WindowManager.LayoutParams params = MainActivity.this.getWindow().getAttributes();
-		params.alpha = 1f;
+		params.alpha = 0.6f;
 		MainActivity.this.getWindow().setAttributes(params);
 		pwBozhong.setBackgroundDrawable(new ColorDrawable());
 		pwBozhong.setOutsideTouchable(false);
@@ -441,7 +516,7 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onDismiss() {
 				WindowManager.LayoutParams params = MainActivity.this.getWindow().getAttributes();
-				params.alpha = 1f;
+				params.alpha = 0.6f;
 				getWindow().setAttributes(params);
 			}
 		});
@@ -536,7 +611,7 @@ public class MainActivity extends BaseActivity {
 		ImageView ivBack = (ImageView) view.findViewById(R.id.popwin_seed_faliure_iv_back);
 		ivClose = (ImageView) view.findViewById(R.id.popwin_seed_faliure_iv_close);
 		WindowManager.LayoutParams params = MainActivity.this.getWindow().getAttributes();
-		params.alpha = 1f;
+		params.alpha = 0.6f;
 		MainActivity.this.getWindow().setAttributes(params);
 		pwChooseSeed.setBackgroundDrawable(new ColorDrawable());
 		pwChooseSeed.setOutsideTouchable(false);
@@ -575,7 +650,7 @@ public class MainActivity extends BaseActivity {
 		pwChooseSeed.setFocusable(true);
 		ivClose = (ImageView) view.findViewById(R.id.popwin_seed_success_iv_close);
 		WindowManager.LayoutParams params = MainActivity.this.getWindow().getAttributes();
-		params.alpha = 1f;
+		params.alpha = 0.6f;
 		MainActivity.this.getWindow().setAttributes(params);
 		pwChooseSeed.setBackgroundDrawable(new ColorDrawable());
 		pwChooseSeed.setOutsideTouchable(false);

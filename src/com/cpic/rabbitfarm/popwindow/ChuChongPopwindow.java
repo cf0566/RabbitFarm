@@ -91,7 +91,7 @@ public class ChuChongPopwindow {
 		btnChu = (Button) view.findViewById(R.id.popwin_chuchong_choose_land_btn_chu);
 		count = 0;
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
-		params.alpha = 1f;
+		params.alpha = 0.6f;
 		activity.getWindow().setAttributes(params);
 		pw.setBackgroundDrawable(new ColorDrawable());
 		pw.setOutsideTouchable(false);
@@ -275,7 +275,7 @@ public class ChuChongPopwindow {
 		btnEnsure = (Button) view.findViewById(R.id.popwin_chuchong_choose_ban_btn_ensure);
 		
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
-		params.alpha = 1f;
+		params.alpha = 0.6f;
 		activity.getWindow().setAttributes(params);
 		pw.setBackgroundDrawable(new ColorDrawable());
 		pw.setOutsideTouchable(false);
@@ -348,7 +348,7 @@ public class ChuChongPopwindow {
 		ivClose = (ImageView) view.findViewById(R.id.popwin_chuchong_lessban_iv_close);
 		ivBack = (ImageView) view.findViewById(R.id.popwin_chuchong_lessban_iv_back);
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
-		params.alpha = 1f;
+		params.alpha = 0.6f;
 		activity.getWindow().setAttributes(params);
 		pw.setBackgroundDrawable(new ColorDrawable());
 		pw.setOutsideTouchable(false);
@@ -419,7 +419,7 @@ public class ChuChongPopwindow {
 		ivClose = (ImageView) view.findViewById(R.id.popwin_chuchong_moreban_iv_close);
 		ivBack = (ImageView) view.findViewById(R.id.popwin_chuchong_moreban_iv_back);
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
-		params.alpha = 1f;
+		params.alpha = 0.6f;
 		activity.getWindow().setAttributes(params);
 		pw.setBackgroundDrawable(new ColorDrawable());
 		pw.setOutsideTouchable(false);
@@ -459,7 +459,7 @@ public class ChuChongPopwindow {
 		pw.setFocusable(true);
 		ivClose = (ImageView) view.findViewById(R.id.popwin_noban_iv_close);
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
-		params.alpha = 1f;
+		params.alpha = 0.6f;
 		activity.getWindow().setAttributes(params);
 		pw.setBackgroundDrawable(new ColorDrawable());
 		pw.setOutsideTouchable(false);

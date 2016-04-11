@@ -70,7 +70,7 @@ public class MessageMainPop {
 		}
 		
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
-		params.alpha = 1f;
+		params.alpha = 0.6f;
 		activity.getWindow().setAttributes(params);
 		pw.setBackgroundDrawable(new ColorDrawable());
 		pw.setOutsideTouchable(false);
