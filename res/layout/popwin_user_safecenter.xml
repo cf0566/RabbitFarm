@@ -144,7 +144,8 @@
                 <EditText
                     android:id="@+id/popwin_user_info_safe_set_pwd_et_mobile"
                     style="@style/userinfo_safe_edit_style"
-                    android:hint="设置您的支付密码" />
+                    android:phoneNumber="true"
+                    android:hint="请输入您的手机号码" />
 				<LinearLayout 
 				    android:layout_width="match_parent"
 				    android:layout_height="wrap_content"

@@ -88,7 +88,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/coins"
             android:gravity="center|right"
-            android:paddingRight="30dp"
+            android:paddingRight="45dp"
             android:paddingTop="6dp"
             android:text="99"
             android:textColor="#FFFFFF"

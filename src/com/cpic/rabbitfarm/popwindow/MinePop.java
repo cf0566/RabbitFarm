@@ -1,10 +1,17 @@
 package com.cpic.rabbitfarm.popwindow;
 
 import java.io.File;
+import java.util.ArrayList;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.cpic.rabbitfarm.R;
+import com.cpic.rabbitfarm.activity.LoginActivity;
+import com.cpic.rabbitfarm.bean.LoginUser;
+import com.cpic.rabbitfarm.bean.OrderList;
+import com.cpic.rabbitfarm.bean.OrderListData;
 import com.cpic.rabbitfarm.utils.GlideRoundTransform;
 import com.cpic.rabbitfarm.utils.MySeekBar;
 import com.cpic.rabbitfarm.utils.UrlUtils;
@@ -33,12 +40,15 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RadioGroup;
@@ -82,8 +92,30 @@ public class MinePop {
 	private LinearLayout llInputId, llInputPwd,llHaveSet;
 	private Button btnEnsureId;
 	private EditText etName, etIdNum;
+	
+	private Button btnChangePwd;
+	
+	/**
+	 * 设置支付密码
+	 */
+	private EditText etMobile,etCode,etPwd,etAgain;
+	private ImageView ivSendCode;
+	private Button btnEnsureChange;
+	
+	
+	/**
+	 * 订单记录的控件
+	 */
+	private ListView lv;
+	private ArrayList<OrderListData> datas;
+	private RecordAdapter adapter;
+	
 
 	private MediaPlayer mp;
+	private HttpUtils post;
+	private RequestParams params;
+	private Dialog dialog;
+	
 
 	public MinePop(Activity activity, String token) {
 		this.activity = activity;
@@ -232,8 +264,235 @@ public class MinePop {
 				}
 			}
 		});
-	}
+		btnRecord.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				pw.dismiss();
+				showRecordList();
+			}
 
+		});
+		btnLogout.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				pw.dismiss();
+				Intent intent = new Intent(activity, LoginActivity.class);
+				activity.startActivity(intent);
+				activity.finish();
+			}
+		});
+	}
+	/**
+	 * 充值记录的弹出框
+	 */
+	private void showRecordList() {
+		View view = View.inflate(activity, R.layout.popwin_user_record, null);
+		pw = new PopupWindow(view, screenWidth, LayoutParams.WRAP_CONTENT);
+		pw.setFocusable(true);
+		lv = (ListView) view.findViewById(R.id.popwin_user_info_record_lv);
+		ivClose = (ImageView) view.findViewById(R.id.popwin_user_info_record_iv_close);
+		
+		WindowManager.LayoutParams params = activity.getWindow().getAttributes();
+		params.alpha = 0.6f;
+		activity.getWindow().setAttributes(params);
+		pw.setBackgroundDrawable(new ColorDrawable());
+		pw.setOutsideTouchable(false);
+		pw.showAtLocation(view, Gravity.CENTER, 0, 0);
+		pw.setOnDismissListener(new OnDismissListener() {
+			@Override
+			public void onDismiss() {
+				WindowManager.LayoutParams params = activity.getWindow().getAttributes();
+				params.alpha = 1f;
+				activity.getWindow().setAttributes(params);
+			}
+		});
+		ivClose.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				pw.dismiss();
+			}
+		});
+		
+		loadList();
+	}
+	/**
+	 * 获取列表数据源
+	 */
+	private void loadList() {
+		HttpUtils post = new HttpUtils();
+		RequestParams params = new RequestParams();
+		final Dialog dialog = ProgressDialogHandle.getProgressDialog(activity, null);
+		params.addBodyParameter("token", token);
+		params.addBodyParameter("type", "2");
+
+		String url = UrlUtils.postUrl + UrlUtils.path_orderList;
+
+		post.send(HttpMethod.POST, url, params, new RequestCallBack<String>() {
+
+			@Override
+			public void onStart() {
+				super.onStart();
+				if (dialog != null) {
+					dialog.show();
+				}
+			}
+
+			@Override
+			public void onFailure(HttpException arg0, String arg1) {
+				Toast.makeText(activity, "保存失败,请检查网络状况", 0).show();
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+			}
+
+			@Override
+			public void onSuccess(ResponseInfo<String> arg0) {
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+				OrderList list = JSONObject.parseObject(arg0.result, OrderList.class);
+				int code = list.getCode();
+				if (code == 1) {
+					datas = list.getData();
+					adapter = new RecordAdapter();
+					adapter.setDatas(datas);
+					lv.setAdapter(adapter);
+				}else{
+					Toast.makeText(activity, "获取数据失败"+list.getMsg(), 0).show();
+				}
+			}
+		});
+	}
+	
+	public class RecordAdapter extends BaseAdapter{
+
+		private ArrayList<OrderListData> datas;
+		
+		public void setDatas(ArrayList<OrderListData> datas){
+			this.datas = datas;
+		}
+		
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return datas == null ? 0 : datas.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return datas.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return position;
+		}
+
+		@Override
+		public View getView(final int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			ViewHolder holder ;
+			if (convertView == null) {
+				holder = new ViewHolder();
+				convertView = View.inflate(activity, R.layout.item_user_info_list, null);
+				holder.tvNum = (TextView) convertView.findViewById(R.id.item_user_info_list_tv_ordernum);
+				holder.tvTime = (TextView) convertView.findViewById(R.id.item_user_info_list_tv_ordertime);
+				holder.tvStatus = (TextView) convertView.findViewById(R.id.item_user_info_list_tv_status);
+				holder.tvCount = (TextView) convertView.findViewById(R.id.item_user_info_list_tv_coin_count);
+				holder.tvSum = (TextView) convertView.findViewById(R.id.item_user_info_list_tv_sum_count);
+				
+				holder.btnPay = (Button) convertView.findViewById(R.id.item_user_info_list_btn_pay);
+				holder.btnDel = (Button) convertView.findViewById(R.id.item_user_info_list_btn_del);
+				convertView.setTag(holder);
+			}else{
+				holder = (ViewHolder) convertView.getTag();
+			}
+			
+			holder.tvNum.setText("订单编号： "+datas.get(position).getOrder_id());
+			holder.tvTime.setText("下单时间： "+datas.get(position).getCreate_time());
+			if ("0".equals(datas.get(position).getPay_status())) {
+				holder.tvStatus.setText("待支付");
+				holder.btnPay.setVisibility(View.VISIBLE);
+			}else if ("1".equals(datas.get(position).getPay_status())){
+				holder.tvStatus.setText("交易成功");
+				holder.btnPay.setVisibility(View.GONE);
+			}
+			holder.tvCount.setText("兔币： "+datas.get(position).getTotal());
+			holder.tvSum.setText(datas.get(position).getTotal());
+			
+			holder.btnDel.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					delOrderList(datas.get(position).getOrder_id());
+				}
+			});
+			
+			return convertView;
+		}
+		
+		class ViewHolder{
+			TextView tvNum,tvTime,tvStatus,tvCount,tvSum;
+			Button btnPay,btnDel;
+		}
+	}
+	
+	
+	/**
+	 * 删除订单
+	 */
+	private void delOrderList(String orderId) {
+		HttpUtils post = new HttpUtils();
+		RequestParams params = new RequestParams();
+		final Dialog dialog = ProgressDialogHandle.getProgressDialog(activity, null);
+		params.addBodyParameter("token", token);
+		params.addBodyParameter("order_id", orderId);
+
+		String url = UrlUtils.postUrl + UrlUtils.path_orderRemove;
+
+		post.send(HttpMethod.POST, url, params, new RequestCallBack<String>() {
+
+			@Override
+			public void onStart() {
+				super.onStart();
+				if (dialog != null) {
+					dialog.show();
+				}
+			}
+
+			@Override
+			public void onFailure(HttpException arg0, String arg1) {
+				Toast.makeText(activity, "删除失败,请检查网络状况", 0).show();
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+			}
+
+			@Override
+			public void onSuccess(ResponseInfo<String> arg0) {
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+				JSONObject obj = JSONObject.parseObject(arg0.result);
+				int code = obj.getIntValue("code");
+				if (code == 1) {
+					Toast.makeText(activity, "删除成功", 0).show();
+					loadList();
+				}else{
+					Toast.makeText(activity, "删除失败"+obj.getString("msg"), 0).show();
+				}
+			}
+		});
+		
+		
+	}
+	
+	
 	/**
 	 * 选择照片
 	 */
@@ -296,19 +555,32 @@ public class MinePop {
 		pw = new PopupWindow(view, screenWidth, LayoutParams.WRAP_CONTENT);
 		pw.setFocusable(true);
 		sp = PreferenceManager.getDefaultSharedPreferences(activity);
-		String is_checked = sp.getString("is_identified", "");
 		String user_name = sp.getString("user_name", "");
 		String identified_card = sp.getString("identified_card", "");
+		final String set_paycode = sp.getString("set_paycode", "");
 
 		llInputId = (LinearLayout) view.findViewById(R.id.popwin_user_info_safe_ll_input);
 		llHaveSet = (LinearLayout) view.findViewById(R.id.popwin_user_info_safe_pwd_ll_change);
 		llInputPwd = (LinearLayout) view.findViewById(R.id.popwin_user_info_safe_set_pwd_ll);
 		
+		btnChangePwd  = (Button) view.findViewById(R.id.popwin_user_info_safe_pwd_btn_change);
 		btnEnsureId = (Button) view.findViewById(R.id.popwin_user_info_safe_btn_ensure_submit);
+		
+		/**
+		 * 设置支付密码接口
+		 */
+		etMobile = (EditText) view.findViewById(R.id.popwin_user_info_safe_set_pwd_et_mobile);
+		etCode = (EditText) view.findViewById(R.id.popwin_user_info_safe_set_pwd_et_code);
+		etPwd = (EditText) view.findViewById(R.id.popwin_user_info_safe_set_pwd_et_pwd);
+		etAgain = (EditText) view.findViewById(R.id.popwin_user_info_safe_set_pwd_et_again);
+		ivSendCode = (ImageView) view.findViewById(R.id.popwin_user_info_safe_set_pwd_iv_sendcode);
+		btnEnsureChange = (Button) view.findViewById(R.id.popwin_user_info_safe_set_pwd_btn_submit);
+		
 		rg = (RadioGroup) view.findViewById(R.id.popwin_user_info_safe_rg);
 		etIdNum = (EditText) view.findViewById(R.id.popwin_user_info_safe_et_idnum);
 		etName = (EditText) view.findViewById(R.id.popwin_user_info_safe_et_name);
 		ivClose = (ImageView) view.findViewById(R.id.popwin_user_info_safe_iv_close);
+		
 		if (user_name == null || identified_card == null || "".endsWith(user_name) || "".equals(identified_card)) {
 			btnEnsureId.setVisibility(View.VISIBLE);
 		} else {
@@ -332,9 +604,7 @@ public class MinePop {
 				activity.getWindow().setAttributes(params);
 			}
 		});
-
 		rg.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				switch (checkedId) {
@@ -343,8 +613,13 @@ public class MinePop {
 					llInputPwd.setVisibility(View.GONE);
 					break;
 				case R.id.popwin_user_info_safe_rb_pwd:
-					llInputId.setVisibility(View.GONE);
-					llInputPwd.setVisibility(View.VISIBLE);
+					if ("1".equals(set_paycode)) {
+						llInputId.setVisibility(View.GONE);
+						llHaveSet.setVisibility(View.VISIBLE);
+					}else{
+						llInputId.setVisibility(View.GONE);
+						llInputPwd.setVisibility(View.VISIBLE);
+					}
 					break;
 
 				default:
@@ -353,7 +628,16 @@ public class MinePop {
 
 			}
 		});
-
+		
+		btnChangePwd.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				llHaveSet.setVisibility(View.GONE);
+				llInputPwd.setVisibility(View.VISIBLE);
+			}
+		});
+		
 		btnEnsureId.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -378,9 +662,145 @@ public class MinePop {
 				pw.dismiss();
 			}
 		});
+		
+		btnEnsureChange.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				changePwdAction();
+			}
 
+		});
+		ivSendCode.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if ("".equals(etMobile.getText().toString())) {
+					Toast.makeText(activity, "手机号码不得为空", 0).show();
+					return;
+				}
+				getMessageCode(etMobile);
+			}
+		});
+	
+	}
+	
+	/**
+	 * 获取短信验证码
+	 */
+	private void getMessageCode(EditText etMob) {
+		post = new HttpUtils();
+		params = new RequestParams();
+		params.addBodyParameter("mobile", etMob.getText().toString());
+		String url = UrlUtils.postUrl + UrlUtils.path_getCode;
+		dialog = ProgressDialogHandle.getProgressDialog(activity, null);
+		post.send(HttpMethod.POST, url, params, new RequestCallBack<String>() {
+
+			@Override
+			public void onStart() {
+				super.onStart();
+				if (dialog != null) {
+					dialog.show();
+				}
+			}
+
+			@Override
+			public void onFailure(HttpException arg0, String arg1) {
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+				Toast.makeText(activity, "获取短信验证码失败，请检查网络连接", 0).show();
+			}
+
+			@Override
+			public void onSuccess(ResponseInfo<String> arg0) {
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+				JSONObject obj = JSON.parseObject(arg0.result);
+				int code = obj.getIntValue("code");
+				if (code == 1) {
+					Toast.makeText(activity, "获取短信验证码成功，请注意查收短信", 0).show();
+				} else {
+					Toast.makeText(activity, "获取短信验证码失败，请稍后重试", 0).show();
+				}
+			}
+		});
+	}
+	
+	/**
+	 * 修改密码
+	 */
+	private void changePwdAction() {
+		if ("".equals(etMobile.getText().toString())) {
+			Toast.makeText(activity, "手机号码不得为空", 0).show();
+			return;
+		}
+		if ("".equals(etCode.getText().toString())) {
+			Toast.makeText(activity, "验证码不得为空", 0).show();
+			return;
+		}
+		if ("".equals(etPwd.getText().toString())) {
+			Toast.makeText(activity, "密码不得为空", 0).show();
+			return;
+		}
+		if ("".equals(etAgain.getText().toString())) {
+			Toast.makeText(activity, "请再次输入密码", 0).show();
+			return;
+		}
+		if (!(etAgain.getText().toString()).equals(etAgain.getText().toString())) {
+			Toast.makeText(activity, "两侧输入的密码不一致", 0).show();
+			return;
+		}
+		post = new HttpUtils();
+		params = new RequestParams();
+		dialog = ProgressDialogHandle.getProgressDialog(activity, null);
+		params.addBodyParameter("token", token);
+		params.addBodyParameter("mobile", etMobile.getText().toString());
+		params.addBodyParameter("code", etCode.getText().toString());
+		params.addBodyParameter("pwd", etPwd.getText().toString());
+		String url = UrlUtils.postUrl + UrlUtils.path_setPayCode;
+		post.send(HttpMethod.POST, url, params, new RequestCallBack<String>() {
+
+			@Override
+			public void onStart() {
+				super.onStart();
+				if (dialog != null) {
+					dialog.show();
+				}
+			}
+
+			@Override
+			public void onFailure(HttpException arg0, String arg1) {
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+				Toast.makeText(activity, "设置失败，请检查网络连接", 0).show();
+			}
+
+			@Override
+			public void onSuccess(ResponseInfo<String> arg0) {
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+				JSONObject obj = JSONObject.parseObject(arg0.result);
+				int code = obj.getIntValue("code");
+				if (code == 1) {
+					Toast.makeText(activity, "设置成功", 0).show();
+					llHaveSet.setVisibility(View.VISIBLE);
+					llInputPwd.setVisibility(View.GONE);
+				} else if (code == 0) {
+					Toast.makeText(activity, "设置失败，验证码错误", 0).show();
+				} else {
+					Toast.makeText(activity, "设置失败", 0).show();
+				}
+			}
+		});
 	}
 
+	/**
+	 * 修改个人信息
+	 */
 	private void uploadIDInfo() {
 		HttpUtils post = new HttpUtils();
 		RequestParams params = new RequestParams();
@@ -412,7 +832,6 @@ public class MinePop {
 			@Override
 			public void onFailure(HttpException arg0, String arg1) {
 				Toast.makeText(activity, "保存失败,请检查网络状况", 0).show();
-				;
 				if (dialog != null) {
 					dialog.dismiss();
 				}

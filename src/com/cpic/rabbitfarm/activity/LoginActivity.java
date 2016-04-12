@@ -477,6 +477,7 @@ public class LoginActivity extends BaseActivity {
 				editor.putString("alias_name", user.getData().getAlias_name());
 				editor.putString("identified_card", user.getData().getIdentified_card());
 				editor.putString("is_identified", user.getData().getIs_identified());
+				editor.putString("set_paycode", user.getData().getSet_paycode());
 				editor.apply();
 				pwLogin.dismiss();
 				ll.setVisibility(View.GONE);

@@ -13,6 +13,7 @@ import com.cpic.rabbitfarm.bean.Seed;
 import com.cpic.rabbitfarm.bean.SeedInfo;
 import com.cpic.rabbitfarm.fonts.CarttonTextView;
 import com.cpic.rabbitfarm.fonts.CatTextView;
+import com.cpic.rabbitfarm.popwindow.BuyCoinPop;
 import com.cpic.rabbitfarm.popwindow.CameraPop;
 import com.cpic.rabbitfarm.popwindow.ChuChongPopwindow;
 import com.cpic.rabbitfarm.popwindow.MessageMainPop;
@@ -88,6 +89,11 @@ public class MainActivity extends BaseActivity {
 	 */
 	private PopupWindow pwMine;
 
+	/**
+	 * 购买兔币
+	 */
+	private PopupWindow pwBuyCoin;
+	
 	/**
 	 * 监控消息商城
 	 */
@@ -290,6 +296,19 @@ public class MainActivity extends BaseActivity {
 
 			}
 		});
+		
+		/**
+		 * 金币点击购买金币
+		 */
+		tvMoney.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				BuyCoinPop pop = new BuyCoinPop(pwBuyCoin, screenWidth, screenHight, MainActivity.this, token);
+				pop.showBuyCoinPop();
+			}
+		});
+		
 	}
 
 	@Override
