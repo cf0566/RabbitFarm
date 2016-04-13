@@ -284,10 +284,12 @@ public class MinePop {
 			}
 		});
 	}
+	
+	
 	/**
 	 * 充值记录的弹出框
 	 */
-	private void showRecordList() {
+	public void showRecordList() {
 		View view = View.inflate(activity, R.layout.popwin_user_record, null);
 		pw = new PopupWindow(view, screenWidth, LayoutParams.WRAP_CONTENT);
 		pw.setFocusable(true);

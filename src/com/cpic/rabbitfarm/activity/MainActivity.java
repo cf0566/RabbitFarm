@@ -30,16 +30,16 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
+import com.pingplusplus.android.Pingpp;
 import com.umeng.socialize.UMShareAPI;
-import com.umeng.socialize.utils.Log;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
@@ -128,9 +128,8 @@ public class MainActivity extends BaseActivity {
 	private ImageView ivTis;
 	private int messageUnread = 0;
 	private int activityUnread = 0;
-
-	private boolean isfirst = true;
 	
+	private boolean isfirst = true;
 	/**
 	 * fragment管理类
 	 */
@@ -304,7 +303,7 @@ public class MainActivity extends BaseActivity {
 			
 			@Override
 			public void onClick(View v) {
-				BuyCoinPop pop = new BuyCoinPop(pwBuyCoin, screenWidth, screenHight, MainActivity.this, token);
+				BuyCoinPop pop = new BuyCoinPop(pwBuyCoin, screenWidth, screenHight, MainActivity.this, token,false,0);
 				pop.showBuyCoinPop();
 			}
 		});
@@ -440,7 +439,7 @@ public class MainActivity extends BaseActivity {
 					// 这里开始的第二部分，获取图片的路径：
 					String[] proj = { MediaStore.Images.Media.DATA };
 					// 好像是android多媒体数据库的封装接口，具体的看Android文档
-					Cursor cursor =  MainActivity.this.managedQuery(uri, proj, null, null, null);
+					Cursor cursor =  MainActivity.this.managedQuery(uri,proj, null, null, null);
 					// 按我个人理解 这个是获得用户选择的图片的索引值
 					int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 					// 将光标移至开头 ，这个很重要，不小心很容易引起越界
@@ -458,6 +457,35 @@ public class MainActivity extends BaseActivity {
 				}
 			}
 		}
+		 if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
+	            if (resultCode == Activity.RESULT_OK) {
+	                String result = data.getExtras().getString("pay_result");
+	                /* 处理返回值
+	                 * "success" - payment succeed
+	                 * "fail"    - payment failed
+	                 * "cancel"  - user canceld
+	                 * "invalid" - payment plugin not installed
+	                 */
+	                String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
+	                String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
+	                if ("success".equals(result)) {
+						showShortToast("支付成功");
+						sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+						String count = sp.getString("count_coin", "");
+						int amount = Integer.parseInt(count)+Integer.parseInt(tvMoney.getText().toString());
+						tvMoney.setText(amount+"");
+						BuyCoinPop pop = new BuyCoinPop(pwBuyCoin, screenWidth, screenHight, MainActivity.this, count, true, amount);
+						pop.showBuyCoinPop();
+						
+					}else if ("fail".equals(result)) {
+						showShortToast("支付失败");
+					}else if ("cancel".equals(result)) {
+						showShortToast("支付取消");
+					}else if ("invalid".equals(result)) {
+						showShortToast("支付插件未安装");
+					}
+	            }
+	        }
 	}
 
 	public Bitmap big(Bitmap b, float x, float y) {
@@ -472,6 +500,18 @@ public class MainActivity extends BaseActivity {
 	}
 
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/*********************************************************************************************
 	 * 以下是播种弹出框，由于第一次做功能性弹出框，将第一类弹出框写在了主界面里进行测试，之后的功能模块封装成类放在popwin文件夹下
 	 */
@@ -513,7 +553,7 @@ public class MainActivity extends BaseActivity {
 	}
 
 	/**
-	 * 确认播种弹出框
+	 * 播种弹出框
 	 */
 	private void showHaveseedPopup() {
 		View view = View.inflate(MainActivity.this, R.layout.popwin_bozhong, null);
@@ -522,9 +562,9 @@ public class MainActivity extends BaseActivity {
 		lvSeed = (ListView) view.findViewById(R.id.popwin_bozhong_lv);
 		btnEnsure = (Button) view.findViewById(R.id.popwin_bozhong_btn_ensure);
 		ivClose = (ImageView) view.findViewById(R.id.popwin_bozhong_iv_close);
-
+		loadSeeds();
 		WindowManager.LayoutParams params = MainActivity.this.getWindow().getAttributes();
-		params.alpha = 1f;
+		params.alpha = 0.6f;
 		MainActivity.this.getWindow().setAttributes(params);
 		pwChooseSeed.setBackgroundDrawable(new ColorDrawable());
 		pwChooseSeed.setOutsideTouchable(false);
@@ -535,7 +575,7 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onDismiss() {
 				WindowManager.LayoutParams params = MainActivity.this.getWindow().getAttributes();
-				params.alpha = 0.6f;
+				params.alpha = 1f;
 				getWindow().setAttributes(params);
 			}
 		});
