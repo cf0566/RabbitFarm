@@ -60,6 +60,7 @@ import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
@@ -103,6 +104,13 @@ public class MainActivity extends BaseActivity {
 
 	private ArrayList<LandListInfo> landDatas;
 
+	
+	/**
+	 * 好友背景
+	 */
+	private LinearLayout llFriend;
+	
+	
 	/**
 	 * 播种控件
 	 */
@@ -130,11 +138,6 @@ public class MainActivity extends BaseActivity {
 	private int activityUnread = 0;
 	
 	private boolean isfirst = true;
-	/**
-	 * fragment管理类
-	 */
-	private FragmentManager fm;
-	private FragmentTransaction trans;
 	
 
 	@Override
@@ -165,7 +168,8 @@ public class MainActivity extends BaseActivity {
 		ivMessage = (ImageView) findViewById(R.id.activity_main_iv_message);
 		ivMarket = (ImageView) findViewById(R.id.activity_main_iv_shop);
 		ivTis = (ImageView) findViewById(R.id.activity_main_message_iv_tis);
-
+		llFriend = (LinearLayout) findViewById(R.id.activity_main_ll_friends);
+		
 		dialog = ProgressDialogHandle.getProgressDialog(MainActivity.this, null);
 	}
 
@@ -186,7 +190,7 @@ public class MainActivity extends BaseActivity {
 		/**
 		 * 加载种子
 		 */
-		loadSeeds();
+		loadSeeds(0);
 
 		/**
 		 * 加载个人信息
@@ -228,10 +232,6 @@ public class MainActivity extends BaseActivity {
 				} else {
 
 					showHaveseedPopup();
-
-					adapter = new SeedAdapter();
-					adapter.setDatas(datas);
-					lvSeed.setAdapter(adapter);
 				}
 			}
 		});
@@ -240,7 +240,7 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				loadSeeds();
+				loadSeeds(0);
 				ChuChongPopwindow pop = new ChuChongPopwindow(pwChuchong, screenWidth, MainActivity.this, ChuChongCount,
 						token);
 				if (ChuChongCount == 0) {
@@ -289,7 +289,6 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				fm = getSupportFragmentManager();
 				MinePop pop = new MinePop(pwMine, screenWidth, screenHight, MainActivity.this, token, mp);
 				pop.showMineMainPop();
 
@@ -308,6 +307,17 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 		
+		/**
+		 * 好友背景框点击事件
+		 */
+		llFriend.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				
+			}
+		});
 	}
 
 	@Override
@@ -472,11 +482,16 @@ public class MainActivity extends BaseActivity {
 						showShortToast("支付成功");
 						sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
 						String count = sp.getString("count_coin", "");
+						int is_mine = sp.getInt("is_mine", 0);
 						int amount = Integer.parseInt(count)+Integer.parseInt(tvMoney.getText().toString());
 						tvMoney.setText(amount+"");
-						BuyCoinPop pop = new BuyCoinPop(pwBuyCoin, screenWidth, screenHight, MainActivity.this, count, true, amount);
-						pop.showBuyCoinPop();
-						
+						if (is_mine == 1) {
+							MinePop pop = new MinePop(pwMine, screenWidth, screenHight, MainActivity.this, token);
+							pop.showRecordList();
+						}else{
+							BuyCoinPop pop = new BuyCoinPop(pwBuyCoin, screenWidth, screenHight, MainActivity.this, count, true, amount);
+							pop.showBuyCoinPop();
+						}
 					}else if ("fail".equals(result)) {
 						showShortToast("支付失败");
 					}else if ("cancel".equals(result)) {
@@ -562,7 +577,7 @@ public class MainActivity extends BaseActivity {
 		lvSeed = (ListView) view.findViewById(R.id.popwin_bozhong_lv);
 		btnEnsure = (Button) view.findViewById(R.id.popwin_bozhong_btn_ensure);
 		ivClose = (ImageView) view.findViewById(R.id.popwin_bozhong_iv_close);
-		loadSeeds();
+		
 		WindowManager.LayoutParams params = MainActivity.this.getWindow().getAttributes();
 		params.alpha = 0.6f;
 		MainActivity.this.getWindow().setAttributes(params);
@@ -614,7 +629,7 @@ public class MainActivity extends BaseActivity {
 				}
 			}
 		});
-
+		loadSeeds(1);
 	}
 
 	/**
@@ -732,7 +747,7 @@ public class MainActivity extends BaseActivity {
 		});
 	}
 
-	private void loadSeeds() {
+	private void loadSeeds(final int type) {
 		post = new HttpUtils();
 		params = new RequestParams();
 		String url = UrlUtils.postUrl + UrlUtils.path_storeroomList;
@@ -777,7 +792,13 @@ public class MainActivity extends BaseActivity {
 							datas.remove(i);
 						}
 					}
+					if (type == 1) {
+						adapter = new SeedAdapter();
+						adapter.setDatas(datas);
+						lvSeed.setAdapter(adapter);
 
+					}
+					
 					for (int j = 0; j < datas.size(); j++) {
 						itemCount.add(0);
 					}

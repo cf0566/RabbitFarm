@@ -1,4 +1,4 @@
-   package com.cpic.rabbitfarm.activity;
+package com.cpic.rabbitfarm.activity;
 
 import java.util.Map;
 
@@ -99,8 +99,7 @@ public class LoginActivity extends BaseActivity {
 	private static final int PRO = 1;
 	private static final int PADING = 2;
 	private Handler handler;
-	private ImageView ivRabbit,ivCarrot;
-	
+	private ImageView ivRabbit, ivCarrot;
 
 	/**
 	 * 网络请求
@@ -119,8 +118,7 @@ public class LoginActivity extends BaseActivity {
 	 * 三方分享登录
 	 */
 	private UMShareAPI mShareAPI = null;
-	
-	
+
 	@Override
 	protected void getIntentData(Bundle savedInstanceState) {
 		DisplayMetrics metrics = new DisplayMetrics();
@@ -132,30 +130,29 @@ public class LoginActivity extends BaseActivity {
 	@Override
 	protected void loadXml() {
 		setContentView(R.layout.activity_login);
-		 mShareAPI = UMShareAPI.get( this );
+		mShareAPI = UMShareAPI.get(this);
 	}
 
 	@Override
 	protected void initView() {
-		ll = (LinearLayout) findViewById(R.id.activity_login_layout);
 		btnMobile = (Button) findViewById(R.id.activity_login_btn_mobile);
 		btnQQ = (Button) findViewById(R.id.activity_login_btn_qq);
 		btnWX = (Button) findViewById(R.id.activity_login_btn_wx);
 		dialog = ProgressDialogHandle.getProgressDialog(LoginActivity.this, null);
 		sbar = (SeekBar) findViewById(R.id.activity_login_sbar_loading);
+		ll = (LinearLayout) findViewById(R.id.activity_login_layout);
 		relate = (RelativeLayout) findViewById(R.id.activity_login_relate);
 		ivRabbit = (ImageView) findViewById(R.id.activity_login_iv_rabbit);
-		ivCarrot = (ImageView) findViewById(R.id.activity_login_iv_carrot);		
+		ivCarrot = (ImageView) findViewById(R.id.activity_login_iv_carrot);
 	}
 
 	@Override
 	protected void initData() {
 
 	}
-
 	@Override
 	protected void registerListener() {
-		
+
 		btnMobile.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -165,25 +162,24 @@ public class LoginActivity extends BaseActivity {
 			}
 		});
 		btnQQ.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				SHARE_MEDIA platform = null;
-				 platform = SHARE_MEDIA.QQ;
-				 mShareAPI.doOauthVerify(LoginActivity.this, platform, umAuthListener);
+				platform = SHARE_MEDIA.QQ;
+				mShareAPI.doOauthVerify(LoginActivity.this, platform, umAuthListener);
 			}
 		});
 		btnWX.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				SHARE_MEDIA platform = null;
 				platform = SHARE_MEDIA.WEIXIN;
-				 mShareAPI.doOauthVerify(LoginActivity.this, platform, umAuthListener);
+				mShareAPI.doOauthVerify(LoginActivity.this, platform, umAuthListener);
+				ll.setVisibility(View.GONE);
 			}
 		});
-		
-		
 	}
 
 	private void showLoginPopupWindow() {
@@ -251,7 +247,6 @@ public class LoginActivity extends BaseActivity {
 			public void onClick(View v) {
 				if (etName.getText().toString() == null || etPwd.getText().toString() == null
 						|| "".equals(etName.getText().toString()) || "".equals(etPwd.getText().toString())) {
-
 					showShortToast("用户名和密码不得为空");
 					return;
 				}
@@ -478,9 +473,11 @@ public class LoginActivity extends BaseActivity {
 				editor.putString("identified_card", user.getData().getIdentified_card());
 				editor.putString("is_identified", user.getData().getIs_identified());
 				editor.putString("set_paycode", user.getData().getSet_paycode());
+				editor.putString("video_url", user.getData().getVideo_url());
 				editor.apply();
 				pwLogin.dismiss();
 				ll.setVisibility(View.GONE);
+				
 				loadingPagerAction();
 			}
 
@@ -637,7 +634,12 @@ public class LoginActivity extends BaseActivity {
 			}
 		});
 	}
-
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+	}
+	
 	/**
 	 * 加载页
 	 */
@@ -645,87 +647,154 @@ public class LoginActivity extends BaseActivity {
 		relate.setVisibility(View.VISIBLE);
 		ivCarrot.setVisibility(View.VISIBLE);
 		ivRabbit.setVisibility(View.VISIBLE);
-		handler = new Handler(){  
-             @Override  
-            public void handleMessage(Message msg) {  
-                super.handleMessage(msg);  
-                  
-                switch (msg.what) {  
-                case PRO:  
-                      if(current_progress>=MAX_PROGRESS){  
-                    	Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-              			startActivity(intent);
-              			finish();
-                      }else{  
-                          current_progress+=1;  
-                          current_padding+=2;
-                          sbar.incrementProgressBy(1);
-                          if (current_padding>170) {
-                  			ivRabbit.setPadding(DensityUtil.dip2px(LoginActivity.this, 170), 0, 0, 0);
-                  		}else{
-                  			ivRabbit.setPadding(DensityUtil.dip2px(LoginActivity.this, current_padding), 0, 0, 0);
-                  		}
-                        handler.sendEmptyMessageDelayed(PRO, 1);  
-                      }  
-                    break;  
-  
-                default:  
-                    break;  
-                }  
-            }  
-        };  
-		current_progress=current_progress>0?current_progress:0;  
-	    sbar.setProgress(current_progress);  
-	    ivRabbit.setPadding(DensityUtil.dip2px(LoginActivity.this, current_padding), 0, 0, 0);
-	    handler.sendEmptyMessage(PRO);
-	    
+		handler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				super.handleMessage(msg);
+
+				switch (msg.what) {
+				case PRO:
+					if (current_progress >= MAX_PROGRESS) {
+						Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+						startActivity(intent);
+						finish();
+					} else {
+						
+						current_progress += 1;
+						current_padding += 2;
+						sbar.incrementProgressBy(1);
+						if (current_padding > 170) {
+							ivRabbit.setPadding(DensityUtil.dip2px(LoginActivity.this, 170), 0, 0, 0);
+						} else {
+							ivRabbit.setPadding(DensityUtil.dip2px(LoginActivity.this, current_padding), 0, 0, 0);
+						}
+						handler.sendEmptyMessageDelayed(PRO, 1);
+					}
+					break;
+				default:
+					break;
+				}
+			}
+		};
+		current_progress = current_progress > 0 ? current_progress : 0;
+		sbar.setProgress(current_progress);
+		ivRabbit.setPadding(DensityUtil.dip2px(LoginActivity.this, current_padding), 0, 0, 0);
+		handler.sendEmptyMessage(PRO);
+
 	}
+
+	/** auth callback interface **/
+	private UMAuthListener umAuthListener = new UMAuthListener() {
+		@Override
+		public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
+			Toast.makeText(getApplicationContext(), "登陆成功"+platform.toString(), Toast.LENGTH_SHORT).show();
+			if (data.get("openid") != null && !"".equals(data.get("openid"))) {
+				if ("WEIXIN".equals(platform.toString())) {  
+					threeCenterLogin(data.get("openid"),1);
+				}else{
+					threeCenterLogin(data.get("openid"),2);
+				}
+			}
+		}
+		@Override
+		public void onError(SHARE_MEDIA platform, int action, Throwable t) {
+			Toast.makeText(getApplicationContext(), "登录失败", Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		public void onCancel(SHARE_MEDIA platform, int action) {
+			Toast.makeText(getApplicationContext(), "登录取消", Toast.LENGTH_SHORT).show();
+		}
+	};
 	
-	
-	 /** auth callback interface**/
-    private UMAuthListener umAuthListener = new UMAuthListener() {
-        @Override
-        public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
-            Toast.makeText(getApplicationContext(), "Authorize succeed", Toast.LENGTH_SHORT).show();
+	private void threeCenterLogin(String openid,int code) {
+		post = new HttpUtils();
+		params = new RequestParams();
+		params.addBodyParameter("open_id",openid );
+		params.addBodyParameter("type", code+"");
+		params.addBodyParameter("alias", "");
+		String url = UrlUtils.postUrl + UrlUtils.path_oauth;
+		post.send(HttpMethod.POST, url, params, new RequestCallBack<String>() {
 
-        }
+			private LoginUser user;
 
-        @Override
-        public void onError(SHARE_MEDIA platform, int action, Throwable t) {
-            Toast.makeText( getApplicationContext(), "Authorize fail", Toast.LENGTH_SHORT).show();
-        }
+			@Override
+			public void onStart() {
+				super.onStart();
+				if (dialog != null) {
+					dialog.show();
+				}
+			}
 
-        @Override
-        public void onCancel(SHARE_MEDIA platform, int action) {
-            Toast.makeText( getApplicationContext(), "Authorize cancel", Toast.LENGTH_SHORT).show();
-        }
-    };
-    
-    
-    /** delauth callback interface**/
-    private UMAuthListener umdelAuthListener = new UMAuthListener() {
-        @Override
-        public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
-            Toast.makeText(getApplicationContext(), "delete Authorize succeed", Toast.LENGTH_SHORT).show();
-        }
+			@Override
+			public void onFailure(HttpException arg0, String arg1) {
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+			}
 
-        @Override
-        public void onError(SHARE_MEDIA platform, int action, Throwable t) {
-            Toast.makeText( getApplicationContext(), "delete Authorize fail", Toast.LENGTH_SHORT).show();
-        }
+			@Override
+			public void onSuccess(ResponseInfo<String> arg0) {
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+				user = JSONObject.parseObject(arg0.result, LoginUser.class);
+				int code = user.getCode();
+				if (code == 1) {
+					getUserInfo();
+				} else {
+					showShortToast(user.getMsg());
+				}
+			}
 
-        @Override
-        public void onCancel(SHARE_MEDIA platform, int action) {
-            Toast.makeText( getApplicationContext(), "delete Authorize cancel", Toast.LENGTH_SHORT).show();
-        }
-    };
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d("oye", "on activity re 2");
-        mShareAPI.onActivityResult(requestCode, resultCode, data);
-        Log.d("oye", "on activity re 3");
-    }
-	
-	
+			private void getUserInfo() {
+				sharedPref = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+				Editor editor = sharedPref.edit();
+				editor.putString("token", user.getData().getToken());
+				editor.putString("user_img", user.getData().getUser_img());
+				editor.putString("farm_name", user.getData().getFarm_name());
+				editor.putString("user_name", user.getData().getUser_name());
+				editor.putString("level", user.getData().getLevel());
+				editor.putString("balance", user.getData().getBalance());
+				editor.putString("user_id", user.getData().getUser_id());
+				editor.putString("alias_name", user.getData().getAlias_name());
+				editor.putString("identified_card", user.getData().getIdentified_card());
+				editor.putString("is_identified", user.getData().getIs_identified());
+				editor.putString("set_paycode", user.getData().getSet_paycode());
+				editor.putString("video_url", user.getData().getVideo_url());
+				editor.apply();
+				ll.setVisibility(View.GONE);
+				loadingPagerAction();
+			}
+
+		});
+	}
+
+	/** delauth callback interface **/
+	private UMAuthListener umdelAuthListener = new UMAuthListener() {
+		@Override
+		public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
+			Toast.makeText(getApplicationContext(), "delete Authorize succeed", Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		public void onError(SHARE_MEDIA platform, int action, Throwable t) {
+			Toast.makeText(getApplicationContext(), "delete Authorize fail", Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		public void onCancel(SHARE_MEDIA platform, int action) {
+			Toast.makeText(getApplicationContext(), "delete Authorize cancel", Toast.LENGTH_SHORT).show();
+		}
+	};
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		Log.d("oye", "on activity re 2");
+		mShareAPI.onActivityResult(requestCode, resultCode, data);
+		Log.d("oye", "on activity re 3");
+
+	}
+
 }

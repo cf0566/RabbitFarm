@@ -9,6 +9,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.cpic.rabbitfarm.R;
 import com.cpic.rabbitfarm.activity.LoginActivity;
+import com.cpic.rabbitfarm.activity.MainActivity;
 import com.cpic.rabbitfarm.bean.LoginUser;
 import com.cpic.rabbitfarm.bean.OrderList;
 import com.cpic.rabbitfarm.bean.OrderListData;
@@ -22,6 +23,7 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
+import com.pingplusplus.android.Pingpp;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -110,11 +112,15 @@ public class MinePop {
 	private ArrayList<OrderListData> datas;
 	private RecordAdapter adapter;
 	
-
+	/**
+	 * 音乐播放器
+	 */
 	private MediaPlayer mp;
 	private HttpUtils post;
 	private RequestParams params;
 	private Dialog dialog;
+	
+	private static final String AlIPAY = "1";
 	
 
 	public MinePop(Activity activity, String token) {
@@ -200,14 +206,16 @@ public class MinePop {
 
 			@Override
 			public void onClick(View v) {
-				mp.start();
+				if (!mp.isPlaying()) {
+					mp.start();
+				}
 			}
 		});
 		ivOff.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				if (mp != null) {
+				if (mp.isPlaying()) {
 					mp.stop();
 				}
 			}
@@ -432,6 +440,57 @@ public class MinePop {
 				@Override
 				public void onClick(View v) {
 					delOrderList(datas.get(position).getOrder_id());
+				}
+			});
+			
+			holder.btnPay.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					post = new HttpUtils();
+					params =  new RequestParams();
+					dialog = ProgressDialogHandle.getProgressDialog(activity, null);
+					String url = UrlUtils.postUrl+UrlUtils.path_buyCurrency;
+					params.addBodyParameter("token", token);
+					params.addBodyParameter("amount", datas.get(position).getTotal());
+					params.addBodyParameter("pay_id", AlIPAY);
+					post.send(HttpMethod.POST, url, params, new RequestCallBack<String>() {
+
+						@Override
+						public void onStart() {
+							super.onStart();
+							if (dialog!=null) {
+								dialog.show();
+							}
+						}
+						@Override
+						public void onFailure(HttpException arg0, String arg1) {
+							if (dialog!=null) {
+								dialog.dismiss();
+							}
+							Toast.makeText(activity, "获取订单信息失败，请检查网络连接", 0).show();
+						}
+
+						@Override
+						public void onSuccess(ResponseInfo<String> arg0) {
+							
+							if (dialog!=null) {
+								dialog.dismiss();
+							}
+							JSONObject obj = JSONObject.parseObject(arg0.result);
+							int code = obj.getIntValue("code");
+							if (code == 1) {
+								Pingpp.createPayment(activity, obj.getString("data"));
+								sp = PreferenceManager.getDefaultSharedPreferences(activity);
+								Editor editor = sp.edit();
+								editor.putString("count_coin", datas.get(position).getTotal());
+								editor.putInt("is_mine",1);
+								editor.commit();
+							}else{
+								Toast.makeText(activity, "获取订单信息失败"+obj.getString("msg"), 0).show();
+							}
+						}
+					});
 				}
 			});
 			

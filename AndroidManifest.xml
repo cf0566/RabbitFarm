@@ -104,8 +104,9 @@
 
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="4eaee02c527015373b000003" >
+            android:value="570f475367e58e5933000b3f" >
         </meta-data>
+        <meta-data android:name="UMENG_CHANNEL" android:value="tuwo"> </meta-data>
     </application>
 
 </manifest>

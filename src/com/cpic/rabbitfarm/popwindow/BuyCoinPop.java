@@ -83,7 +83,7 @@ public class BuyCoinPop {
 	}
 
 	/**
-	 * 弹出活动主界面
+	 * 弹出活动主界面  
 	 */
 	public void showBuyCoinPop() {
 		View view = View.inflate(activity, R.layout.popwin_buy_rabbit_coin, null);
@@ -261,6 +261,7 @@ public class BuyCoinPop {
 							sp = PreferenceManager.getDefaultSharedPreferences(activity);
 							Editor editor = sp.edit();
 							editor.putString("count_coin", etCount.getText().toString());
+							editor.putInt("is_mine",0);
 							editor.commit();
 							pw.dismiss();
 						}else{

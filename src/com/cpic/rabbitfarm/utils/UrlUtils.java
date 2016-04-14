@@ -14,6 +14,8 @@ public class UrlUtils {
 	public static final String path_read="read";
 	//环信获取用户ID:
 	public static final String path_getEaseInfo="getEaseInfo";
+	//三方登录
+	public static final String path_oauth="oauth";
 	//注册接口:
 	public static final String path_register="register";
 	//登录接口:
