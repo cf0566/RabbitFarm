@@ -89,7 +89,6 @@ public class BuyCoinPop {
 		View view = View.inflate(activity, R.layout.popwin_buy_rabbit_coin, null);
 		pw = new PopupWindow(view, screenWidth, LayoutParams.WRAP_CONTENT);
 		pw.setFocusable(true);
-
 		ivDel = (ImageView) view.findViewById(R.id.popwin_buy_rabbit_coin_ivdel);
 		ivAdd = (ImageView) view.findViewById(R.id.popwin_buy_rabbit_coin_ivadd);
 		etCount = (EditText) view.findViewById(R.id.popwin_buy_rabbit_coin_et_num);

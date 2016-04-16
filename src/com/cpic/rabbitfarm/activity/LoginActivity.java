@@ -98,6 +98,8 @@ public class LoginActivity extends BaseActivity {
 	private int current_padding = 10;
 	private static final int PRO = 1;
 	private static final int PADING = 2;
+	private static final int SET_VISIBLE = 3;
+	
 	private Handler handler;
 	private ImageView ivRabbit, ivCarrot;
 
@@ -177,7 +179,6 @@ public class LoginActivity extends BaseActivity {
 				SHARE_MEDIA platform = null;
 				platform = SHARE_MEDIA.WEIXIN;
 				mShareAPI.doOauthVerify(LoginActivity.this, platform, umAuthListener);
-				ll.setVisibility(View.GONE);
 			}
 		});
 	}
@@ -477,10 +478,8 @@ public class LoginActivity extends BaseActivity {
 				editor.apply();
 				pwLogin.dismiss();
 				ll.setVisibility(View.GONE);
-				
 				loadingPagerAction();
 			}
-
 		});
 	}
 
@@ -635,11 +634,6 @@ public class LoginActivity extends BaseActivity {
 		});
 	}
 	
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-	
 	/**
 	 * 加载页
 	 */
@@ -659,7 +653,6 @@ public class LoginActivity extends BaseActivity {
 						startActivity(intent);
 						finish();
 					} else {
-						
 						current_progress += 1;
 						current_padding += 2;
 						sbar.incrementProgressBy(1);
@@ -680,7 +673,6 @@ public class LoginActivity extends BaseActivity {
 		sbar.setProgress(current_progress);
 		ivRabbit.setPadding(DensityUtil.dip2px(LoginActivity.this, current_padding), 0, 0, 0);
 		handler.sendEmptyMessage(PRO);
-
 	}
 
 	/** auth callback interface **/
@@ -769,6 +761,10 @@ public class LoginActivity extends BaseActivity {
 
 		});
 	}
+	
+	
+	
+	
 
 	/** delauth callback interface **/
 	private UMAuthListener umdelAuthListener = new UMAuthListener() {

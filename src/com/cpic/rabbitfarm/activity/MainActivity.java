@@ -1,6 +1,7 @@
 package com.cpic.rabbitfarm.activity;
 
 import java.io.File;
+import java.text.BreakIterator;
 import java.util.ArrayList;
 
 import com.alibaba.fastjson.JSONObject;
@@ -19,6 +20,7 @@ import com.cpic.rabbitfarm.popwindow.ChuChongPopwindow;
 import com.cpic.rabbitfarm.popwindow.MessageMainPop;
 import com.cpic.rabbitfarm.popwindow.MinePop;
 import com.cpic.rabbitfarm.popwindow.ShiFeiPopwindow;
+import com.cpic.rabbitfarm.utils.DensityUtil;
 import com.cpic.rabbitfarm.utils.GlideRoundTransform;
 import com.cpic.rabbitfarm.utils.MySeekBar;
 import com.cpic.rabbitfarm.utils.RoundImageView;
@@ -46,11 +48,14 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -65,6 +70,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends BaseActivity {
 
@@ -84,7 +90,6 @@ public class MainActivity extends BaseActivity {
 	 */
 	private ImageView ivBozhong, ivChuchong, ivShifei, ivChucang;
 	private PopupWindow pwBozhong, pwChuchong, pwShifei, pwChucang;
-
 	/**
 	 * 个人中心
 	 */
@@ -94,7 +99,7 @@ public class MainActivity extends BaseActivity {
 	 * 购买兔币
 	 */
 	private PopupWindow pwBuyCoin;
-	
+
 	/**
 	 * 监控消息商城
 	 */
@@ -104,13 +109,14 @@ public class MainActivity extends BaseActivity {
 
 	private ArrayList<LandListInfo> landDatas;
 
-	
 	/**
 	 * 好友背景
 	 */
 	private LinearLayout llFriend;
-	
-	
+	private final static int OPEN = 0;
+	private final static int CLOSE = 1;
+	private int current_padding = 106;
+	private boolean isClose = true;
 	/**
 	 * 播种控件
 	 */
@@ -136,9 +142,32 @@ public class MainActivity extends BaseActivity {
 	private ImageView ivTis;
 	private int messageUnread = 0;
 	private int activityUnread = 0;
-	
-	private boolean isfirst = true;
-	
+
+	Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+
+			switch (msg.what) {
+			case OPEN:
+				if (current_padding > 0) {
+					current_padding -= 2;
+					llFriend.setTranslationX(DensityUtil.dip2px(MainActivity.this, current_padding));
+					handler.sendEmptyMessageDelayed(OPEN, 10);
+				}
+			break;
+			case CLOSE:
+				if (current_padding < 106) {
+					current_padding += 2;
+					llFriend.setTranslationX(DensityUtil.dip2px(MainActivity.this, current_padding));
+					handler.sendEmptyMessageDelayed(CLOSE, 10);
+				}
+			break;
+			default:
+			break;	
+			}
+		}
+	};
 
 	@Override
 	protected void getIntentData(Bundle savedInstanceState) {
@@ -169,7 +198,7 @@ public class MainActivity extends BaseActivity {
 		ivMarket = (ImageView) findViewById(R.id.activity_main_iv_shop);
 		ivTis = (ImageView) findViewById(R.id.activity_main_message_iv_tis);
 		llFriend = (LinearLayout) findViewById(R.id.activity_main_ll_friends);
-		
+
 		dialog = ProgressDialogHandle.getProgressDialog(MainActivity.this, null);
 	}
 
@@ -208,7 +237,7 @@ public class MainActivity extends BaseActivity {
 		String farm_name = sp.getString("farm_name", "");
 		String user_name = sp.getString("alias_name", "");
 		String level = sp.getString("level", "");
-		String balance = sp.getString("balance", "");
+		String balance = sp.getString("balance", "0");
 		tvName.setText(user_name);
 		if ("".equals(level)) {
 			level = "0";
@@ -230,12 +259,10 @@ public class MainActivity extends BaseActivity {
 				if (datas.size() == 0) {
 					showNoSeedsPop();
 				} else {
-
 					showHaveseedPopup();
 				}
 			}
 		});
-
 		ivChuchong.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -258,7 +285,6 @@ public class MainActivity extends BaseActivity {
 				pop.showGiveFeiPop();
 			}
 		});
-
 		/**
 		 * 摄像头点击事件
 		 */
@@ -294,32 +320,38 @@ public class MainActivity extends BaseActivity {
 
 			}
 		});
-		
+
 		/**
 		 * 金币点击购买金币
 		 */
 		tvMoney.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				BuyCoinPop pop = new BuyCoinPop(pwBuyCoin, screenWidth, screenHight, MainActivity.this, token,false,0);
+				BuyCoinPop pop = new BuyCoinPop(pwBuyCoin, screenWidth, screenHight, MainActivity.this, token, false,
+						0);
 				pop.showBuyCoinPop();
 			}
 		});
-		
 		/**
 		 * 好友背景框点击事件
 		 */
 		llFriend.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				
-				
+				if (isClose) {
+					current_padding = 106;
+					handler.sendEmptyMessage(OPEN);
+					isClose = false;
+				}else {
+					current_padding = 0;
+					handler.sendEmptyMessage(CLOSE);
+					isClose = true;
+				}
 			}
 		});
 	}
-
 	@Override
 	public void onBackPressed() {
 		// 获取本次点击的时间
@@ -339,7 +371,6 @@ public class MainActivity extends BaseActivity {
 		String url = UrlUtils.postUrl + UrlUtils.path_getMessageCount;
 		params.addBodyParameter("token", token);
 		post.send(HttpMethod.POST, url, params, new RequestCallBack<String>() {
-
 			@Override
 			public void onFailure(HttpException arg0, String arg1) {
 				showShortToast("获取未读消息失败，请检查网络连接");
@@ -367,7 +398,6 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 	}
-
 	/**
 	 * 获取土地的状态
 	 */
@@ -377,7 +407,7 @@ public class MainActivity extends BaseActivity {
 		String url = UrlUtils.postUrl + UrlUtils.path_landList;
 		params.addBodyParameter("token", token);
 		post.send(HttpMethod.POST, url, params, new RequestCallBack<String>() {
-
+			
 			@Override
 			public void onStart() {
 				super.onStart();
@@ -424,13 +454,12 @@ public class MainActivity extends BaseActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
 		if (requestCode == 0) {
-			String path = Environment.getExternalStorageDirectory().getAbsolutePath()+ "/userIcon.jpg";
+			String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/userIcon.jpg";
 			if (!new File(path).getPath().isEmpty()) {
 				MinePop pop = new MinePop(pwMine, screenWidth, screenHight, MainActivity.this, token);
 				pop.showMineMainPop();
-				pop.loadIcon(path,ivUser);
+				pop.loadIcon(path, ivUser);
 			}
-			
 			// upLoadUserIcon(new File(Environment.getExternalStorageDirectory()
 			// .getAbsolutePath() + "/usericon.PNG"));
 		} else if (requestCode == 1) {
@@ -449,7 +478,7 @@ public class MainActivity extends BaseActivity {
 					// 这里开始的第二部分，获取图片的路径：
 					String[] proj = { MediaStore.Images.Media.DATA };
 					// 好像是android多媒体数据库的封装接口，具体的看Android文档
-					Cursor cursor =  MainActivity.this.managedQuery(uri,proj, null, null, null);
+					Cursor cursor = MainActivity.this.managedQuery(uri, proj, null, null, null);
 					// 按我个人理解 这个是获得用户选择的图片的索引值
 					int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 					// 将光标移至开头 ，这个很重要，不小心很容易引起越界
@@ -460,47 +489,47 @@ public class MainActivity extends BaseActivity {
 					// 上传头像
 					// upLoadUserIcon(new File(path));
 					pop.showMineMainPop();
-					pop.loadIcon(path,ivUser);
-					
+					pop.loadIcon(path, ivUser);
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		 if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
-	            if (resultCode == Activity.RESULT_OK) {
-	                String result = data.getExtras().getString("pay_result");
-	                /* 处理返回值
-	                 * "success" - payment succeed
-	                 * "fail"    - payment failed
-	                 * "cancel"  - user canceld
-	                 * "invalid" - payment plugin not installed
-	                 */
-	                String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
-	                String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
-	                if ("success".equals(result)) {
-						showShortToast("支付成功");
-						sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-						String count = sp.getString("count_coin", "");
-						int is_mine = sp.getInt("is_mine", 0);
-						int amount = Integer.parseInt(count)+Integer.parseInt(tvMoney.getText().toString());
-						tvMoney.setText(amount+"");
-						if (is_mine == 1) {
-							MinePop pop = new MinePop(pwMine, screenWidth, screenHight, MainActivity.this, token);
-							pop.showRecordList();
-						}else{
-							BuyCoinPop pop = new BuyCoinPop(pwBuyCoin, screenWidth, screenHight, MainActivity.this, count, true, amount);
-							pop.showBuyCoinPop();
-						}
-					}else if ("fail".equals(result)) {
-						showShortToast("支付失败");
-					}else if ("cancel".equals(result)) {
-						showShortToast("支付取消");
-					}else if ("invalid".equals(result)) {
-						showShortToast("支付插件未安装");
+		if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
+			if (resultCode == Activity.RESULT_OK) {
+				String result = data.getExtras().getString("pay_result");
+				/*
+				 * 处理返回值 "success" - payment succeed "fail" - payment failed
+				 * "cancel" - user canceld "invalid" - payment plugin not
+				 * installed
+				 */
+				String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
+				String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
+				if ("success".equals(result)) {
+					showShortToast("支付成功");
+					sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+					String count = sp.getString("count_coin", "");
+					int is_mine = sp.getInt("is_mine", 0);
+					int amount = Integer.parseInt(count) + Integer.parseInt(tvMoney.getText().toString());
+					tvMoney.setText(amount + "");
+					if (is_mine == 1) {
+						MinePop pop = new MinePop(pwMine, screenWidth, screenHight, MainActivity.this, token);
+						pop.showRecordList();
+					} else {
+						BuyCoinPop pop = new BuyCoinPop(pwBuyCoin, screenWidth, screenHight, MainActivity.this, count,
+								true, amount);
+						pop.showBuyCoinPop();
 					}
-	            }
-	        }
+				} else if ("fail".equals(result)) {
+					showShortToast("支付失败");
+				} else if ("cancel".equals(result)) {
+					showShortToast("支付取消");
+				} else if ("invalid".equals(result)) {
+					showShortToast("支付插件未安装");
+				}
+			}
+		}
 	}
 
 	public Bitmap big(Bitmap b, float x, float y) {
@@ -514,19 +543,6 @@ public class MainActivity extends BaseActivity {
 		return resizeBmp;
 	}
 
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	/*********************************************************************************************
 	 * 以下是播种弹出框，由于第一次做功能性弹出框，将第一类弹出框写在了主界面里进行测试，之后的功能模块封装成类放在popwin文件夹下
 	 */
@@ -577,7 +593,7 @@ public class MainActivity extends BaseActivity {
 		lvSeed = (ListView) view.findViewById(R.id.popwin_bozhong_lv);
 		btnEnsure = (Button) view.findViewById(R.id.popwin_bozhong_btn_ensure);
 		ivClose = (ImageView) view.findViewById(R.id.popwin_bozhong_iv_close);
-		
+
 		WindowManager.LayoutParams params = MainActivity.this.getWindow().getAttributes();
 		params.alpha = 0.6f;
 		MainActivity.this.getWindow().setAttributes(params);
@@ -798,7 +814,7 @@ public class MainActivity extends BaseActivity {
 						lvSeed.setAdapter(adapter);
 
 					}
-					
+
 					for (int j = 0; j < datas.size(); j++) {
 						itemCount.add(0);
 					}
