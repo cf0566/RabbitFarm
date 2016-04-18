@@ -111,6 +111,7 @@ public class MinePop {
 	private ListView lv;
 	private ArrayList<OrderListData> datas;
 	private RecordAdapter adapter;
+	private ImageView ivNo;
 	
 	/**
 	 * 音乐播放器
@@ -303,7 +304,7 @@ public class MinePop {
 		pw.setFocusable(true);
 		lv = (ListView) view.findViewById(R.id.popwin_user_info_record_lv);
 		ivClose = (ImageView) view.findViewById(R.id.popwin_user_info_record_iv_close);
-		
+		ivNo =  (ImageView) view.findViewById(R.id.popwin_user_info_record_iv);
 		WindowManager.LayoutParams params = activity.getWindow().getAttributes();
 		params.alpha = 0.6f;
 		activity.getWindow().setAttributes(params);
@@ -367,9 +368,16 @@ public class MinePop {
 				int code = list.getCode();
 				if (code == 1) {
 					datas = list.getData();
-					adapter = new RecordAdapter();
-					adapter.setDatas(datas);
-					lv.setAdapter(adapter);
+					if (datas.size() != 0) {
+						lv.setVisibility(View.VISIBLE);
+						adapter = new RecordAdapter();
+						adapter.setDatas(datas);
+						lv.setAdapter(adapter);
+						ivNo.setVisibility(View.GONE);
+					}else{
+						ivNo.setVisibility(View.VISIBLE);
+						lv.setVisibility(View.GONE);
+					}
 				}else{
 					Toast.makeText(activity, "获取数据失败"+list.getMsg(), 0).show();
 				}

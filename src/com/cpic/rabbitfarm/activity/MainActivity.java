@@ -17,9 +17,11 @@ import com.cpic.rabbitfarm.fonts.CatTextView;
 import com.cpic.rabbitfarm.popwindow.BuyCoinPop;
 import com.cpic.rabbitfarm.popwindow.CameraPop;
 import com.cpic.rabbitfarm.popwindow.ChuChongPopwindow;
+import com.cpic.rabbitfarm.popwindow.MarketPop;
 import com.cpic.rabbitfarm.popwindow.MessageMainPop;
 import com.cpic.rabbitfarm.popwindow.MinePop;
 import com.cpic.rabbitfarm.popwindow.ShiFeiPopwindow;
+import com.cpic.rabbitfarm.popwindow.StoreRoomPop;
 import com.cpic.rabbitfarm.utils.DensityUtil;
 import com.cpic.rabbitfarm.utils.GlideRoundTransform;
 import com.cpic.rabbitfarm.utils.MySeekBar;
@@ -99,6 +101,7 @@ public class MainActivity extends BaseActivity {
 	 * 购买兔币
 	 */
 	private PopupWindow pwBuyCoin;
+	
 
 	/**
 	 * 监控消息商城
@@ -351,6 +354,31 @@ public class MainActivity extends BaseActivity {
 				}
 			}
 		});
+		/**
+		 *储藏室
+		 */
+		ivChucang.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				StoreRoomPop pop = new StoreRoomPop(pwChucang, screenWidth, screenHight, MainActivity.this, token);
+				pop.showStoreMainPop();
+			}
+		});
+		
+		/**
+		 * 商城
+		 */
+		ivMarket.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				MarketPop pop = new MarketPop(pwMarket, screenWidth, screenHight, MainActivity.this, token);
+				pop.showMarketMainPop();
+			}
+		});
+		
+		
 	}
 	@Override
 	public void onBackPressed() {
@@ -812,7 +840,6 @@ public class MainActivity extends BaseActivity {
 						adapter = new SeedAdapter();
 						adapter.setDatas(datas);
 						lvSeed.setAdapter(adapter);
-
 					}
 
 					for (int j = 0; j < datas.size(); j++) {

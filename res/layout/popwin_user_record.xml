@@ -24,7 +24,19 @@
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginBottom="20dp"
+            
             ></ListView>
+        <ImageView 
+              android:id="@+id/popwin_user_info_record_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/c_mychongzhijil"
+            android:layout_gravity="center"
+            android:layout_marginTop="110dp"
+            android:visibility="gone"
+            />
+        
+        
     </LinearLayout>
 
     <ImageView

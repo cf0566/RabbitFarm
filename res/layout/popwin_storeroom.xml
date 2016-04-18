@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center" >
+
+    <LinearLayout
+        android:id="@+id/popwin_storeroom_iv_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/c_bg"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical" >
+
+        <RadioGroup
+            android:id="@+id/popwin_storeroom_rg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="50dp"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/popwin_storeroom_rb_buy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:button="@drawable/storeroom_buy"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/popwin_storeroom_rb_zhuanjia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:button="@drawable/storeroom_zhuanjia" />
+        </RadioGroup>
+
+        <LinearLayout 
+            android:layout_width="390dp"
+            android:layout_height="215dp"
+             android:background="@drawable/gr_tmbj"
+             android:gravity="center"
+             android:layout_gravity="center"
+            >
+        <GridView
+            android:id="@+id/popwin_storeroom_gv"
+            android:layout_width="390dp"
+            android:layout_height="215dp"
+            android:numColumns="4" 
+            android:layout_marginTop="3dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:listSelector="#00000000"
+            >
+        </GridView>
+        <ImageView 
+            android:id="@+id/popwin_storeroom_iv_nobuy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/c_myshangp"
+            android:visibility="gone"
+            />
+
+        <ImageView
+                android:id="@+id/popwin_storeroom_iv_nozhuanjia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 android:visibility="gone"
+                android:src="@drawable/c_myzhuangjia" />
+        </LinearLayout>
+    </LinearLayout>
+    
+    
+    <ImageView
+        android:id="@+id/popwin_storeroom_iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/popwin_storeroom_iv_bg"
+        android:layout_marginLeft="150dp"
+        android:layout_toRightOf="@+id/popwin_storeroom_iv_title"
+        android:src="@drawable/close" />
+
+    <ImageView
+        android:id="@+id/popwin_storeroom_iv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/popwin_storeroom_iv_bg"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/c_cas" />
+
+</RelativeLayout>
