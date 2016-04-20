@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center" >
+
+    <LinearLayout
+        android:id="@+id/popwin_market_setpwd_iv_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/dingdanbg"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="360dp"
+            android:layout_height="160dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="45dp"
+            android:background="@drawable/gr_tmbj"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:text="请输入您的支付密码"
+                android:textColor="#774C17"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/popwin_market_setpwd_et_pwd"
+                style="@style/userinfo_safe_edit_style"
+                android:password="true"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_gravity="center"
+                />
+        </LinearLayout>
+        
+        <LinearLayout 
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            >
+            <Button 
+                android:id="@+id/popwin_market_setpwd_btn_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/pay_btn_pay"
+                />
+            
+            
+            
+        </LinearLayout>
+        
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/popwin_market_setpwd_iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/popwin_market_setpwd_iv_bg"
+        android:layout_marginLeft="110dp"
+        android:layout_toRightOf="@+id/popwin_market_setpwd_iv_title"
+        android:src="@drawable/close" />
+
+    <ImageView
+        android:id="@+id/popwin_market_setpwd_iv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/popwin_market_setpwd_iv_bg"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:paddingLeft="15dp"
+        android:src="@drawable/gm_qrzf1" />
+
+</RelativeLayout>

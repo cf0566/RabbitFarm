@@ -656,8 +656,8 @@ public class LoginActivity extends BaseActivity {
 						current_progress += 1;
 						current_padding += 2;
 						sbar.incrementProgressBy(1);
-						if (current_padding > 170) {
-							ivRabbit.setPadding(DensityUtil.dip2px(LoginActivity.this, 170), 0, 0, 0);
+						if (current_padding > 210) {
+							ivRabbit.setPadding(DensityUtil.dip2px(LoginActivity.this, 210), 0, 0, 0);
 						} else {
 							ivRabbit.setPadding(DensityUtil.dip2px(LoginActivity.this, current_padding), 0, 0, 0);
 						}

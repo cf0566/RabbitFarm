@@ -51,6 +51,8 @@ public class ChuChongPopwindow {
 	private TextView tvCount;
 	private Button btnEnsure;
 	
+	private ImageView ivNoBan;
+	
 	/**
 	 * 土地选择控件
 	 */
@@ -449,7 +451,6 @@ public class ChuChongPopwindow {
 			}
 		});
 	}
-	
 	/**
 	 * 弹出没有除虫版
 	 */
@@ -458,6 +459,7 @@ public class ChuChongPopwindow {
 		pw = new PopupWindow(view, screenWidth, LayoutParams.WRAP_CONTENT);
 		pw.setFocusable(true);
 		ivClose = (ImageView) view.findViewById(R.id.popwin_noban_iv_close);
+		ivNoBan = (ImageView) view.findViewById(R.id.popwin_noban_iv_noban);
 		WindowManager.LayoutParams params =	activity.getWindow().getAttributes();
 		params.alpha = 0.6f;
 		activity.getWindow().setAttributes(params);
@@ -478,6 +480,15 @@ public class ChuChongPopwindow {
 			@Override
 			public void onClick(View v) {
 				pw.dismiss();
+			}
+		});
+		ivNoBan.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				pw.dismiss();
+				MarketPop pop = new MarketPop(pw, screenWidth, 0, activity, token);
+				pop.showMarketMainPop();
 			}
 		});
 	}

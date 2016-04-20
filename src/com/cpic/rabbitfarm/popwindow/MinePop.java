@@ -927,6 +927,8 @@ public class MinePop {
 						Editor editor = sp.edit();
 						editor.putString("alias_name", tvName.getText().toString());
 						editor.commit();
+						MainActivity a = (MainActivity) activity;
+						a.setUserName(tvName.getText().toString());
 					}
 					if (tvName != null && !"".equals(tvFarm.getText().toString())) {
 						sp = PreferenceManager.getDefaultSharedPreferences(activity);

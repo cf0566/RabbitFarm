@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center" >
+
+    <LinearLayout
+        android:id="@+id/popwin_market_ensure_iv_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/dingdanbg"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="360dp"
+            android:layout_height="140dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="45dp"
+            android:background="@drawable/x_bg2"
+            android:orientation="vertical" >
+
+            <GridView
+                android:id="@+id/popwin_market_ensure_gv"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:listSelector="#00000000"
+                android:numColumns="4" >
+            </GridView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp" >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    style="@style/market_tv_style"
+                    android:text="共" />
+
+                <TextView
+                    android:id="@+id/popwin_market_ensure_tv_shanping"
+                    style="@style/market_tv_style"
+                    android:text="10" />
+
+                <TextView
+                    style="@style/market_tv_style"
+                    android:text="件商品" />
+
+                <TextView
+                    style="@style/market_tv_style"
+                    android:layout_marginLeft="5dp"
+                    android:text="合计" />
+
+                <TextView
+                    android:id="@+id/popwin_market_ensure_tv_money"
+                    style="@style/market_tv_style"
+                    android:text="10"
+                    android:textColor="#981213" />
+
+                <TextView
+                    style="@style/market_tv_style"
+                    android:text="兔币" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/popwin_market_ll_unpay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+           
+             >
+
+            <TextView
+                android:id="@+id/popwin_market_ensure_tv_tis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:text="您当前拥有兔币数为888个，支付成功以后还有800个!"
+                android:textColor="#FE0000"
+                android:textSize="13sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical|right"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/popwin_market_ensure_btn_math"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/pay_btn_math" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/popwin_market_ll_less"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+             android:visibility="gone"
+             >
+
+            <TextView
+                android:id="@+id/popwin_market_ensure_tv_less_tis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:text="您当前的账户余额不足，请充值!"
+                android:textColor="#FE0000"
+                android:textSize="13sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical|right"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/popwin_market_ensure_btn_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/pay_btn_chongzhi" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/popwin_market_ll_pay_success"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:gravity="center_vertical"
+            android:orientation="vertical" >
+
+            <com.cpic.rabbitfarm.fonts.CarttonTextView
+                android:id="@+id/popwin_market_ensure_tv_pay_success"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="您已成功支付88兔币"
+                android:textColor="#8B4D00"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <com.cpic.rabbitfarm.fonts.CarttonTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="快去前往"
+                    android:textColor="#8B4D00"
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/g_quccs" />
+
+                <com.cpic.rabbitfarm.fonts.CarttonTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="查看商品吧！"
+                    android:textColor="#8B4D00"
+                    android:textSize="15sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/popwin_market_ensure_iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/popwin_market_ensure_iv_bg"
+        android:layout_marginLeft="110dp"
+        android:layout_toRightOf="@+id/popwin_market_ensure_iv_title"
+        android:src="@drawable/close" />
+
+    <ImageView
+        android:id="@+id/popwin_market_ensure_iv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/popwin_market_ensure_iv_bg"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:paddingLeft="15dp"
+        android:src="@drawable/gm_querendd" />
+
+</RelativeLayout>

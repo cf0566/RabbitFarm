@@ -83,7 +83,7 @@ public class BuyCoinPop {
 	}
 
 	/**
-	 * 弹出活动主界面  
+	 * 弹出购买金币界面  
 	 */
 	public void showBuyCoinPop() {
 		View view = View.inflate(activity, R.layout.popwin_buy_rabbit_coin, null);

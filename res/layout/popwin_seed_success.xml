@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/b_bgsmall"
         android:layout_centerInParent="true"
-        android:padding="10dp"
+        android:padding="8dp"
         />
     
     
@@ -25,7 +25,7 @@
     
     <ImageView 
          android:id="@+id/popwin_seed_success_iv_buy"
-        android:layout_width="wrap_content"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:src="@drawable/b_qdbz"
         android:layout_centerInParent="true"

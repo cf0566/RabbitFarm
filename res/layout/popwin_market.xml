@@ -43,16 +43,29 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 />
+            
+             <com.cpic.rabbitfarm.fonts.FishTextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="合计:"
+                android:textSize="15sp"
+                android:shadowColor="#3A230A"
+                android:textColor="#ffffff"
+                android:shadowDx="4"
+                android:shadowDy="4"
+                android:shadowRadius="4"
+                />
+            
             <com.cpic.rabbitfarm.fonts.FishTextView 
                 android:id="@+id/popwin_market_tv_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="合计:0"
+                android:text="0"
                 android:textSize="15sp"
                 android:shadowColor="#3A230A"
                 android:textColor="#ffffff"
-                android:shadowDx="1"
-                android:shadowDy="2"
+                android:shadowDx="4"
+                android:shadowDy="4"
                 android:shadowRadius="4"
                 />
             <Button 

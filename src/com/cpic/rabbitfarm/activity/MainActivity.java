@@ -1,7 +1,8 @@
 package com.cpic.rabbitfarm.activity;
 
 import java.io.File;
-import java.text.BreakIterator;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import com.alibaba.fastjson.JSONObject;
@@ -21,6 +22,7 @@ import com.cpic.rabbitfarm.popwindow.MarketPop;
 import com.cpic.rabbitfarm.popwindow.MessageMainPop;
 import com.cpic.rabbitfarm.popwindow.MinePop;
 import com.cpic.rabbitfarm.popwindow.ShiFeiPopwindow;
+import com.cpic.rabbitfarm.popwindow.ShoppingPop;
 import com.cpic.rabbitfarm.popwindow.StoreRoomPop;
 import com.cpic.rabbitfarm.utils.DensityUtil;
 import com.cpic.rabbitfarm.utils.GlideRoundTransform;
@@ -44,6 +46,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
@@ -54,10 +57,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -72,7 +72,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
-import android.widget.Toast;
+import uk.co.senab.photoview.PhotoView;
 
 public class MainActivity extends BaseActivity {
 
@@ -83,6 +83,7 @@ public class MainActivity extends BaseActivity {
 	private TextView tvLevel, tvName;
 	private SharedPreferences sp;
 
+	private PhotoView pv;
 	/**
 	 * 背景音乐播放
 	 */
@@ -106,8 +107,8 @@ public class MainActivity extends BaseActivity {
 	/**
 	 * 监控消息商城
 	 */
-	private ImageView ivCamera, ivMessage, ivMarket;
-	private PopupWindow pwCamera, pwMessage, pwMarket;
+	private ImageView ivCamera, ivMessage, ivMarket,ivShop;
+	private PopupWindow pwCamera, pwMessage, pwMarket,pwShop;
 	private int screenWidth, screenHight;
 
 	private ArrayList<LandListInfo> landDatas;
@@ -199,9 +200,12 @@ public class MainActivity extends BaseActivity {
 		ivCamera = (ImageView) findViewById(R.id.activity_main_iv_video);
 		ivMessage = (ImageView) findViewById(R.id.activity_main_iv_message);
 		ivMarket = (ImageView) findViewById(R.id.activity_main_iv_shop);
+		ivShop = (ImageView) findViewById(R.id.activity_main_iv_buy);
 		ivTis = (ImageView) findViewById(R.id.activity_main_message_iv_tis);
 		llFriend = (LinearLayout) findViewById(R.id.activity_main_ll_friends);
 
+		pv = (PhotoView) findViewById(R.id.pv);
+		localImage();
 		dialog = ProgressDialogHandle.getProgressDialog(MainActivity.this, null);
 	}
 
@@ -228,10 +232,23 @@ public class MainActivity extends BaseActivity {
 		 * 加载个人信息
 		 */
 		loadDatas();
+		
 		/**
 		 * 获取Message的未读消息
 		 */
 		loadUnreadMsg();
+	}
+	
+	
+	private void localImage() {
+		try {
+			InputStream is = getAssets().open("rrrrr.png");
+			Bitmap bm = BitmapFactory.decodeStream(is);
+			pv.setImageBitmap(bm);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	private void loadDatas() {
@@ -250,9 +267,11 @@ public class MainActivity extends BaseActivity {
 		sbLevel.setProgress((int) Double.parseDouble(level));
 		Glide.with(MainActivity.this).load(user_img).transform(new GlideRoundTransform(MainActivity.this, 80))
 				.fitCenter().into(ivUser);
-
 	}
-
+	
+	public void setUserName(String name){
+		tvName.setText(name);
+	}
 	@Override
 	protected void registerListener() {
 		ivBozhong.setOnClickListener(new OnClickListener() {
@@ -375,6 +394,19 @@ public class MainActivity extends BaseActivity {
 			public void onClick(View v) {
 				MarketPop pop = new MarketPop(pwMarket, screenWidth, screenHight, MainActivity.this, token);
 				pop.showMarketMainPop();
+			}
+		});
+		
+		/**
+		 * 我的购买
+		 */
+		ivShop.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ShoppingPop pop = new ShoppingPop(pwShop, screenWidth, screenHight, MainActivity.this, token);
+				pop.showShoppingMainPop();
+				
 			}
 		});
 		
@@ -570,6 +602,17 @@ public class MainActivity extends BaseActivity {
 		Bitmap resizeBmp = Bitmap.createBitmap(b, 0, 0, w, h, matrix, true);
 		return resizeBmp;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	/*********************************************************************************************
 	 * 以下是播种弹出框，由于第一次做功能性弹出框，将第一类弹出框写在了主界面里进行测试，之后的功能模块封装成类放在popwin文件夹下
@@ -601,12 +644,22 @@ public class MainActivity extends BaseActivity {
 				getWindow().setAttributes(params);
 			}
 		});
-
+		
 		ivClose.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				pwBozhong.dismiss();
+			}
+		});
+		
+		ivBuy.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				pwBozhong.dismiss();
+				MarketPop pop = new MarketPop(pwMarket, screenWidth, screenHight, MainActivity.this, token);
+				pop.showMarketMainPop();
 			}
 		});
 	}
@@ -629,7 +682,10 @@ public class MainActivity extends BaseActivity {
 		pwChooseSeed.setOutsideTouchable(false);
 		pwChooseSeed.showAtLocation(view, Gravity.CENTER, 0, 0);
 		pwChooseSeed.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-
+		/**
+		 * 获取土地状态
+		 */
+		loadLandList();
 		pwChooseSeed.setOnDismissListener(new OnDismissListener() {
 			@Override
 			public void onDismiss() {
@@ -665,7 +721,14 @@ public class MainActivity extends BaseActivity {
 				if (count == 0) {
 					showFaluirePop();
 				} else {
-					if (6 - landDatas.size() < count) {
+					int landCount = 0;
+					for (int i = 0; i < landDatas.size(); i++) {
+						if (null != landDatas.get(i).getGoods_name()) {
+							landCount++;
+						}
+					}
+					
+					if (6 - landCount < count) {
 						showFaluirePop();
 					} else {
 						plantSeeds(goodsId, landsId);
@@ -896,7 +959,6 @@ public class MainActivity extends BaseActivity {
 			holder.tvSeeds.setText(datas.get(position).getGoods_name() + ":");
 			holder.tvCount.setText(itemCount.get(position) + "");
 			holder.ivAdd.setOnClickListener(new OnClickListener() {
-
 				@Override
 				public void onClick(View v) {
 					int count = Integer.parseInt(holder.tvCount.getText().toString());
@@ -915,7 +977,7 @@ public class MainActivity extends BaseActivity {
 				@Override
 				public void onClick(View v) {
 					int count = Integer.parseInt(holder.tvCount.getText().toString());
-
+					
 					if (count < 1) {
 						showShortToast("土地范围不得小于0");
 					} else {
