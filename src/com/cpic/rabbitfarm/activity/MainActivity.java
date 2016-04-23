@@ -8,13 +8,17 @@ import java.util.ArrayList;
 import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.cpic.rabbitfarm.R;
+import com.cpic.rabbitfarm.adapter.FriendListAdapter;
 import com.cpic.rabbitfarm.base.BaseActivity;
+import com.cpic.rabbitfarm.bean.Friend;
+import com.cpic.rabbitfarm.bean.FriendData;
 import com.cpic.rabbitfarm.bean.LandList;
 import com.cpic.rabbitfarm.bean.LandListInfo;
 import com.cpic.rabbitfarm.bean.Seed;
 import com.cpic.rabbitfarm.bean.SeedInfo;
 import com.cpic.rabbitfarm.fonts.CarttonTextView;
 import com.cpic.rabbitfarm.fonts.CatTextView;
+import com.cpic.rabbitfarm.popwindow.AddFriendPop;
 import com.cpic.rabbitfarm.popwindow.BuyCoinPop;
 import com.cpic.rabbitfarm.popwindow.CameraPop;
 import com.cpic.rabbitfarm.popwindow.ChuChongPopwindow;
@@ -30,6 +34,7 @@ import com.cpic.rabbitfarm.utils.MySeekBar;
 import com.cpic.rabbitfarm.utils.RoundImageView;
 import com.cpic.rabbitfarm.utils.UrlUtils;
 import com.cpic.rabbitfarm.view.ProgressDialogHandle;
+import com.easemob.chatuidemo.activity.ChatActivity;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -38,7 +43,9 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.pingplusplus.android.Pingpp;
 import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.utils.BitmapUtils;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentResolver;
@@ -47,8 +54,16 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -58,15 +73,21 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -102,13 +123,12 @@ public class MainActivity extends BaseActivity {
 	 * 购买兔币
 	 */
 	private PopupWindow pwBuyCoin;
-	
 
 	/**
 	 * 监控消息商城
 	 */
-	private ImageView ivCamera, ivMessage, ivMarket,ivShop;
-	private PopupWindow pwCamera, pwMessage, pwMarket,pwShop;
+	private ImageView ivCamera, ivMessage, ivMarket, ivShop;
+	private PopupWindow pwCamera, pwMessage, pwMarket, pwShop;
 	private int screenWidth, screenHight;
 
 	private ArrayList<LandListInfo> landDatas;
@@ -119,8 +139,17 @@ public class MainActivity extends BaseActivity {
 	private LinearLayout llFriend;
 	private final static int OPEN = 0;
 	private final static int CLOSE = 1;
-	private int current_padding = 106;
+	private final static int DOUBLE = 2;
+	private int current_padding = 105;
 	private boolean isClose = true;
+	
+	/**
+	 * 好友列表
+	 */
+	private ListView lvFriends;
+	private Button addFriends;
+	private PopupWindow onlineUsersPop;
+	private ArrayList<Friend> friends;
 	/**
 	 * 播种控件
 	 */
@@ -147,31 +176,33 @@ public class MainActivity extends BaseActivity {
 	private int messageUnread = 0;
 	private int activityUnread = 0;
 
-	Handler handler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-
-			switch (msg.what) {
-			case OPEN:
-				if (current_padding > 0) {
-					current_padding -= 2;
-					llFriend.setTranslationX(DensityUtil.dip2px(MainActivity.this, current_padding));
-					handler.sendEmptyMessageDelayed(OPEN, 10);
-				}
-			break;
-			case CLOSE:
-				if (current_padding < 106) {
-					current_padding += 2;
-					llFriend.setTranslationX(DensityUtil.dip2px(MainActivity.this, current_padding));
-					handler.sendEmptyMessageDelayed(CLOSE, 10);
-				}
-			break;
-			default:
-			break;	
-			}
-		}
-	};
+//	Handler handler = new Handler() {
+//		@Override
+//		public void handleMessage(Message msg) {
+//			super.handleMessage(msg);
+//			switch (msg.what) {
+//			case OPEN:
+//				if (current_padding > 0) {
+//					current_padding -= 5;
+//					llFriend.setTranslationX(DensityUtil.dip2px(MainActivity.this, current_padding));
+//					handler.sendEmptyMessageDelayed(OPEN, 1);
+//				}
+//				break;
+//			case CLOSE:
+//				if (current_padding < 105) {
+//					current_padding += 5;
+//					llFriend.setTranslationX(DensityUtil.dip2px(MainActivity.this, current_padding));
+//					handler.sendEmptyMessageDelayed(CLOSE, 1);
+//				}
+//				break;
+//			case DOUBLE:
+//				pv.setScaleType(ScaleType.CENTER);
+//				break;
+//			default:
+//				break;
+//			}
+//		}
+//	};
 
 	@Override
 	protected void getIntentData(Bundle savedInstanceState) {
@@ -203,9 +234,11 @@ public class MainActivity extends BaseActivity {
 		ivShop = (ImageView) findViewById(R.id.activity_main_iv_buy);
 		ivTis = (ImageView) findViewById(R.id.activity_main_message_iv_tis);
 		llFriend = (LinearLayout) findViewById(R.id.activity_main_ll_friends);
-
+		addFriends = (Button) findViewById(R.id.activity_main_add_friend_bt);
+		lvFriends = (ListView) findViewById(R.id.activity_main_friend_lv);
 		pv = (PhotoView) findViewById(R.id.pv);
 		localImage();
+		
 		dialog = ProgressDialogHandle.getProgressDialog(MainActivity.this, null);
 	}
 
@@ -214,44 +247,48 @@ public class MainActivity extends BaseActivity {
 		sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
 		token = sp.getString("token", "");
 
-		mp = MediaPlayer.create(MainActivity.this, R.raw.test);
-		mp.setLooping(true);
-		mp.start();
-
 		/**
 		 * 获取土地状态
 		 */
 		loadLandList();
-
 		/**
 		 * 加载种子
 		 */
 		loadSeeds(0);
-
 		/**
 		 * 加载个人信息
 		 */
 		loadDatas();
 		
 		/**
+		 * 加载好友列表
+		 */
+		loadFriends();
+		
+		/**
 		 * 获取Message的未读消息
 		 */
 		loadUnreadMsg();
 	}
-	
-	
+
 	private void localImage() {
+		
 		try {
 			InputStream is = getAssets().open("rrrrr.png");
 			Bitmap bm = BitmapFactory.decodeStream(is);
 			pv.setImageBitmap(bm);
+			pv.setScale(2, 700, 200, false);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
-
+	
 	private void loadDatas() {
+		
+		mp = MediaPlayer.create(MainActivity.this, R.raw.test);
+		mp.setLooping(true);
+		mp.start();
+		
 		sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
 		String user_img = sp.getString("user_img", "");
 		String farm_name = sp.getString("farm_name", "");
@@ -269,11 +306,13 @@ public class MainActivity extends BaseActivity {
 				.fitCenter().into(ivUser);
 	}
 	
-	public void setUserName(String name){
+	public void setUserName(String name) {
 		tvName.setText(name);
 	}
+
 	@Override
 	protected void registerListener() {
+		
 		ivBozhong.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -362,56 +401,103 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
+//				if (isClose) {
+//					current_padding = 105;
+//					handler.sendEmptyMessage(OPEN);
+//					isClose = false;
+//				} else {
+//					current_padding = 0;
+//					handler.sendEmptyMessage(CLOSE);
+//					isClose = true;
+//				}
 				if (isClose) {
-					current_padding = 106;
-					handler.sendEmptyMessage(OPEN);
+					ObjectAnimator oa = ObjectAnimator.ofFloat(llFriend, "translationX",DensityUtil.dip2px(MainActivity.this, 105),0);
+					oa.setDuration(700);
+					oa.start();
 					isClose = false;
-				}else {
-					current_padding = 0;
-					handler.sendEmptyMessage(CLOSE);
+				}else{
+					ObjectAnimator oa = ObjectAnimator.ofFloat(llFriend, "translationX",0,DensityUtil.dip2px(MainActivity.this, 105));
+					oa.setDuration(700);
+					oa.start();
 					isClose = true;
 				}
+				
 			}
 		});
 		/**
-		 *储藏室
+		 * 储藏室
 		 */
 		ivChucang.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				StoreRoomPop pop = new StoreRoomPop(pwChucang, screenWidth, screenHight, MainActivity.this, token);
 				pop.showStoreMainPop();
 			}
 		});
-		
+
 		/**
 		 * 商城
 		 */
 		ivMarket.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				MarketPop pop = new MarketPop(pwMarket, screenWidth, screenHight, MainActivity.this, token);
 				pop.showMarketMainPop();
 			}
 		});
-		
+
 		/**
 		 * 我的购买
 		 */
 		ivShop.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				ShoppingPop pop = new ShoppingPop(pwShop, screenWidth, screenHight, MainActivity.this, token);
 				pop.showShoppingMainPop();
-				
+
 			}
 		});
 		
+		/**
+		 * 选择聊天好友点击事件
+		 */
+		lvFriends.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+				if (null != friends) {
+					Intent intent = new Intent();
+					intent.putExtra("userId", friends.get(position).ease_user);
+					intent.putExtra("userNick", friends.get(position).alias_name);
+					intent.putExtra("userImg", friends.get(position).user_img);
+					intent.setClass(MainActivity.this, ChatActivity.class);
+					startActivity(intent);
+				}
+			}
+		});
+
+		/**
+		 * 添加好友事件
+		 */
+
+		addFriends.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				AddFriendPop pop = new AddFriendPop(onlineUsersPop, screenWidth, screenHight, MainActivity.this, token);
+				pop.showAddFriendPop();
+
+			}
+		});
 		
+
 	}
+
 	@Override
 	public void onBackPressed() {
 		// 获取本次点击的时间
@@ -458,6 +544,7 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 	}
+
 	/**
 	 * 获取土地的状态
 	 */
@@ -467,7 +554,7 @@ public class MainActivity extends BaseActivity {
 		String url = UrlUtils.postUrl + UrlUtils.path_landList;
 		params.addBodyParameter("token", token);
 		post.send(HttpMethod.POST, url, params, new RequestCallBack<String>() {
-			
+
 			@Override
 			public void onStart() {
 				super.onStart();
@@ -605,10 +692,64 @@ public class MainActivity extends BaseActivity {
 	
 	
 	
-	
-	
-	
-	
+	/**
+	 * 加载好友
+	 */
+	private void loadFriends() {
+
+		post = new HttpUtils();
+		params = new RequestParams();
+		String url = UrlUtils.postUrl + UrlUtils.path_friendList;
+		params.addBodyParameter("token", token);
+		post.send(HttpMethod.POST, url, params, new RequestCallBack<String>() {
+
+			@Override
+			public void onStart() {
+				super.onStart();
+				if (dialog != null) {
+					dialog.show();
+				}
+			}
+
+			@Override
+			public void onFailure(HttpException arg0, String arg1) {
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+				showShortToast("获取好友列表失败，请检查网络连接");
+			}
+
+			@Override
+			public void onSuccess(ResponseInfo<String> arg0) {
+				if (dialog != null) {
+					dialog.dismiss();
+				}
+
+				FriendData obj = JSONObject.parseObject(arg0.result, FriendData.class);
+				int code = obj.code;
+				if (code == 1) {
+					friends = (ArrayList<Friend>) JSONObject.parseObject(arg0.result, FriendData.class).data;
+					if (null != friends) {
+						/**
+						 * 0代表好友用户调用适配器标志位
+						 */
+						FriendListAdapter adapter = new FriendListAdapter(MainActivity.this, token, friends, 0);
+
+						lvFriends.setAdapter(adapter);
+
+					}
+				}
+			}
+		});
+	}
+
+	public int getScreenWidth() {
+		return screenWidth;
+	}
+
+	public int getScreenHight() {
+		return screenHight;
+	}
 	
 	
 	
@@ -644,7 +785,7 @@ public class MainActivity extends BaseActivity {
 				getWindow().setAttributes(params);
 			}
 		});
-		
+
 		ivClose.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -652,9 +793,9 @@ public class MainActivity extends BaseActivity {
 				pwBozhong.dismiss();
 			}
 		});
-		
+
 		ivBuy.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				pwBozhong.dismiss();
@@ -727,7 +868,7 @@ public class MainActivity extends BaseActivity {
 							landCount++;
 						}
 					}
-					
+
 					if (6 - landCount < count) {
 						showFaluirePop();
 					} else {
@@ -977,7 +1118,7 @@ public class MainActivity extends BaseActivity {
 				@Override
 				public void onClick(View v) {
 					int count = Integer.parseInt(holder.tvCount.getText().toString());
-					
+
 					if (count < 1) {
 						showShortToast("土地范围不得小于0");
 					} else {

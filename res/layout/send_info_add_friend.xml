@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center" >
+
+    <LinearLayout
+        android:id="@+id/popwin_add_friend_message"
+        android:layout_width="340dp"
+        android:layout_height="250dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/hyxbg"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/popwin_message_main_ll_activity"
+            style="@style/yxhy_play_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:background="@null" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/hydzh" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/popwin_message_main_ll_friends"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/gr_tmbj"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/et_info"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/hybg2"
+                android:gravity="top|left"
+                android:hint=""
+                android:padding="5dp" >
+            </EditText>
+
+            <Button
+                android:id="@+id/bt_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|bottom"
+                android:layout_margin="5dp"
+                android:background="@drawable/hbutton" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/popwin_send_add_friend_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/popwin_add_friend_message"
+        android:layout_marginLeft="80dp"
+        android:layout_toRightOf="@+id/add_friend_img"
+        android:src="@drawable/close" />
+
+    <ImageView
+        android:id="@+id/add_friend_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/popwin_add_friend_message"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="7dp"
+        android:src="@drawable/tjhy" />
+
+</RelativeLayout>

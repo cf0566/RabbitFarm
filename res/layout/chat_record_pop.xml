@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+  
+    android:layout_gravity="center" >
+
+    <LinearLayout
+        android:id="@+id/popwin_add_friend_message"
+        android:layout_width="340dp"
+        android:layout_height="250dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/hyxbg"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/popwin_message_main_ll_activity"
+            style="@style/yxhy_play_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:layout_marginTop="50dp" >
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/popwin_message_main_ll_friends"
+            android:background="@drawable/gr_tmbj"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="0dp" >
+
+            <ListView
+                android:id="@+id/chat_record_lv"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:listSelector="#00000000"
+                android:divider="#EBC65E"
+                android:dividerHeight="3dp"
+                android:scrollbars="none" >
+            </ListView>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/popwin_cht_record_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/popwin_add_friend_message"
+        android:layout_marginLeft="80dp"
+        android:layout_toRightOf="@+id/add_friend_img"
+        android:src="@drawable/close" />
+
+    <ImageView
+        android:id="@+id/add_friend_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/popwin_add_friend_message"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="7dp"
+        android:src="@drawable/tjhy" />
+
+</RelativeLayout>

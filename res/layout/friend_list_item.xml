@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/friend_list_id"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:layout_marginTop="10dp"
+    android:padding="5dp"
+    android:descendantFocusability="blocksDescendants" >
+
+    <LinearLayout
+         android:id="@+id/friend_logo1"
+        android:layout_width="39dp"
+        android:layout_height="39dp"
+        android:background="@drawable/i_photobg"
+        android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+        android:orientation="vertical" >
+
+        <com.cpic.rabbitfarm.utils.RoundImageView
+            android:id="@+id/friend_logo"
+            style="@style/friends_logo"
+            android:src="@drawable/icon1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/friend_logo1"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/friend_list_user_name"
+            style="@style/friend_invite_name"
+            android:ellipsize="end"
+            android:maxEms="6"
+            android:singleLine="true"
+            android:text="用户名称"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:id="@+id/friend_info"
+            style="@style/friend_invite_comment"
+            android:ellipsize="end"
+            android:text="用户等级"
+            android:textColor="#ffffff" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/add_friend_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/addhaoyou"
+        android:visibility="gone" />
+
+</RelativeLayout>

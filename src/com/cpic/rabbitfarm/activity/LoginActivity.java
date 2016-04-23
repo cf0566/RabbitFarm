@@ -1,15 +1,30 @@
 package com.cpic.rabbitfarm.activity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cpic.rabbitfarm.R;
 import com.cpic.rabbitfarm.base.BaseActivity;
+import com.cpic.rabbitfarm.base.MyApplication;
 import com.cpic.rabbitfarm.bean.LoginUser;
 import com.cpic.rabbitfarm.utils.DensityUtil;
 import com.cpic.rabbitfarm.utils.UrlUtils;
 import com.cpic.rabbitfarm.view.ProgressDialogHandle;
+import com.easemob.EMCallBack;
+import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMContactListener;
+import com.easemob.chat.EMContactManager;
+import com.easemob.chat.EMGroupManager;
+import com.easemob.chatuidemo.Constant;
+import com.easemob.chatuidemo.db.UserDao;
+import com.easemob.chatuidemo.domain.User;
+import com.easemob.exceptions.EaseMobException;
+import com.easemob.util.EMLog;
+import com.easemob.util.HanziToPinyin;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -30,6 +45,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
@@ -457,6 +473,7 @@ public class LoginActivity extends BaseActivity {
 				int code = user.getCode();
 				if (code == 1) {
 					getUserInfo();
+					LoginEaseMob(user.getData().getEase_user(), user.getData().getEase_pwd());
 				} else {
 					showShortToast(user.getMsg());
 				}
@@ -791,6 +808,177 @@ public class LoginActivity extends BaseActivity {
 		mShareAPI.onActivityResult(requestCode, resultCode, data);
 		Log.d("oye", "on activity re 3");
 
+	}
+	
+	
+	/*---------------------------------------环信登录-------------------------------------------*/
+	public void LoginEaseMob(final String currentUsername, final String currentPassword) {
+		final long start = System.currentTimeMillis();
+		// 调用sdk登陆方法登陆聊天服务器
+		EMChatManager.getInstance().login(currentUsername, currentPassword, new EMCallBack() {
+
+			@Override
+			public void onSuccess() {
+
+				// 登陆成功，保存用户名密码
+				MyApplication.getInstance().setUserName(currentUsername);
+				MyApplication.getInstance().setPassword(currentPassword);
+
+				runOnUiThread(new Runnable() {
+					public void run() {
+					}
+				});
+				try {
+					// ** 第一次登录或者之前logout后再登录，加载所有本地群和回话
+					// ** manually load all local groups and
+					// conversations in case we are auto login
+					EMGroupManager.getInstance().loadAllGroups();
+					EMChatManager.getInstance().loadAllConversations();
+					// 处理好友和群组
+					processContactsAndGroups();
+				} catch (Exception e) {
+					e.printStackTrace();
+					// 取好友或者群聊失败，不让进入主页面
+					runOnUiThread(new Runnable() {
+						public void run() {
+							MyApplication.getInstance().logout(null);
+							// Toast.makeText(getApplicationContext(),
+							// R.string.login_failure_failed, 1).show();
+						}
+					});
+					return;
+				}
+				// 更新当前用户的nickname 此方法的作用是在ios离线推送时能够显示用户nick
+				boolean updatenick = EMChatManager.getInstance().updateCurrentUserNick(MyApplication.currentUserNick.trim());
+				if (!updatenick) {
+					Log.e("LoginActivity", "update current user nick fail");
+				}
+				if (!LoginActivity.this.isFinishing()) {
+
+				}
+				// 进入主页面
+				// startActivity(new Intent(LoginActivity.this,
+				// MainActivity.class));
+				// finish();
+			}
+
+			@Override
+			public void onProgress(int progress, String status) {
+			}
+
+			@Override
+			public void onError(final int code, final String message) {
+				runOnUiThread(new Runnable() {
+					public void run() {
+					}
+				});
+			}
+		});
+
+	}
+
+	private void processContactsAndGroups() throws EaseMobException {
+		// demo中简单的处理成每次登陆都去获取好友username，开发者自己根据情况而定
+		List<String> usernames = EMContactManager.getInstance().getContactUserNames();
+		EMLog.d("roster", "contacts size: " + usernames.size());
+		Map<String, User> userlist = new HashMap<String, User>();
+		for (String username : usernames) {
+			User user = new User();
+			user.setUsername(username);
+			setUserHearder(username, user);
+			userlist.put(username, user);
+		}
+		// 添加user"申请与通知"
+		
+		EMContactManager.getInstance().setContactListener(new EMContactListener() {
+			   
+			   @Override
+			   public void onContactAgreed(String username) {
+			       //好友请求被同意
+				   Log.e("test", "好友请求被同意");
+			   }
+			   
+			   @Override
+			   public void onContactRefused(String username) {
+			       //好友请求被拒绝
+				   Log.e("test", "好友请求被拒绝");
+			   }
+			   
+			   @Override
+			   public void onContactInvited(String username, String reason) {
+			       //收到好友邀请
+				   Log.e("test", "收到好友邀请"+username.toString());
+			   }
+			   
+			   @Override
+			   public void onContactDeleted(List<String> usernameList) {
+			       //被删除时回调此方法
+				   Log.e("test", "被删除时回调此方法");
+			   }
+			   
+			   
+			   @Override
+			   public void onContactAdded(List<String> usernameList) {
+			       //增加了联系人时回调此方法
+			   }
+			   
+			});
+		Log.e("test", "环信登录成功"+usernames);
+		User newFriends = new User();
+		newFriends.setUsername(Constant.NEW_FRIENDS_USERNAME);
+		String strChat = getResources().getString(R.string.Application_and_notify);
+		newFriends.setNick(strChat);
+
+		userlist.put(Constant.NEW_FRIENDS_USERNAME, newFriends);
+		// 添加"群聊"
+		User groupUser = new User();
+		String strGroup = getResources().getString(R.string.group_chat);
+		groupUser.setUsername(Constant.GROUP_USERNAME);
+		groupUser.setNick(strGroup);
+		groupUser.setHeader("");
+		userlist.put(Constant.GROUP_USERNAME, groupUser);
+
+		// 存入内存
+		MyApplication.getInstance().setContactList(userlist);
+//		System.out.println("----------------" + userlist.values().toString());
+		// 存入db
+		UserDao dao = new UserDao(LoginActivity.this);
+		List<User> users = new ArrayList<User>(userlist.values());
+		dao.saveContactList(users);
+
+		// 获取黑名单列表
+		List<String> blackList = EMContactManager.getInstance().getBlackListUsernamesFromServer();
+		// 保存黑名单
+		EMContactManager.getInstance().saveBlackList(blackList);
+
+		// 获取群聊列表(群聊里只有groupid和groupname等简单信息，不包含members),sdk会把群组存入到内存和db中
+		EMGroupManager.getInstance().getGroupsFromServer();
+	}
+
+	/**
+	 * 设置hearder属性，方便通讯中对联系人按header分类显示，以及通过右侧ABCD...字母栏快速定位联系人
+	 * 
+	 * @param username
+	 * @param user
+	 */
+	protected void setUserHearder(String username, User user) {
+		String headerName = null;
+		if (!TextUtils.isEmpty(user.getNick())) {
+			headerName = user.getNick();
+		} else {
+			headerName = user.getUsername();
+		}
+		if (username.equals(Constant.NEW_FRIENDS_USERNAME)) {
+			user.setHeader("");
+		} else if (Character.isDigit(headerName.charAt(0))) {
+			user.setHeader("#");
+		} else {
+			user.setHeader(HanziToPinyin.getInstance().get(headerName.substring(0, 1)).get(0).target.substring(0, 1).toUpperCase());
+			char header = user.getHeader().toLowerCase().charAt(0);
+			if (header < 'a' || header > 'z') {
+				user.setHeader("#");
+			}
+		}
 	}
 
 }

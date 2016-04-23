@@ -111,11 +111,14 @@ public class MessageMainPop {
 				pop.showZhuanjiaMainPop();
 			}
 		});
+		
 		llFriend.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(activity, "好友信息", 0).show();
+				pw.dismiss();
+				FriendInfoPop pop=new FriendInfoPop(pw, screenWidth,screenHight, activity, token);
+				pop.showFriendInfoMainPop();
 			}
 		});
 		

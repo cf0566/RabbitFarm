@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    android:background="@drawable/x_bg2"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:id="@+id/friend_invite_user_logo"
+        style="@style/friend_invite_logo"
+        android:src="@drawable/icon1" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/friend_invite_user_name"
+            style="@style/friend_invite_name"
+            android:ellipsize="end"
+            android:maxEms="6"
+            android:singleLine="true"
+            android:text="用户名称" />
+
+        <TextView
+            android:id="@+id/friend_invite_info"
+            style="@style/friend_invite_comment"
+            android:ellipsize="end"
+            android:text="请求添加您为好友" />
+
+        <TextView
+            android:id="@+id/friend_invite_comment"
+            style="@style/friend_invite_comment"
+            android:ellipsize="end"
+            android:text="备注：希望你能添加我" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/friend_invite_button_layout"
+        style="@style/friend_invite_button"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/button_yes"
+            style="@style/friend_invite_button"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/friend_invite_agree" />
+
+        <Button
+            android:id="@+id/button_no"
+            style="@style/friend_invite_button"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/friend_invite_refuse" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/friend_invite_state"
+        style="@style/friend_invite_button"
+        android:layout_marginRight="10dp"
+        android:text="已添加"
+        android:visibility="gone" />
+
+</LinearLayout>

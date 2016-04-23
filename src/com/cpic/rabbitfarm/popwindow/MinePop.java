@@ -208,6 +208,8 @@ public class MinePop {
 			@Override
 			public void onClick(View v) {
 				if (!mp.isPlaying()) {
+					mp = MediaPlayer.create(activity, R.raw.test);
+					mp.setLooping(true);
 					mp.start();
 				}
 			}
@@ -493,7 +495,7 @@ public class MinePop {
 								Editor editor = sp.edit();
 								editor.putString("count_coin", datas.get(position).getTotal());
 								editor.putInt("is_mine",1);
-								editor.commit();
+								editor.commit();  
 							}else{
 								Toast.makeText(activity, "获取订单信息失败"+obj.getString("msg"), 0).show();
 							}

@@ -8,9 +8,9 @@ package com.cpic.rabbitfarm.utils;
 public class UrlUtils {
 	//请求头
 	public static final String postUrl="http://wx.cpioc.com/rf/index.php?m=Api&c=api&a=";
-	//环信获取用户ID:
+	//未读消息数量
 	public static final String path_getMessageCount="getMessageCount";
-	//环信获取用户ID:
+	//阅读
 	public static final String path_read="read";
 	//环信获取用户ID:
 	public static final String path_getEaseInfo="getEaseInfo";
@@ -29,7 +29,7 @@ public class UrlUtils {
 	//土地状态:
 	public static final String path_landList="landList";
 	//好友列表:
-	public static final String path_friendList=" friendList";
+	public static final String path_friendList="friendList";
 	//在线用户:
 	public static final String path_onlineList="onlineList";
 	//添加好友:
