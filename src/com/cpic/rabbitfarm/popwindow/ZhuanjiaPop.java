@@ -131,6 +131,7 @@ public class ZhuanjiaPop {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				pw.dismiss();
+				
 				showZhuanjiaDetailsPop(datas.get(position).getMessage_id(),
 						datas.get(position).getMessage_img(),
 						datas.get(position).getMessage_content()
@@ -138,6 +139,7 @@ public class ZhuanjiaPop {
 				
 			}
 		});
+		
 		ivBack.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -146,6 +148,7 @@ public class ZhuanjiaPop {
 			}
 		});
 	}
+	
 	/**
 	 * 获取活动详情的pop
 	 */

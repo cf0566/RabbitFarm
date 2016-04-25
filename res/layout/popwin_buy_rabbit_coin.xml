@@ -70,7 +70,7 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/jb_jian" />
 
-                    <com.cpic.rabbitfarm.fonts.CarttonEditView
+                    <com.cpic.rabbitfarm.fonts.CatEditText
                         android:id="@+id/popwin_buy_rabbit_coin_et_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -83,6 +83,7 @@
                         android:shadowDx="2"
                         android:shadowDy="2"
                         android:text="0"
+                        android:textSize="12sp"
                         android:textColor="#FFFFFF" />
 
                     <ImageView

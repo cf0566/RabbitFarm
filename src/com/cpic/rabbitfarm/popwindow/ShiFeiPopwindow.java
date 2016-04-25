@@ -127,7 +127,8 @@ public class ShiFeiPopwindow {
 					ensureChuchong();
 				}else{
 					pw.dismiss();
-					showLessFei();
+					showMissLandPop();
+					
 				}
 			}
 		});
@@ -335,7 +336,7 @@ public class ShiFeiPopwindow {
 					showChoose2Pop();
 				}else{
 					pw.dismiss();
-					showMissLandPop();
+					showLessFei();
 				}
 			}
 		});
@@ -485,6 +486,7 @@ public class ShiFeiPopwindow {
 				pw.dismiss();
 			}
 		});
+		
 		btnGive.setOnClickListener(new OnClickListener() {
 			
 			@Override

@@ -91,6 +91,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.ScrollView;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 import uk.co.senab.photoview.PhotoView;
@@ -176,6 +177,7 @@ public class MainActivity extends BaseActivity {
 	private int messageUnread = 0;
 	private int activityUnread = 0;
 
+	private ScrollView sv;
 //	Handler handler = new Handler() {
 //		@Override
 //		public void handleMessage(Message msg) {
@@ -236,17 +238,18 @@ public class MainActivity extends BaseActivity {
 		llFriend = (LinearLayout) findViewById(R.id.activity_main_ll_friends);
 		addFriends = (Button) findViewById(R.id.activity_main_add_friend_bt);
 		lvFriends = (ListView) findViewById(R.id.activity_main_friend_lv);
-		pv = (PhotoView) findViewById(R.id.pv);
-		localImage();
+//		pv = (PhotoView) findViewById(R.id.pv);
+//		localImage();
+		sv = (ScrollView) findViewById(R.id.sv);
 		
 		dialog = ProgressDialogHandle.getProgressDialog(MainActivity.this, null);
 	}
 
 	@Override
 	protected void initData() {
+		sv.scrollTo(-300, -400);
 		sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
 		token = sp.getString("token", "");
-
 		/**
 		 * 获取土地状态
 		 */
@@ -255,7 +258,7 @@ public class MainActivity extends BaseActivity {
 		 * 加载种子
 		 */
 		loadSeeds(0);
-		/**
+		/** 
 		 * 加载个人信息
 		 */
 		loadDatas();
@@ -277,7 +280,6 @@ public class MainActivity extends BaseActivity {
 			InputStream is = getAssets().open("rrrrr.png");
 			Bitmap bm = BitmapFactory.decodeStream(is);
 			pv.setImageBitmap(bm);
-			pv.setScale(2, 700, 200, false);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -718,7 +720,6 @@ public class MainActivity extends BaseActivity {
 				}
 				showShortToast("获取好友列表失败，请检查网络连接");
 			}
-
 			@Override
 			public void onSuccess(ResponseInfo<String> arg0) {
 				if (dialog != null) {
@@ -734,15 +735,13 @@ public class MainActivity extends BaseActivity {
 						 * 0代表好友用户调用适配器标志位
 						 */
 						FriendListAdapter adapter = new FriendListAdapter(MainActivity.this, token, friends, 0);
-
 						lvFriends.setAdapter(adapter);
-
 					}
 				}
 			}
 		});
 	}
-
+	
 	public int getScreenWidth() {
 		return screenWidth;
 	}
@@ -810,7 +809,7 @@ public class MainActivity extends BaseActivity {
 	 */
 	private void showHaveseedPopup() {
 		View view = View.inflate(MainActivity.this, R.layout.popwin_bozhong, null);
-		pwChooseSeed = new PopupWindow(view, screenWidth / 2, LayoutParams.WRAP_CONTENT);
+		pwChooseSeed = new PopupWindow(view, screenWidth, LayoutParams.WRAP_CONTENT);
 		pwChooseSeed.setFocusable(true);
 		lvSeed = (ListView) view.findViewById(R.id.popwin_bozhong_lv);
 		btnEnsure = (Button) view.findViewById(R.id.popwin_bozhong_btn_ensure);

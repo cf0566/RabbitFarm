@@ -16,6 +16,7 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
@@ -30,6 +31,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -135,15 +137,39 @@ public class ActivityPop {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				pw.dismiss();
+				if (datas.get(position).getIs_read() == 0) {
+					HttpUtils post = new HttpUtils();
+					RequestParams params = new RequestParams();
+					params.addBodyParameter("token", token);
+					params.addBodyParameter("type", 2+"");
+					params.addBodyParameter("id", datas.get(position).getActivity_id());
+					String url = UrlUtils.postUrl+UrlUtils.path_read;
+					post.send(HttpMethod.POST, url, params, new RequestCallBack<String>() {
+
+						@Override
+						public void onFailure(HttpException arg0, String arg1) {
+							
+						}
+
+						@Override
+						public void onSuccess(ResponseInfo<String> arg0) {
+							JSONObject obj = JSONObject.parseObject(arg0.result);
+							int code = obj.getIntValue("code");
+							if (code == 1) {
+								Log.i("oye", "success");
+							}else{
+								Log.i("oye", "failure");
+							}
+						}
+					});
+				}
 				showActivityDetailsPop(datas.get(position).getActivity_title(),
 						datas.get(position).getActivity_img(),
 						datas.get(position).getActivity_content(),
 						datas.get(position).getUrl());
-				
 			}
 		});
 		ivBack.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				loadUnreadMsg();

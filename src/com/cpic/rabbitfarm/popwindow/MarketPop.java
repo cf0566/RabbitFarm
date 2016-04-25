@@ -131,6 +131,7 @@ public class MarketPop {
 				pw.dismiss();
 			}
 		});
+		
 		btnEnsure.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -187,7 +188,7 @@ public class MarketPop {
 		llUnPay = (LinearLayout) view.findViewById(R.id.popwin_market_ll_unpay);
 		llPaySuccess = (LinearLayout) view.findViewById(R.id.popwin_market_ll_pay_success);
 		llLess =  (LinearLayout) view.findViewById(R.id.popwin_market_ll_less);
-		
+		ivChucang = (ImageView) view.findViewById(R.id.popwin_market_ensure_iv_chucang);
 		tvCount.setText(myList.size() + "");
 		tvMoney.setText(sumCoin);
 	
@@ -216,6 +217,15 @@ public class MarketPop {
 			llPaySuccess.setVisibility(View.VISIBLE);
 			tvPaySuccess.setText("您已成功支付"+sumCoin+"兔币");
 			ivTitle.setImageResource(R.drawable.gm_zfcg);
+			ivChucang.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					pw.dismiss();
+					StoreRoomPop pop = new StoreRoomPop(pw, screenWidth, screenHight, activity, token);
+					pop.showStoreMainPop();
+				}
+			});
 		}
 		
   		ivClose.setOnClickListener(new OnClickListener() {

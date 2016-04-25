@@ -682,6 +682,7 @@ public class MinePop {
 				case R.id.popwin_user_info_safe_rb_id:
 					llInputId.setVisibility(View.VISIBLE);
 					llInputPwd.setVisibility(View.GONE);
+					llHaveSet.setVisibility(View.GONE);
 					break;
 				case R.id.popwin_user_info_safe_rb_pwd:
 					if ("1".equals(set_paycode)) {

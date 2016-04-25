@@ -176,6 +176,7 @@
                     android:textSize="15sp" />
 
                 <ImageView
+                    android:id="@+id/popwin_market_ensure_iv_chucang"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/g_quccs" />

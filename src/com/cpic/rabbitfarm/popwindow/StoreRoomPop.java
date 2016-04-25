@@ -3,6 +3,7 @@ package com.cpic.rabbitfarm.popwindow;
 import java.util.ArrayList;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bumptech.glide.Glide;
 import com.cpic.rabbitfarm.R;
 import com.cpic.rabbitfarm.activity.MainActivity.SeedAdapter;
 import com.cpic.rabbitfarm.bean.Seed;
@@ -218,18 +219,20 @@ public class StoreRoomPop {
 				convertView = View.inflate(activity, R.layout.item_store_list, null);
 				holder.tvName = (TextView) convertView.findViewById(R.id.item_store_tv_seeds);
 				holder.tvCount = (TextView) convertView.findViewById(R.id.item_store_tv_count);
+				holder.ivSeeds = (ImageView) convertView.findViewById(R.id.item_store_iv_seeds);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
 			holder.tvName.setText(datas.get(position).getGoods_name());
 			holder.tvCount.setText(datas.get(position).getGoods_number()+"块地的量");
-
+			Glide.with(activity).load(datas.get(position).getGoods_img()).placeholder(R.drawable.zhongzibaicai).fitCenter().into(holder.ivSeeds);
 			return convertView;
 		}
 
 		class ViewHolder {
 			TextView tvName, tvCount;
+			ImageView ivSeeds;
 		}
 	}
 

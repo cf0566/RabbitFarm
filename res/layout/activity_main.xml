@@ -3,13 +3,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <uk.co.senab.photoview.PhotoView
+<!-- <uk.co.senab.photoview.PhotoView
         android:id="@+id/pv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="center" >
-    </uk.co.senab.photoview.PhotoView>
+    </uk.co.senab.photoview.PhotoView> -->  
 
+	  <ScrollView 
+	      android:id="@+id/sv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        >
+        <FrameLayout 
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+        <ImageView 
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/app_bg"/>
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="你猜"
+            
+            />
+    
+        
+        </FrameLayout>
+    </ScrollView>
+	
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
@@ -80,7 +106,7 @@
                     android:textColor="@color/user_name"
                     android:textSize="18sp" />
             </LinearLayout>
-
+			
             <com.cpic.rabbitfarm.fonts.NormalTextView
                 android:id="@+id/activity_main_tv_level"
                 android:layout_width="wrap_content"
@@ -99,6 +125,7 @@
                 android:background="@drawable/coins"
                 android:gravity="center|right"
                 android:paddingRight="45dp"
+                android:layout_marginLeft="8dp"
                 android:paddingTop="6dp"
                 android:text="99"
                 android:textColor="#FFFFFF"

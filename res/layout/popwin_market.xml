@@ -13,8 +13,6 @@
         android:background="@drawable/c_bg"
         android:focusableInTouchMode="true"
         android:orientation="vertical" >
-
-
         <GridView
             android:id="@+id/popwin_market_gv"
             android:layout_width="390dp"
@@ -28,6 +26,7 @@
             android:layout_marginTop="50dp"
             >
         </GridView>
+        
         <LinearLayout 
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -38,6 +37,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="30dp"
             >
+            
             <TextView 
                 android:layout_weight="1"
                 android:layout_width="0dp"
@@ -51,9 +51,10 @@
                 android:textSize="15sp"
                 android:shadowColor="#3A230A"
                 android:textColor="#ffffff"
-                android:shadowDx="4"
-                android:shadowDy="4"
-                android:shadowRadius="4"
+                 android:paddingRight="3dp"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="2"
                 />
             
             <com.cpic.rabbitfarm.fonts.FishTextView 
@@ -61,12 +62,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
+                android:paddingRight="3dp"
                 android:textSize="15sp"
                 android:shadowColor="#3A230A"
                 android:textColor="#ffffff"
-                android:shadowDx="4"
-                android:shadowDy="4"
-                android:shadowRadius="4"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="2"
                 />
             <Button 
                 android:id="@+id/popwin_market_btn_ensure"
