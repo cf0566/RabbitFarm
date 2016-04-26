@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.cpic.rabbitfarm.R;
 import com.cpic.rabbitfarm.adapter.FriendListAdapter;
+import com.cpic.rabbitfarm.adapter.MainActivityAdapter;
 import com.cpic.rabbitfarm.base.BaseActivity;
 import com.cpic.rabbitfarm.bean.Friend;
 import com.cpic.rabbitfarm.bean.FriendData;
@@ -79,13 +80,16 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -104,8 +108,7 @@ public class MainActivity extends BaseActivity {
 	private MySeekBar sbLevel;
 	private TextView tvLevel, tvName;
 	private SharedPreferences sp;
-
-	private PhotoView pv;
+	private TextView tvFarmName;
 	/**
 	 * 背景音乐播放
 	 */
@@ -143,7 +146,7 @@ public class MainActivity extends BaseActivity {
 	private final static int DOUBLE = 2;
 	private int current_padding = 105;
 	private boolean isClose = true;
-	
+
 	/**
 	 * 好友列表
 	 */
@@ -177,34 +180,22 @@ public class MainActivity extends BaseActivity {
 	private int messageUnread = 0;
 	private int activityUnread = 0;
 
-	private ScrollView sv;
-//	Handler handler = new Handler() {
-//		@Override
-//		public void handleMessage(Message msg) {
-//			super.handleMessage(msg);
-//			switch (msg.what) {
-//			case OPEN:
-//				if (current_padding > 0) {
-//					current_padding -= 5;
-//					llFriend.setTranslationX(DensityUtil.dip2px(MainActivity.this, current_padding));
-//					handler.sendEmptyMessageDelayed(OPEN, 1);
-//				}
-//				break;
-//			case CLOSE:
-//				if (current_padding < 105) {
-//					current_padding += 5;
-//					llFriend.setTranslationX(DensityUtil.dip2px(MainActivity.this, current_padding));
-//					handler.sendEmptyMessageDelayed(CLOSE, 1);
-//				}
-//				break;
-//			case DOUBLE:
-//				pv.setScaleType(ScaleType.CENTER);
-//				break;
-//			default:
-//				break;
-//			}
-//		}
-//	};
+	private ScrollView sv1, sv, sv2;
+	private ImageView iv1, iv2, iv3, iv4, iv5, iv6;
+	private ImageView ivBg, ivBg2;
+	private float mPosX;
+	private float mPosY;
+	private float mCurrentPosX;
+	private float mCurrentPosY;
+
+	Handler handler;
+	private Runnable runnable = new Runnable() {
+		@Override
+		public void run() {
+			sv.scrollTo(0, DensityUtil.dip2px(MainActivity.this, 315));// 改变滚动条的位置
+		}
+	};
+	private ImageView ivBg1;
 
 	@Override
 	protected void getIntentData(Bundle savedInstanceState) {
@@ -238,16 +229,28 @@ public class MainActivity extends BaseActivity {
 		llFriend = (LinearLayout) findViewById(R.id.activity_main_ll_friends);
 		addFriends = (Button) findViewById(R.id.activity_main_add_friend_bt);
 		lvFriends = (ListView) findViewById(R.id.activity_main_friend_lv);
-//		pv = (PhotoView) findViewById(R.id.pv);
-//		localImage();
+		// pv = (PhotoView) findViewById(R.id.pv);
+		// localImage();
 		sv = (ScrollView) findViewById(R.id.sv);
-		
+		sv2 = (ScrollView) findViewById(R.id.sv2);
+		sv1 = (ScrollView) findViewById(R.id.sv1);
+		tvFarmName = (TextView) findViewById(R.id.activity_main_tv_farmname);
+
+		iv1 = (ImageView) findViewById(R.id.activity_main_iv1);
+		iv2 = (ImageView) findViewById(R.id.activity_main_iv2);
+		iv3 = (ImageView) findViewById(R.id.activity_main_iv3);
+		iv4 = (ImageView) findViewById(R.id.activity_main_iv4);
+		iv5 = (ImageView) findViewById(R.id.activity_main_iv5);
+		iv6 = (ImageView) findViewById(R.id.activity_main_iv6);
+		ivBg = (ImageView) findViewById(R.id.activity_main_iv_bg);
+		ivBg2 = (ImageView) findViewById(R.id.activity_main_iv_bg2);
+		ivBg1 = (ImageView) findViewById(R.id.activity_main_iv_bg1);
+		localImage();
 		dialog = ProgressDialogHandle.getProgressDialog(MainActivity.this, null);
 	}
 
 	@Override
 	protected void initData() {
-		sv.scrollTo(-300, -400);
 		sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
 		token = sp.getString("token", "");
 		/**
@@ -258,16 +261,16 @@ public class MainActivity extends BaseActivity {
 		 * 加载种子
 		 */
 		loadSeeds(0);
-		/** 
+		/**
 		 * 加载个人信息
 		 */
 		loadDatas();
-		
+
 		/**
 		 * 加载好友列表
 		 */
 		loadFriends();
-		
+
 		/**
 		 * 获取Message的未读消息
 		 */
@@ -275,22 +278,41 @@ public class MainActivity extends BaseActivity {
 	}
 
 	private void localImage() {
-		
+
 		try {
-			InputStream is = getAssets().open("rrrrr.png");
+			InputStream is = getAssets().open("a2.png");
 			Bitmap bm = BitmapFactory.decodeStream(is);
-			pv.setImageBitmap(bm);
+			ivBg.setImageBitmap(bm);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		try {
+			InputStream is = getAssets().open("a3.png");
+			Bitmap bm = BitmapFactory.decodeStream(is);
+			ivBg2.setImageBitmap(bm);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			InputStream is = getAssets().open("a1.png");
+			Bitmap bm = BitmapFactory.decodeStream(is);
+			ivBg1.setImageBitmap(bm);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
-	
+
 	private void loadDatas() {
-		
+
 		mp = MediaPlayer.create(MainActivity.this, R.raw.test);
 		mp.setLooping(true);
 		mp.start();
-		
+
+		handler = new Handler();
+		handler.postDelayed(runnable, 300);
+
 		sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
 		String user_img = sp.getString("user_img", "");
 		String farm_name = sp.getString("farm_name", "");
@@ -301,20 +323,25 @@ public class MainActivity extends BaseActivity {
 		if ("".equals(level)) {
 			level = "0";
 		}
+		tvFarmName.setText(farm_name);
 		tvMoney.setText((int) Double.parseDouble(balance) + "");
 		tvLevel.setText((int) Double.parseDouble(level) + "级");
 		sbLevel.setProgress((int) Double.parseDouble(level));
 		Glide.with(MainActivity.this).load(user_img).transform(new GlideRoundTransform(MainActivity.this, 80))
 				.fitCenter().into(ivUser);
 	}
-	
+
 	public void setUserName(String name) {
 		tvName.setText(name);
 	}
 
+	public void setFarmName(String name) {
+		tvFarmName.setText(name);
+	}
+
 	@Override
 	protected void registerListener() {
-		
+
 		ivBozhong.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -403,27 +430,20 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-//				if (isClose) {
-//					current_padding = 105;
-//					handler.sendEmptyMessage(OPEN);
-//					isClose = false;
-//				} else {
-//					current_padding = 0;
-//					handler.sendEmptyMessage(CLOSE);
-//					isClose = true;
-//				}
 				if (isClose) {
-					ObjectAnimator oa = ObjectAnimator.ofFloat(llFriend, "translationX",DensityUtil.dip2px(MainActivity.this, 105),0);
+					ObjectAnimator oa = ObjectAnimator.ofFloat(llFriend, "translationX",
+							DensityUtil.dip2px(MainActivity.this, 105), 0);
 					oa.setDuration(700);
 					oa.start();
 					isClose = false;
-				}else{
-					ObjectAnimator oa = ObjectAnimator.ofFloat(llFriend, "translationX",0,DensityUtil.dip2px(MainActivity.this, 105));
+				} else {
+					ObjectAnimator oa = ObjectAnimator.ofFloat(llFriend, "translationX", 0,
+							DensityUtil.dip2px(MainActivity.this, 105));
 					oa.setDuration(700);
 					oa.start();
 					isClose = true;
 				}
-				
+
 			}
 		});
 		/**
@@ -462,7 +482,7 @@ public class MainActivity extends BaseActivity {
 
 			}
 		});
-		
+
 		/**
 		 * 选择聊天好友点击事件
 		 */
@@ -496,7 +516,109 @@ public class MainActivity extends BaseActivity {
 
 			}
 		});
-		
+
+		/**
+		 * 背景双击事件
+		 */
+		ivBg.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				long currentTime = System.currentTimeMillis();
+				long dTime = currentTime - lastTime;
+				if (dTime < 500) {
+					handler = new Handler();
+					handler.postDelayed(runnable, 200);
+				} else {
+					lastTime = currentTime;
+				}
+			}
+		});
+		/**
+		 * 背景双击事件
+		 */
+		ivBg2.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				long currentTime = System.currentTimeMillis();
+				long dTime = currentTime - lastTime;
+				if (dTime < 500) {
+					sv.setVisibility(View.VISIBLE);
+					sv1.setVisibility(View.GONE);
+					sv2.setVisibility(View.GONE);
+					handler = new Handler();
+					handler.postDelayed(runnable, 200);
+				} else {
+					lastTime = currentTime;
+				}
+			}
+		});
+		/**
+		 * 背景双击事件
+		 */
+		ivBg1.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				long currentTime = System.currentTimeMillis();
+				long dTime = currentTime - lastTime;
+				if (dTime < 500) {
+					sv.setVisibility(View.VISIBLE);
+					sv1.setVisibility(View.GONE);
+					sv2.setVisibility(View.GONE);
+					handler = new Handler();
+					handler.postDelayed(runnable, 200);
+				} else {
+					lastTime = currentTime;
+				}
+			}
+		});
+
+		/**
+		 * 监听左右滑动事件
+		 */
+		ivBg.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+				// 按下
+				case MotionEvent.ACTION_DOWN:
+					mPosX = event.getX();
+					mPosY = event.getY();
+					break;
+				// 移动
+				case MotionEvent.ACTION_MOVE:
+					mCurrentPosX = event.getX();
+					mCurrentPosY = event.getY();
+
+					if (mCurrentPosX - mPosX > 20 && Math.abs(mCurrentPosY - mPosY) < 10){
+//						Log.i("oye", "向右");
+						sv.setVisibility(View.GONE);
+						sv1.setVisibility(View.VISIBLE);
+						sv2.setVisibility(View.GONE);
+					}else if (mCurrentPosX - mPosX < -20 && Math.abs(mCurrentPosY - mPosY) < 10){
+//						Log.i("oye", "向左");
+						sv.setVisibility(View.GONE);
+						sv1.setVisibility(View.GONE);
+						sv2.setVisibility(View.VISIBLE);
+					}else if (mCurrentPosY - mPosY > 0 && Math.abs(mCurrentPosX - mPosX) < 10){
+//						Log.i("oye", "向下");
+					}else if (mCurrentPosY - mPosY < 0 && Math.abs(mCurrentPosX - mPosX) < 10){
+//						Log.i("oye", "向上");
+					}
+					break;
+				// 拿起
+				case MotionEvent.ACTION_UP:
+
+					break;
+				default:
+					break;
+				}
+				return true;
+			}
+		});
 
 	}
 
@@ -582,6 +704,75 @@ public class MainActivity extends BaseActivity {
 				int code = land.getCode();
 				if (code == 1) {
 					landDatas = land.getData();
+					int count = 0;
+					for (int i = 0; i < landDatas.size(); i++) {
+						if ("1".equals(landDatas.get(i).getIn_user())) {
+							count++;
+						}
+					}
+					// Log.i("oye", count+"");
+					switch (count) {
+					case 0:
+						iv1.setVisibility(View.GONE);
+						iv2.setVisibility(View.GONE);
+						iv3.setVisibility(View.GONE);
+						iv4.setVisibility(View.GONE);
+						iv5.setVisibility(View.GONE);
+						iv6.setVisibility(View.GONE);
+						break;
+					case 1:
+						iv1.setVisibility(View.VISIBLE);
+						iv2.setVisibility(View.GONE);
+						iv3.setVisibility(View.GONE);
+						iv4.setVisibility(View.GONE);
+						iv5.setVisibility(View.GONE);
+						iv6.setVisibility(View.GONE);
+						break;
+					case 2:
+						iv1.setVisibility(View.VISIBLE);
+						iv2.setVisibility(View.VISIBLE);
+						iv3.setVisibility(View.GONE);
+						iv4.setVisibility(View.GONE);
+						iv5.setVisibility(View.GONE);
+						iv6.setVisibility(View.GONE);
+						break;
+					case 3:
+						iv1.setVisibility(View.VISIBLE);
+						iv2.setVisibility(View.VISIBLE);
+						iv3.setVisibility(View.VISIBLE);
+						iv4.setVisibility(View.GONE);
+						iv5.setVisibility(View.GONE);
+						iv6.setVisibility(View.GONE);
+						break;
+					case 4:
+						iv1.setVisibility(View.VISIBLE);
+						iv2.setVisibility(View.VISIBLE);
+						iv3.setVisibility(View.VISIBLE);
+						iv4.setVisibility(View.VISIBLE);
+						iv5.setVisibility(View.GONE);
+						iv6.setVisibility(View.GONE);
+						break;
+					case 5:
+						iv1.setVisibility(View.VISIBLE);
+						iv2.setVisibility(View.VISIBLE);
+						iv3.setVisibility(View.VISIBLE);
+						iv4.setVisibility(View.VISIBLE);
+						iv5.setVisibility(View.VISIBLE);
+						iv6.setVisibility(View.GONE);
+						break;
+					case 6:
+						iv1.setVisibility(View.VISIBLE);
+						iv2.setVisibility(View.VISIBLE);
+						iv3.setVisibility(View.VISIBLE);
+						iv4.setVisibility(View.VISIBLE);
+						iv5.setVisibility(View.VISIBLE);
+						iv6.setVisibility(View.VISIBLE);
+						break;
+
+					default:
+						break;
+					}
+
 				} else {
 					showShortToast("获取土地状态失败");
 				}
@@ -691,9 +882,7 @@ public class MainActivity extends BaseActivity {
 		Bitmap resizeBmp = Bitmap.createBitmap(b, 0, 0, w, h, matrix, true);
 		return resizeBmp;
 	}
-	
-	
-	
+
 	/**
 	 * 加载好友
 	 */
@@ -720,6 +909,7 @@ public class MainActivity extends BaseActivity {
 				}
 				showShortToast("获取好友列表失败，请检查网络连接");
 			}
+
 			@Override
 			public void onSuccess(ResponseInfo<String> arg0) {
 				if (dialog != null) {
@@ -741,7 +931,7 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 	}
-	
+
 	public int getScreenWidth() {
 		return screenWidth;
 	}
@@ -749,10 +939,6 @@ public class MainActivity extends BaseActivity {
 	public int getScreenHight() {
 		return screenHight;
 	}
-	
-	
-	
-	
 
 	/*********************************************************************************************
 	 * 以下是播种弹出框，由于第一次做功能性弹出框，将第一类弹出框写在了主界面里进行测试，之后的功能模块封装成类放在popwin文件夹下

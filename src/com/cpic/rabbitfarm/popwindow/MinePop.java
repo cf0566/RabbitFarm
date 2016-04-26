@@ -933,11 +933,13 @@ public class MinePop {
 						MainActivity a = (MainActivity) activity;
 						a.setUserName(tvName.getText().toString());
 					}
-					if (tvName != null && !"".equals(tvFarm.getText().toString())) {
+					if (tvFarm != null && !"".equals(tvFarm.getText().toString())) {
 						sp = PreferenceManager.getDefaultSharedPreferences(activity);
 						Editor editor = sp.edit();
 						editor.putString("farm_name", tvFarm.getText().toString());
 						editor.commit();
+						MainActivity a = (MainActivity) activity;
+						a.setFarmName(tvFarm.getText().toString());
 					}
 				} else {
 					Toast.makeText(activity, "保存失败，请重试", 0).show();

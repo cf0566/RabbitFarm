@@ -3,39 +3,168 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-<!-- <uk.co.senab.photoview.PhotoView
-        android:id="@+id/pv"
+      <ScrollView
+        android:id="@+id/sv2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="center" >
-    </uk.co.senab.photoview.PhotoView> -->  
+        android:scrollbars="none" 
+        android:visibility="gone">
 
-	  <ScrollView 
-	      android:id="@+id/sv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none"
-        >
-        <FrameLayout 
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-        <ImageView 
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:src="@drawable/app_bg"/>
-        <TextView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="你猜"
+            android:layout_height="match_parent" >
+
+            <ImageView
+                android:id="@+id/activity_main_iv_bg2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+               />
             
-            />
-    
-        
         </FrameLayout>
     </ScrollView>
-	
+      <ScrollView
+        android:id="@+id/sv1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none" 
+        android:visibility="gone">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <ImageView
+                android:id="@+id/activity_main_iv_bg1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+               />
+            
+        </FrameLayout>
+    </ScrollView>
+            
+    <ScrollView
+        android:id="@+id/sv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <ImageView
+                android:id="@+id/activity_main_iv_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+               />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="417dp"
+                android:orientation="horizontal" >
+
+                <com.cpic.rabbitfarm.fonts.PaperTextView
+                    android:id="@+id/activity_main_tv_farmname"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.45"
+                    android:gravity="center_horizontal"
+                    android:text="农场之家"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="458dp"
+                android:orientation="horizontal" >
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <com.cpic.rabbitfarm.fonts.PaperTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.95"
+                    android:gravity="center_horizontal"
+                    android:text="待开发"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="200dp"
+                android:layout_marginTop="450dp"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/activity_main_iv4"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/miao" />
+
+                <ImageView
+                    android:id="@+id/activity_main_iv5"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginTop="12dp"
+                    android:src="@drawable/miao" />
+
+                <ImageView
+                    android:id="@+id/activity_main_iv6"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="35dp"
+                    android:layout_marginTop="22dp"
+                    android:src="@drawable/miao" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="155dp"
+                android:layout_marginTop="490dp"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/activity_main_iv1"
+                     android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/miao" />
+
+                <ImageView
+                    android:id="@+id/activity_main_iv2"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginTop="12dp"
+                    android:src="@drawable/miao" />
+
+                <ImageView
+                    android:id="@+id/activity_main_iv3"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="35dp"
+                    android:layout_marginTop="22dp"
+                    android:src="@drawable/miao" />
+            </LinearLayout>
+        </FrameLayout>
+    </ScrollView>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
@@ -106,7 +235,7 @@
                     android:textColor="@color/user_name"
                     android:textSize="18sp" />
             </LinearLayout>
-			
+
             <com.cpic.rabbitfarm.fonts.NormalTextView
                 android:id="@+id/activity_main_tv_level"
                 android:layout_width="wrap_content"
@@ -121,11 +250,11 @@
                 android:id="@+id/activity_main_tv_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/coins"
                 android:gravity="center|right"
                 android:paddingRight="45dp"
-                android:layout_marginLeft="8dp"
                 android:paddingTop="6dp"
                 android:text="99"
                 android:textColor="#FFFFFF"
@@ -250,10 +379,10 @@
                 android:id="@+id/activity_main_friend_lv"
                 android:layout_width="80dp"
                 android:layout_height="0dp"
-                android:layout_weight="1"
                 android:layout_gravity="center"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="10dp"
+                android:layout_weight="1"
                 android:cacheColorHint="#00000000"
                 android:divider="@drawable/xian"
                 android:listSelector="#00000000"
@@ -264,8 +393,8 @@
                 android:id="@+id/activity_main_add_friend_bt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="14dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="14dp"
                 android:layout_marginLeft="17dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/i_addfri" />
