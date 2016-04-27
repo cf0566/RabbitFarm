@@ -139,17 +139,18 @@ public class MarketPop {
 				for (int i = 0; i < list.size(); i++) {
 					if (Integer.parseInt(tvSum.getText().toString()) == 0) {
 						Toast.makeText(activity, "请选择至少一种种子", 0).show();
+						return;
 					} else {
-						pw.dismiss();
 						myList = new ArrayList<MarketBuy>();
 						for (int j = 0; j < list.size(); j++) {
 							if (list.get(j).getCount() != 0) {
 								myList.add(list.get(j));
 							}
 						}
-						showMarketEnsurePop(tvSum.getText().toString(),UNPAY,myList);
 					}
 				}
+				pw.dismiss();
+				showMarketEnsurePop(tvSum.getText().toString(),UNPAY,myList);
 			}
 		});
 	}
@@ -192,6 +193,7 @@ public class MarketPop {
 		tvCount.setText(myList.size() + "");
 		tvMoney.setText(sumCoin);
 	
+		Log.i("oye", "开始");
 		EnsureAdapter adapter = new EnsureAdapter();
 		adapter.setDatas(myList);
 		gvBuy.setAdapter(adapter);
@@ -254,7 +256,7 @@ public class MarketPop {
 				pop.showBuyCoinPop();
 			}
 		});
-		
+		Log.i("oye", "结束");
 	}
 	/**
 	 * 确认订单结算

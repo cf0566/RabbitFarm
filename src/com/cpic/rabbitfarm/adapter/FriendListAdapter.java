@@ -4,31 +4,24 @@ package com.cpic.rabbitfarm.adapter;
  * 好友列表适配器
  */
 import java.util.ArrayList;
-import java.util.List;
-
 import com.bumptech.glide.Glide;
 import com.cpic.rabbitfarm.R;
-import com.cpic.rabbitfarm.activity.MainActivity;
 import com.cpic.rabbitfarm.base.MyApplication;
 import com.cpic.rabbitfarm.bean.Friend;
-import com.cpic.rabbitfarm.utils.GlideRoundTransform;
+import com.cpic.rabbitfarm.popwindow.AddFriendPop;
 import com.cpic.rabbitfarm.utils.RoundImageView;
 import com.easemob.chat.EMContactManager;
 import com.easemob.chatuidemo.activity.AlertDialog;
-import com.easemob.chatuidemo.db.InviteMessgeDao;
-import com.easemob.chatuidemo.domain.InviteMessage;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,21 +29,22 @@ import android.widget.Toast;
 public class FriendListAdapter extends BaseAdapter {
 
 	private Context mcontext;
-	private InviteMessgeDao messgeDao;
-	private List<InviteMessage> objects;
-	private String token;
 	private ArrayList<Friend> friends;
 	private int actionId;
-	private PopupWindow addDetailPop;
-	private MainActivity activity;
+	AddFriendPop addFriendPop;
 
 	public FriendListAdapter(Context mcontext, String token, ArrayList<Friend> friends, int actionId) {
 
 		this.mcontext = mcontext;
-		this.token = token;
 		this.friends = friends;
 		this.actionId = actionId;
-		activity=(MainActivity) mcontext;
+	}
+	public FriendListAdapter(Context mcontext, String token, ArrayList<Friend> friends, int actionId,AddFriendPop addFriendPop) {
+
+		this.mcontext = mcontext;
+		this.friends = friends;
+		this.actionId = actionId;
+		this.addFriendPop=addFriendPop;
 	}
 
 	@Override
@@ -69,7 +63,7 @@ public class FriendListAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		final Friend friend = (Friend) getItem(position);
 		final ViewHolder holder;
 		if (convertView == null) {
@@ -85,22 +79,26 @@ public class FriendListAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		holder.friend_list_user_name.setText(friend.alias_name);
-		holder.friend_info.setText(friend.level);
+		if(null==friend.level){
+			holder.friend_info.setText("VIP:"+"0"+"级");
+		}else{
+			holder.friend_info.setText("VIP:"+friend.level+"级");
+		}
+		
 		if (actionId == 1) {
 			holder.add_friend_bt.setVisibility(View.VISIBLE);
 			holder.friend_list_id.setBackgroundResource(R.drawable.x_bg2);
 		}
-		
-		Glide.with(mcontext).load(friend.user_img).placeholder(R.drawable.m_tx).fitCenter().into(holder.friend_logo);
-		/*holder.add_friend_bt.setOnClickListener(new OnClickListener() {
-
+		holder.add_friend_bt.setOnClickListener(new OnClickListener() {
+			
 			@Override
 			public void onClick(View v) {
-				
-				//addContact(friend.ease_user);
-				AddFriendDetailPop pop=new AddFriendDetailPop(addDetailPop, activity.getScreenWidth(), activity.getScreenHight(), activity, token);
+				// TODO Auto-generated method stub
+				addFriendPop.addOline(position);
 			}
-		});*/
+		});
+		
+		Glide.with(mcontext).load(friend.user_img).placeholder(R.drawable.m_tx).fitCenter().into(holder.friend_logo);
 
 		return convertView;
 	}
@@ -170,5 +168,11 @@ public class FriendListAdapter extends BaseAdapter {
 			}
 		}).start();
 	}
+	
+	
+	public interface addOnlineFsIf{
+		void addOline(int position);
+	}
+	
 
 }

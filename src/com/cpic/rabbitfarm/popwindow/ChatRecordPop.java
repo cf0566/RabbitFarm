@@ -72,17 +72,12 @@ import android.widget.Toast;
 public class ChatRecordPop {
 
 	private PopupWindow pw;
-	private PopupWindow pwShare;
 	private int screenWidth;
-	private int screenHight;
 	private MainActivity activity;
 	private HttpUtils post;
 	private String token;
 	private RequestParams params;
 	private Dialog dialog;
-	private ArrayList<ZhuanjiaData> datas;
-	private PopupWindow addDetailPop;
-	
 	/**
 	 * 定义friends以及控件
 	 */
@@ -100,26 +95,11 @@ public class ChatRecordPop {
 	 * 复用的控件
 	 */
 	private ImageView ivClose;
-	private ImageView ivBack;
-	/**
-	 * 活动列表的控件
-	 */
-	private ListView lv;
-	private int messageUnread;
-	private int activityUnread;
-
-	/**
-	 * 活动详情的控件
-	 */
-	private ImageView ivIcon;
-	private TextView tvTitle, tvContent;
-
 	public ChatRecordPop(PopupWindow pw, int screenWidth, int screenHight, Activity activity, String token) {
 		this.pw = pw;
 		this.screenWidth = screenWidth;
 		this.activity = (MainActivity) activity;
 		this.token = token;
-		this.screenHight = screenHight;
 	}
 
 	/**
@@ -235,14 +215,11 @@ public class ChatRecordPop {
 					dialog.dismiss();
 				}
 
-				FriendData obj = JSONObject.parseObject(arg0.result, FriendData.class);
+				JSONObject.parseObject(arg0.result, FriendData.class);
 				friends = (ArrayList<Friend>) JSONObject.parseObject(arg0.result, FriendData.class).data;
 				Log.e("test", "friends" + friends);
 				if (null != friends) {
-					/**
-					 * 1代表在线用户调用适配器标志位
-					 */
-					FriendListAdapter adapter = new FriendListAdapter(activity, token, friends,1);
+					new FriendListAdapter(activity, token, friends,1);
 
 
 				}

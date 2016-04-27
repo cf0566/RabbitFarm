@@ -346,6 +346,7 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
+				loadSeeds(0);
 				if (datas.size() == 0) {
 					showNoSeedsPop();
 				} else {
@@ -410,7 +411,6 @@ public class MainActivity extends BaseActivity {
 
 			}
 		});
-
 		/**
 		 * 金币点击购买金币
 		 */
@@ -432,18 +432,17 @@ public class MainActivity extends BaseActivity {
 			public void onClick(View v) {
 				if (isClose) {
 					ObjectAnimator oa = ObjectAnimator.ofFloat(llFriend, "translationX",
-							DensityUtil.dip2px(MainActivity.this, 105), 0);
+							DensityUtil.dip2px(MainActivity.this, 120), 0);
 					oa.setDuration(700);
 					oa.start();
 					isClose = false;
 				} else {
 					ObjectAnimator oa = ObjectAnimator.ofFloat(llFriend, "translationX", 0,
-							DensityUtil.dip2px(MainActivity.this, 105));
+							DensityUtil.dip2px(MainActivity.this, 120));
 					oa.setDuration(700);
 					oa.start();
 					isClose = true;
 				}
-
 			}
 		});
 		/**
@@ -517,23 +516,7 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 
-		/**
-		 * 背景双击事件
-		 */
-		ivBg.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				long currentTime = System.currentTimeMillis();
-				long dTime = currentTime - lastTime;
-				if (dTime < 500) {
-					handler = new Handler();
-					handler.postDelayed(runnable, 200);
-				} else {
-					lastTime = currentTime;
-				}
-			}
-		});
+		
 		/**
 		 * 背景双击事件
 		 */
@@ -587,6 +570,14 @@ public class MainActivity extends BaseActivity {
 				case MotionEvent.ACTION_DOWN:
 					mPosX = event.getX();
 					mPosY = event.getY();
+					long currentTime = System.currentTimeMillis();
+					long dTime = currentTime - lastTime;
+					if (dTime < 500) {
+						handler = new Handler();
+						handler.postDelayed(runnable, 200);
+					} else {
+						lastTime = currentTime;
+					}
 					break;
 				// 移动
 				case MotionEvent.ACTION_MOVE:
@@ -612,6 +603,110 @@ public class MainActivity extends BaseActivity {
 				// 拿起
 				case MotionEvent.ACTION_UP:
 
+					break;
+				default:
+					break;
+				}
+				return true;
+			}
+		});
+		/**
+		 * 背景1监听左右滑动事件
+		 */
+		ivBg1.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+				// 按下
+				case MotionEvent.ACTION_DOWN:
+					mPosX = event.getX();
+					mPosY = event.getY();
+					long currentTime = System.currentTimeMillis();
+					long dTime = currentTime - lastTime;
+					if (dTime < 500) {
+						sv.setVisibility(View.VISIBLE);
+						sv1.setVisibility(View.GONE);
+						sv2.setVisibility(View.GONE);
+						handler = new Handler();
+						handler.postDelayed(runnable, 200);
+					} else {
+						lastTime = currentTime;
+					}
+					break;
+					// 移动
+				case MotionEvent.ACTION_MOVE:
+					mCurrentPosX = event.getX();
+					mCurrentPosY = event.getY();
+					
+					if (mCurrentPosX - mPosX > 20 && Math.abs(mCurrentPosY - mPosY) < 10){
+//						Log.i("oye", "向右");
+					}else if (mCurrentPosX - mPosX < -20 && Math.abs(mCurrentPosY - mPosY) < 10){
+//						Log.i("oye", "向左");
+						sv.setVisibility(View.VISIBLE);
+						sv1.setVisibility(View.GONE);
+						sv2.setVisibility(View.GONE);
+					}else if (mCurrentPosY - mPosY > 0 && Math.abs(mCurrentPosX - mPosX) < 10){
+//						Log.i("oye", "向下");
+					}else if (mCurrentPosY - mPosY < 0 && Math.abs(mCurrentPosX - mPosX) < 10){
+//						Log.i("oye", "向上");
+					}
+					break;
+					// 拿起
+				case MotionEvent.ACTION_UP:
+					
+					break;
+				default:
+					break;
+				}
+				return true;
+			}
+		});
+		/**
+		 * 监听左右滑动事件
+		 */
+		ivBg2.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+				// 按下
+				case MotionEvent.ACTION_DOWN:
+					mPosX = event.getX();
+					mPosY = event.getY();
+					long currentTime = System.currentTimeMillis();
+					long dTime = currentTime - lastTime;
+					if (dTime < 500) {
+						sv.setVisibility(View.VISIBLE);
+						sv1.setVisibility(View.GONE);
+						sv2.setVisibility(View.GONE);
+						handler = new Handler();
+						handler.postDelayed(runnable, 200);
+					} else {
+						lastTime = currentTime;
+					}
+					break;
+					// 移动
+				case MotionEvent.ACTION_MOVE:
+					mCurrentPosX = event.getX();
+					mCurrentPosY = event.getY();
+					
+					if (mCurrentPosX - mPosX > 20 && Math.abs(mCurrentPosY - mPosY) < 10){
+//						Log.i("oye", "向右");
+						sv.setVisibility(View.VISIBLE);
+						sv1.setVisibility(View.GONE);
+						sv2.setVisibility(View.GONE);
+					}else if (mCurrentPosX - mPosX < -20 && Math.abs(mCurrentPosY - mPosY) < 10){
+//						Log.i("oye", "向左");
+					}else if (mCurrentPosY - mPosY > 0 && Math.abs(mCurrentPosX - mPosX) < 10){
+//						Log.i("oye", "向下");
+					}else if (mCurrentPosY - mPosY < 0 && Math.abs(mCurrentPosX - mPosX) < 10){
+//						Log.i("oye", "向上");
+					}
+					break;
+					// 拿起
+				case MotionEvent.ACTION_UP:
+					
 					break;
 				default:
 					break;
@@ -836,6 +931,7 @@ public class MainActivity extends BaseActivity {
 				}
 			}
 		}
+		
 		if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
 			if (resultCode == Activity.RESULT_OK) {
 				String result = data.getExtras().getString("pay_result");
@@ -886,7 +982,7 @@ public class MainActivity extends BaseActivity {
 	/**
 	 * 加载好友
 	 */
-	private void loadFriends() {
+	public void loadFriends() {
 
 		post = new HttpUtils();
 		params = new RequestParams();
@@ -1103,6 +1199,7 @@ public class MainActivity extends BaseActivity {
 				if (code == 1) {
 					pwChooseSeed.dismiss();
 					showSuccessPop();
+					loadLandList();
 				}
 			}
 		});
@@ -1234,14 +1331,12 @@ public class MainActivity extends BaseActivity {
 					for (int j = 0; j < datas.size(); j++) {
 						itemCount.add(0);
 					}
-
 				} else {
 					showShortToast("无法获取数据" + obj.getMsg());
 				}
 			}
 		});
 	}
-
 	public class SeedAdapter extends BaseAdapter {
 
 		private ArrayList<SeedInfo> datas;

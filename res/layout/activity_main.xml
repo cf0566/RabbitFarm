@@ -367,13 +367,14 @@
 
         <LinearLayout
             android:id="@+id/activity_main_ll_friends"
-            android:layout_width="wrap_content"
+            android:layout_width="155dp"
             android:layout_height="200dp"
             android:layout_alignParentRight="true"
             android:layout_marginTop="70dp"
             android:background="@drawable/i_haoyoubg"
             android:orientation="vertical"
-            android:translationX="106dp" >
+            android:translationX="120dp"
+             >
 
             <ListView
                 android:id="@+id/activity_main_friend_lv"

@@ -67,16 +67,8 @@ import android.widget.Toast;
 public class AddFriendDetailPop {
 
 	private PopupWindow pw;
-	private PopupWindow pwShare;
 	private int screenWidth;
-	private int screenHight;
 	private MainActivity activity;
-	private HttpUtils post;
-	private String token;
-	private RequestParams params;
-	private Dialog dialog;
-	private ArrayList<ZhuanjiaData> datas;
-	
 	/**
 	 * 环信Id
 	 */
@@ -90,35 +82,13 @@ public class AddFriendDetailPop {
 	private EditText editInfo;
 	
 	/**
-	 * 定义friends以及控件
-	 */
-	private ArrayList<Friend> friends;
-	private ListView lvOnlineFriends;
-
-	/**
 	 * 复用的控件
 	 */
 	private ImageView ivClose;
-	private ImageView ivBack;
-	/**
-	 * 活动列表的控件
-	 */
-	private ListView lv;
-	private int messageUnread;
-	private int activityUnread;
-
-	/**
-	 * 活动详情的控件
-	 */
-	private ImageView ivIcon;
-	private TextView tvTitle, tvContent;
-
 	public AddFriendDetailPop(PopupWindow pw, int screenWidth, int screenHight, Activity activity, String token,String userId) {
 		this.pw = pw;
 		this.screenWidth = screenWidth;
 		this.activity = (MainActivity) activity;
-		this.token = token;
-		this.screenHight = screenHight;
 		this.userId=userId;
 	}
 
@@ -202,8 +172,7 @@ public class AddFriendDetailPop {
 			public void run() {
 				
 				try {
-					//demo写死了个reason，实际应该让用户手动填入
-					String s =activity. getResources().getString(R.string.Add_a_friend);
+					activity. getResources().getString(R.string.Add_a_friend);
 					EMContactManager.getInstance().addContact(userId, info);
 					((Activity) activity).runOnUiThread(new Runnable() {
 						public void run() {

@@ -5,17 +5,17 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
     android:layout_marginTop="10dp"
-    android:padding="5dp"
+    android:paddingBottom="2dp"
     android:descendantFocusability="blocksDescendants" >
 
     <LinearLayout
          android:id="@+id/friend_logo1"
-        android:layout_width="39dp"
-        android:layout_height="39dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:background="@drawable/i_photobg"
         android:layout_alignParentLeft="true"
-            android:layout_centerInParent="true"
-            android:gravity="center"
+        android:layout_centerInParent="true"
+        android:gravity="center"
         android:orientation="vertical" >
 
         <com.cpic.rabbitfarm.utils.RoundImageView

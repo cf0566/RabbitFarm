@@ -230,7 +230,7 @@
         <!-- 自定义的alertdialog -->
         <activity
             android:name="com.easemob.chatuidemo.activity.AlertDialog"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/MyDialogStyle" >
         </activity>
         <!-- 显示下载大图页面 -->

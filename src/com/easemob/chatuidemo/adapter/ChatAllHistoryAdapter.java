@@ -32,6 +32,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.cpic.rabbitfarm.R;
 import com.cpic.rabbitfarm.bean.EaseUser;
+import com.cpic.rabbitfarm.bean.EaseUserInfo;
 import com.cpic.rabbitfarm.utils.UrlUtils;
 import com.easemob.chat.EMContact;
 import com.easemob.chat.EMConversation;
@@ -51,6 +52,7 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
+import com.umeng.socialize.utils.Log;
 
 /**
  * 显示所有聊天记录adpater
@@ -180,10 +182,13 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 				EaseUser user = JSONObject.parseObject(arg0.result, EaseUser.class);
 				int code = user.getCode();
 				if (code == 1) {
-					userName = user.getData().get(0).getAlias_name();
-					userImg = user.getData().get(0).getUser_img();
+					ArrayList<EaseUserInfo> datas = user.getData();
+					userName =datas.get(0).getAlias_name();
+					userImg = datas.get(0).getUser_img();
 					Glide.with(context).load(userImg).placeholder(R.drawable.m_tx).fitCenter().into(iv);
 					tv.setText(userName);
+					Log.i("oye", arg0.result);
+					
 				}else{
 					userName = "未知";
 					userImg = "";

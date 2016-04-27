@@ -1,11 +1,16 @@
 package com.cpic.rabbitfarm.adapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.bumptech.glide.Glide;
 import com.cpic.rabbitfarm.R;
+import com.cpic.rabbitfarm.activity.MainActivity;
+import com.cpic.rabbitfarm.bean.EaseUser;
+import com.cpic.rabbitfarm.bean.EaseUserInfo;
 import com.cpic.rabbitfarm.utils.UrlUtils;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMGroupManager;
@@ -42,17 +47,24 @@ public class FriendInviteAdapter extends BaseAdapter {
 	private InviteMessgeDao messgeDao;
 	private List<InviteMessage> objects;
 	private String token;
+	private HttpUtils post;
+	private RequestParams params;
+	public String user_id;
+	public MainActivity activity;
+	private InviteMessage msg;
+	private ArrayList<EaseUserInfo> data;
 
-	public FriendInviteAdapter(List<InviteMessage> objects, Context mcontext,String token) {
+	public FriendInviteAdapter(List<InviteMessage> objects, Context mcontext, String token, ArrayList<EaseUserInfo> data) {
 		this.mcontext = mcontext;
 		this.objects = objects;
 		messgeDao = new InviteMessgeDao(mcontext);
-		this.token=token;
+		this.token = token;
+		this.activity = (MainActivity) mcontext;
+		this.data = data;
 	}
 
 	@Override
 	public int getCount() {
-
 		return objects.size();
 	}
 
@@ -68,7 +80,7 @@ public class FriendInviteAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		final InviteMessage msg = (InviteMessage) getItem(position);
+		msg = (InviteMessage) getItem(position);
 		final ViewHolder holder;
 		if (convertView == null) {
 			convertView = View.inflate(mcontext, R.layout.item_friend_invite, null);
@@ -81,17 +93,36 @@ public class FriendInviteAdapter extends BaseAdapter {
 			holder.button_yes = (Button) convertView.findViewById(R.id.button_yes);
 			holder.button_no = (Button) convertView.findViewById(R.id.button_no);
 			holder.friend_invite_state = (TextView) convertView.findViewById(R.id.friend_invite_state);
+
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-
+		
+		holder.friend_invite_user_name.setText(data.get(position).getAlias_name());
+		holder.friend_invite_comment.setText("备注：" + msg.getReason());
+		if (msg.getStatus() == InviteMesageStatus.AGREED) {
+			holder.friend_invite_button_layout.setVisibility(View.GONE);
+			holder.friend_invite_state.setVisibility(View.VISIBLE);
+			holder.friend_invite_state.setText("已同意");
+		} else if (msg.getStatus() == InviteMesageStatus.REFUSED) {
+			holder.friend_invite_button_layout.setVisibility(View.GONE);
+			holder.friend_invite_state.setVisibility(View.VISIBLE);
+			holder.friend_invite_state.setText("已拒绝");
+		} else {
+			holder.friend_invite_button_layout.setVisibility(View.VISIBLE);
+			holder.friend_invite_state.setVisibility(View.GONE);
+		}
+		
 		holder.button_yes.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				acceptInvitation(holder.button_yes, msg);
-				accepOrRefuseInvitationOur(String.valueOf(msg.getId()),"1");
+				acceptInvitation(msg);
+				loadUserInfoToAddFriend(msg.getFrom());
+				holder.friend_invite_button_layout.setVisibility(View.GONE);
+				holder.friend_invite_state.setVisibility(View.VISIBLE);
+				holder.friend_invite_state.setText("已同意");
 			}
 		});
 
@@ -99,27 +130,16 @@ public class FriendInviteAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-
-				refusenvitation(holder.button_no, msg);
-				accepOrRefuseInvitationOur(String.valueOf(msg.getId()),"2");
-				
+				refusenvitation(msg);
+				holder.friend_invite_button_layout.setVisibility(View.GONE);
+				holder.friend_invite_state.setVisibility(View.VISIBLE);
+				holder.friend_invite_state.setText("已拒绝");
 			}
 		});
-		holder.friend_invite_user_name.setText(msg.getFrom());
-		holder.friend_invite_comment.setText("备注：" + msg.getReason());
-		if (msg.getStatus() == InviteMesageStatus.AGREED) {
-			holder.friend_invite_button_layout.setVisibility(View.GONE);
-			holder.friend_invite_state.setVisibility(View.VISIBLE);
-			holder.friend_invite_state.setText("已同意");
-			Log.e("test", "已同" + holder.friend_invite_state.getText()); 
-		} else if (msg.getStatus() == InviteMesageStatus.REFUSED) {
-			holder.friend_invite_button_layout.setVisibility(View.GONE);
-			holder.friend_invite_state.setVisibility(View.VISIBLE);
-			holder.friend_invite_state.setText("已拒绝");
-			Log.e("test", "" + token);
-		}
-		notifyDataSetChanged();
+		
 
+		Glide.with(mcontext).load(data.get(position).getUser_img()).placeholder(R.drawable.m_tx).fitCenter().into(holder.friend_invite_user_logo);
+		notifyDataSetChanged();
 		return convertView;
 	}
 
@@ -141,7 +161,7 @@ public class FriendInviteAdapter extends BaseAdapter {
 	 * @param button
 	 * @param username
 	 */
-	private void acceptInvitation(final Button button, final InviteMessage msg) {
+	private void acceptInvitation(final InviteMessage msg) {
 		final ProgressDialog pd = new ProgressDialog(mcontext);
 		String str1 = mcontext.getResources().getString(R.string.Are_agree_with);
 		final String str2 = mcontext.getResources().getString(R.string.Has_agreed_to);
@@ -155,7 +175,9 @@ public class FriendInviteAdapter extends BaseAdapter {
 				// 调用sdk的同意方法
 				try {
 					if (msg.getGroupId() == null) // 同意好友请求
-						EMChatManager.getInstance().acceptInvitation(msg.getFrom());
+					{	EMChatManager.getInstance().acceptInvitation(msg.getFrom());
+					}
+					
 					else
 						// 同意加群申请
 						EMGroupManager.getInstance().acceptApplication(msg.getFrom(), msg.getGroupId());
@@ -164,14 +186,11 @@ public class FriendInviteAdapter extends BaseAdapter {
 						@Override
 						public void run() {
 							pd.dismiss();
-							button.setText(str2);
 							msg.setStatus(InviteMesageStatus.AGREED);
 							// 更新db
 							ContentValues values = new ContentValues();
 							values.put(InviteMessgeDao.COLUMN_NAME_STATUS, msg.getStatus().ordinal());
 							messgeDao.updateMessage(msg.getId(), values);
-							button.setBackgroundDrawable(null);
-							button.setEnabled(false);
 
 						}
 					});
@@ -190,13 +209,13 @@ public class FriendInviteAdapter extends BaseAdapter {
 		}).start();
 	}
 
-	private void accepOrRefuseInvitationOur(String message_id, String action) {
+	private void accepOrRefuseInvitationOur(String user_id, String msg) {
 		HttpUtils httpUtils = new HttpUtils();
 		RequestParams params = new RequestParams();
-		String url = UrlUtils.postUrl + UrlUtils.path_friendAction;
+		String url = UrlUtils.postUrl + UrlUtils.path_addFriend;
 		params.addBodyParameter("token", token);
-		params.addBodyParameter("message_id", message_id);
-		params.addBodyParameter("action", action);
+		params.addBodyParameter("user_id", user_id);
+		params.addBodyParameter("msg", msg);
 		httpUtils.send(HttpMethod.POST, url, params, new RequestCallBack<String>() {
 			@Override
 			public void onFailure(HttpException e, String s) {
@@ -205,7 +224,7 @@ public class FriendInviteAdapter extends BaseAdapter {
 			@Override
 			public void onSuccess(ResponseInfo<String> responseInfo) {
 				String result = responseInfo.result;
-				Log.e("test", "result"+responseInfo.result);
+				Log.e("test", "result" + responseInfo.result);
 				JSONObject jsonObj = null;
 				try {
 					jsonObj = new JSONObject(result);
@@ -223,7 +242,7 @@ public class FriendInviteAdapter extends BaseAdapter {
 					} else {
 
 					}
-					Log.e("hello", "+++++" + jsonObj.getString("msg"));
+//					Log.e("hello", "+++++" + jsonObj.getString("msg"));
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -237,21 +256,28 @@ public class FriendInviteAdapter extends BaseAdapter {
 	 * @param button
 	 * @param username
 	 */
-	private void refusenvitation(final Button button, final InviteMessage msg) {
+	
+	
+	
+	private void refusenvitation(final InviteMessage msg) {
 		final ProgressDialog pd = new ProgressDialog(mcontext);
 		String str1 = mcontext.getResources().getString(R.string.Are_refuse_with);
 		final String str2 = mcontext.getResources().getString(R.string.Has_refused_to);
 		final String str3 = mcontext.getResources().getString(R.string.Refuse_with_failure);
 		pd.setMessage(str1);
 		pd.setCanceledOnTouchOutside(false);
-		pd.show();
+		pd.show(); 
 
 		new Thread(new Runnable() {
 			public void run() {
 				// 调用sdk的同意方法
 				try {
-					if (msg.getGroupId() == null) // 同意好友请求
-						EMChatManager.getInstance().refuseInvitation(msg.getFrom());
+					if (msg.getGroupId() == null) // 拒绝好友请求
+					{
+						EMChatManager.getInstance().refuseInvitation(msg.getFrom()); 
+						
+					}
+						
 					else
 						// 同意加群申请
 						EMGroupManager.getInstance().acceptApplication(msg.getFrom(), msg.getGroupId());
@@ -260,15 +286,11 @@ public class FriendInviteAdapter extends BaseAdapter {
 						@Override
 						public void run() {
 							pd.dismiss();
-							button.setText(str2);
 							msg.setStatus(InviteMesageStatus.REFUSED);
 							// 更新db
 							ContentValues values = new ContentValues();
 							values.put(InviteMessgeDao.COLUMN_NAME_STATUS, msg.getStatus().ordinal());
 							messgeDao.updateMessage(msg.getId(), values);
-							button.setBackgroundDrawable(null);
-							button.setEnabled(false);
-
 						}
 					});
 				} catch (final Exception e) {
@@ -285,4 +307,53 @@ public class FriendInviteAdapter extends BaseAdapter {
 			}
 		}).start();
 	}
+
+	public String loadUserInfoToAddFriend(String ease_user) {
+		post = new HttpUtils();
+		params = new RequestParams();
+		String url = UrlUtils.postUrl + UrlUtils.path_getEaseInfo;
+		params.addBodyParameter("users", ease_user);
+		post.send(HttpMethod.POST, url, params, new RequestCallBack<String>() {
+
+			@Override
+			public void onFailure(HttpException arg0, String arg1) {
+
+			}
+
+			@Override
+			public void onSuccess(ResponseInfo<String> responseInfo) {
+				String result = responseInfo.result;
+//				Log.e("test", "result" + responseInfo.result);
+				JSONObject jsonObj = null;
+				EaseUser easeUser = null;
+				try {
+					jsonObj = new JSONObject(result);
+					Gson gson = new Gson();
+					java.lang.reflect.Type type = new TypeToken<EaseUser>() {
+					}.getType();
+					easeUser = gson.fromJson(result, type);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				try {
+					if ("1".equals(String.valueOf(jsonObj.getInt("code")))) {
+						if (null != easeUser) {
+							accepOrRefuseInvitationOur(easeUser.getData().get(0).getUser_id(), null);
+							activity.loadFriends();
+						}
+					} else if ("2".equals(String.valueOf(jsonObj.getInt("code")))) {
+						// Token过期请重新登录
+					} else {
+
+					}
+					Log.e("hello", "+++++" + jsonObj.getString("msg"));
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+		return user_id;
+	}
+
 }

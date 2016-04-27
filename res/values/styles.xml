@@ -336,7 +336,7 @@
         <item name="android:layout_marginTop">3dp</item>
         <item name="android:layout_marginLeft">3dp</item>
         <item name="android:layout_marginBottom">3dp</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/message_toast</item>
     </style>
 
@@ -344,7 +344,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">3dp</item>
-        <item name="android:textSize">11sp</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:textColor">@color/friend_invite_conmment</item>
         <item name="android:layout_marginLeft">3dp</item>
         <item name="android:gravity">center_vertical</item>

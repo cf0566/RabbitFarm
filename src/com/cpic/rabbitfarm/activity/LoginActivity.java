@@ -751,6 +751,7 @@ public class LoginActivity extends BaseActivity {
 				int code = user.getCode();
 				if (code == 1) {
 					getUserInfo();
+					LoginEaseMob(user.getData().getEase_user(), user.getData().getEase_pwd());
 				} else {
 					showShortToast(user.getMsg());
 				}
