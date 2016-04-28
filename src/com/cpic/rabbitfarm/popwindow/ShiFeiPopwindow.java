@@ -128,7 +128,6 @@ public class ShiFeiPopwindow {
 				}else{
 					pw.dismiss();
 					showMissLandPop();
-					
 				}
 			}
 		});
@@ -231,8 +230,9 @@ public class ShiFeiPopwindow {
 		post = new HttpUtils();
 		params = new RequestParams();
 		String url = UrlUtils.postUrl+UrlUtils.path_fertilization;
+		params.addBodyParameter("token", token);
 		post.send(HttpMethod.POST, url, params, new RequestCallBack<String>() {
-
+			
 			@Override
 			public void onStart() {
 				super.onStart();
@@ -245,7 +245,7 @@ public class ShiFeiPopwindow {
 				if (dialog != null) {
 					dialog.dismiss();
 				}
-				Toast.makeText(activity, "除虫失败，请检查网络连接", 0).show();
+				Toast.makeText(activity, "施肥失败，请检查网络连接", 0).show();
 			}
 
 			@Override
@@ -259,7 +259,7 @@ public class ShiFeiPopwindow {
 					pw.dismiss();
 					showShiFeiSuccessPop();
 				}else{
-					Toast.makeText(activity, "除虫失败", 0).show();
+					Toast.makeText(activity, "施肥失败", 0).show();
 				}
 			}
 		});

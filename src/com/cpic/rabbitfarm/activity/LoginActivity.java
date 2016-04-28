@@ -492,6 +492,10 @@ public class LoginActivity extends BaseActivity {
 				editor.putString("is_identified", user.getData().getIs_identified());
 				editor.putString("set_paycode", user.getData().getSet_paycode());
 				editor.putString("video_url", user.getData().getVideo_url());
+				editor.putString("customer", user.getData().getCustomer());
+				editor.putString("customer_alias", user.getData().getCustomer_alias());
+				editor.putString("customer_img", user.getData().getCustomer_img());
+				
 				editor.apply();
 				pwLogin.dismiss();
 				ll.setVisibility(View.GONE);
@@ -772,6 +776,9 @@ public class LoginActivity extends BaseActivity {
 				editor.putString("is_identified", user.getData().getIs_identified());
 				editor.putString("set_paycode", user.getData().getSet_paycode());
 				editor.putString("video_url", user.getData().getVideo_url());
+				editor.putString("customer", user.getData().getCustomer());
+				editor.putString("customer_alias", user.getData().getCustomer_alias());
+				editor.putString("customer_img", user.getData().getCustomer_img());
 				editor.apply();
 				ll.setVisibility(View.GONE);
 				loadingPagerAction();

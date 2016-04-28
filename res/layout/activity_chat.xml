@@ -38,7 +38,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="9dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/home" />
+                android:src="@drawable/delete" />
         </RelativeLayout>
 
         <RelativeLayout

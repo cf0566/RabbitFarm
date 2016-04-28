@@ -84,6 +84,7 @@ public class ChatRecordPop {
 	private ArrayList<Friend> friends;
 	
 	private ListView lvChat;
+	private ImageView ivBack;
 	
 	/**
 	 * 定义环信内容
@@ -112,7 +113,7 @@ public class ChatRecordPop {
 
 		ivClose = (ImageView) view.findViewById(R.id.popwin_cht_record_close);
 		lvChat = (ListView) view.findViewById(R.id.chat_record_lv);
-
+		ivBack = (ImageView) view.findViewById(R.id.popwin_cht_record_iv_back);
 		WindowManager.LayoutParams params = activity.getWindow().getAttributes();
 		params.alpha = 0.6f;
 		activity.getWindow().setAttributes(params);
@@ -137,6 +138,15 @@ public class ChatRecordPop {
 			@Override
 			public void onClick(View v) {
 				pw.dismiss();
+			}
+		});
+		ivBack.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				pw.dismiss();
+				FriendInfoPop pop = new FriendInfoPop(pw, screenWidth, 0, activity, token);
+				pop.showFriendInfoMainPop();
 			}
 		});
 		/*lvChat.setOnItemClickListener(new OnItemClickListener() {
@@ -172,7 +182,9 @@ public class ChatRecordPop {
                         intent.putExtra("groupId", username);
 				    }else{
 				        // it is single chat
+				    	TextView tv = (TextView) view.findViewById(R.id.name);
                         intent.putExtra("userId", username);
+                        intent.putExtra("userNick", tv.getText().toString());
 				    }
 				    activity.startActivity(intent);
 				    pw.dismiss();

@@ -35,6 +35,7 @@ import com.cpic.rabbitfarm.utils.MySeekBar;
 import com.cpic.rabbitfarm.utils.RoundImageView;
 import com.cpic.rabbitfarm.utils.UrlUtils;
 import com.cpic.rabbitfarm.view.ProgressDialogHandle;
+import com.easemob.chat.EMChatManager;
 import com.easemob.chatuidemo.activity.ChatActivity;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -183,6 +184,7 @@ public class MainActivity extends BaseActivity {
 	private ScrollView sv1, sv, sv2;
 	private ImageView iv1, iv2, iv3, iv4, iv5, iv6;
 	private ImageView ivBg, ivBg2;
+	private Button btnRabbit;
 	private float mPosX;
 	private float mPosY;
 	private float mCurrentPosX;
@@ -245,6 +247,8 @@ public class MainActivity extends BaseActivity {
 		ivBg = (ImageView) findViewById(R.id.activity_main_iv_bg);
 		ivBg2 = (ImageView) findViewById(R.id.activity_main_iv_bg2);
 		ivBg1 = (ImageView) findViewById(R.id.activity_main_iv_bg1);
+		btnRabbit = (Button) findViewById(R.id.activity_main_btn_rabbit);
+		
 		localImage();
 		dialog = ProgressDialogHandle.getProgressDialog(MainActivity.this, null);
 	}
@@ -260,7 +264,7 @@ public class MainActivity extends BaseActivity {
 		/**
 		 * 加载种子
 		 */
-		loadSeeds(0);
+		loadSeeds(1);
 		/**
 		 * 加载个人信息
 		 */
@@ -347,25 +351,14 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				loadSeeds(0);
-				if (datas.size() == 0) {
-					showNoSeedsPop();
-				} else {
-					showHaveseedPopup();
-				}
+			
 			}
 		});
 		ivChuchong.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				loadSeeds(0);
-				ChuChongPopwindow pop = new ChuChongPopwindow(pwChuchong, screenWidth, MainActivity.this, ChuChongCount,
-						token);
-				if (ChuChongCount == 0) {
-					pop.showNoBanPop();
-				} else {
-					pop.showChooseBanPop();
-				}
+				loadSeeds(2);
 			}
 		});
 		ivShifei.setOnClickListener(new OnClickListener() {
@@ -498,6 +491,26 @@ public class MainActivity extends BaseActivity {
 					intent.setClass(MainActivity.this, ChatActivity.class);
 					startActivity(intent);
 				}
+			}
+		});
+		
+		/**
+		 * 点击小兔子客服
+		 */
+		btnRabbit.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+				String userId = sp.getString("customer", "");
+				String userName = sp.getString("customer_alias", "");
+				String userImg = sp.getString("customer_img", "");
+				Intent intent = new Intent();
+				intent.putExtra("userId",userId);
+				intent.putExtra("userNick",userName);
+				intent.putExtra("userImg",userImg);
+				intent.setClass(MainActivity.this, ChatActivity.class);
+				startActivity(intent);
 			}
 		});
 
@@ -724,6 +737,7 @@ public class MainActivity extends BaseActivity {
 		long dTime = currentTime - lastTime;
 		if (dTime < 2000) {
 			finish();
+			EMChatManager.getInstance().logout();
 		} else {
 			showShortToast("再按一次退出程序");
 			lastTime = currentTime;
@@ -867,7 +881,6 @@ public class MainActivity extends BaseActivity {
 					default:
 						break;
 					}
-
 				} else {
 					showShortToast("获取土地状态失败");
 				}
@@ -1036,6 +1049,10 @@ public class MainActivity extends BaseActivity {
 		return screenHight;
 	}
 
+	
+	
+	
+	
 	/*********************************************************************************************
 	 * 以下是播种弹出框，由于第一次做功能性弹出框，将第一类弹出框写在了主界面里进行测试，之后的功能模块封装成类放在popwin文件夹下
 	 */
@@ -1104,10 +1121,12 @@ public class MainActivity extends BaseActivity {
 		pwChooseSeed.setOutsideTouchable(false);
 		pwChooseSeed.showAtLocation(view, Gravity.CENTER, 0, 0);
 		pwChooseSeed.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+		
 		/**
 		 * 获取土地状态
 		 */
 		loadLandList();
+		
 		pwChooseSeed.setOnDismissListener(new OnDismissListener() {
 			@Override
 			public void onDismiss() {
@@ -1123,12 +1142,15 @@ public class MainActivity extends BaseActivity {
 				pwChooseSeed.dismiss();
 			}
 		});
+		
 		btnEnsure.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				pwChooseSeed.dismiss();
 				int count = 0;
+				goodsId = "";
+				landsId = "";
 				if (itemCount.size() != 0) {
 					for (int i = 0; i < itemCount.size() - 1; i++) {
 						goodsId += datas.get(i).getGoods_id() + ",";
@@ -1140,27 +1162,27 @@ public class MainActivity extends BaseActivity {
 						count += itemCount.get(j);
 					}
 				}
+				
 				if (count == 0) {
 					showFaluirePop();
 				} else {
 					int landCount = 0;
 					for (int i = 0; i < landDatas.size(); i++) {
-						if (null != landDatas.get(i).getGoods_name()) {
+						if ("1".equals(landDatas.get(i).getIn_user())){
 							landCount++;
 						}
 					}
-
 					if (6 - landCount < count) {
 						showFaluirePop();
 					} else {
+//						Log.i("oye", "goodsId:"+goodsId +"---"+"landsId:"+landsId);
 						plantSeeds(goodsId, landsId);
+						
 					}
 				}
 			}
 		});
-		loadSeeds(1);
 	}
-
 	/**
 	 * 确认播种
 	 */
@@ -1312,9 +1334,10 @@ public class MainActivity extends BaseActivity {
 				if (code == 1) {
 					datas = JSONObject.parseObject(arg0.result, Seed.class).getData();
 					itemCount = new ArrayList<Integer>();
-
 					for (int i = 0; i < datas.size(); i++) {
-
+						if (!"2".equals(datas.get(i).getStore_type())) {
+							ChuChongCount = 0;
+						}
 						if ("2".equals(datas.get(i).getStore_type())) {
 							ChuChongCount = Integer.parseInt(datas.get(i).getGoods_number());
 						}
@@ -1322,15 +1345,30 @@ public class MainActivity extends BaseActivity {
 							datas.remove(i);
 						}
 					}
-					if (type == 1) {
-						adapter = new SeedAdapter();
-						adapter.setDatas(datas);
-						lvSeed.setAdapter(adapter);
-					}
-
 					for (int j = 0; j < datas.size(); j++) {
 						itemCount.add(0);
 					}
+					
+					if (type == 0) {
+						if (datas.size() == 0) {
+							showNoSeedsPop();
+						} else {
+							showHaveseedPopup();
+							adapter = new SeedAdapter();
+							adapter.setDatas(datas);
+							lvSeed.setAdapter(adapter);
+						}
+					}
+					
+					if (type == 2) {
+						ChuChongPopwindow pop = new ChuChongPopwindow(pwChuchong, screenWidth, MainActivity.this, ChuChongCount,token);
+						if (ChuChongCount == 0) {
+							pop.showNoBanPop();
+						} else {
+							pop.showChooseBanPop();
+						}
+					}
+					
 				} else {
 					showShortToast("无法获取数据" + obj.getMsg());
 				}

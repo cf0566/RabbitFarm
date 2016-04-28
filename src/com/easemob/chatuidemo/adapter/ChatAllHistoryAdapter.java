@@ -187,7 +187,6 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 					userImg = datas.get(0).getUser_img();
 					Glide.with(context).load(userImg).placeholder(R.drawable.m_tx).fitCenter().into(iv);
 					tv.setText(userName);
-					Log.i("oye", arg0.result);
 					
 				}else{
 					userName = "未知";

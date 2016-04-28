@@ -17,6 +17,7 @@ import com.cpic.rabbitfarm.utils.GlideRoundTransform;
 import com.cpic.rabbitfarm.utils.MySeekBar;
 import com.cpic.rabbitfarm.utils.UrlUtils;
 import com.cpic.rabbitfarm.view.ProgressDialogHandle;
+import com.easemob.chat.EMChatManager;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -178,8 +179,7 @@ public class MinePop {
 		tvName.setText(sp.getString("alias_name", ""));
 		tvFarm.setText(sp.getString("farm_name", ""));
 		tvId.setText("账号ID： " + sp.getString("user_id", ""));
-		Glide.with(activity).load(sp.getString("user_img", "")).transform(new GlideRoundTransform(activity, 80))
-				.fitCenter().into(ivIcon);
+		Glide.with(activity).load(sp.getString("user_img", "")).transform(new GlideRoundTransform(activity, 80)).fitCenter().into(ivIcon);
 
 		WindowManager.LayoutParams params = activity.getWindow().getAttributes();
 		params.alpha = 0.6f;
@@ -291,6 +291,7 @@ public class MinePop {
 				pw.dismiss();
 				Intent intent = new Intent(activity, LoginActivity.class);
 				activity.startActivity(intent);
+				EMChatManager.getInstance().logout();
 				activity.finish();
 			}
 		});
@@ -859,8 +860,13 @@ public class MinePop {
 				int code = obj.getIntValue("code");
 				if (code == 1) {
 					Toast.makeText(activity, "设置成功", 0).show();
+					SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
+					Editor editor = sp.edit();
+					editor.putString("set_paycode", "1");
+					editor.commit();
 					llHaveSet.setVisibility(View.VISIBLE);
 					llInputPwd.setVisibility(View.GONE);
+					
 				} else if (code == 0) {
 					Toast.makeText(activity, "设置失败，验证码错误", 0).show();
 				} else {

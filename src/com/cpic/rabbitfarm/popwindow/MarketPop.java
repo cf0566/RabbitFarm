@@ -193,7 +193,6 @@ public class MarketPop {
 		tvCount.setText(myList.size() + "");
 		tvMoney.setText(sumCoin);
 	
-		Log.i("oye", "开始");
 		EnsureAdapter adapter = new EnsureAdapter();
 		adapter.setDatas(myList);
 		gvBuy.setAdapter(adapter);
@@ -242,8 +241,14 @@ public class MarketPop {
 
 			@Override
 			public void onClick(View v) {
-				pw.dismiss();
-				ensureOrder(myList,sumCoin);
+				SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
+				String set_paycode = sp.getString("set_paycode", "");
+				if ("1".equals(set_paycode)) {
+					pw.dismiss();
+					ensureOrder(myList,sumCoin);
+				}else{
+					Toast.makeText(activity, "您还没有设置支付密码，请您到安全中心设置支付密码", 0).show();
+				}
 			}
 
 		});
@@ -256,7 +261,6 @@ public class MarketPop {
 				pop.showBuyCoinPop();
 			}
 		});
-		Log.i("oye", "结束");
 	}
 	/**
 	 * 确认订单结算

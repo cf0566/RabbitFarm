@@ -165,6 +165,7 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:textColor="#855319"
+                    android:maxLength="6"
                     android:focusable="true"
                     android:textSize="16sp" />
             </LinearLayout>
