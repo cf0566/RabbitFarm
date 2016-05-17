@@ -64,17 +64,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="417dp"
+                android:layout_marginTop="376dp"
                 android:orientation="horizontal" >
 
                 <com.cpic.rabbitfarm.fonts.PaperTextView
                     android:id="@+id/activity_main_tv_farmname"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.45"
+                    android:layout_weight="1.15"
                     android:gravity="center_horizontal"
                     android:text="农场之家"
-                    android:textSize="15sp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -85,7 +85,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="458dp"
+                android:layout_marginTop="407dp"
                 android:orientation="horizontal" >
                 <TextView
                     android:layout_width="0dp"
@@ -95,18 +95,18 @@
                 <com.cpic.rabbitfarm.fonts.PaperTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.95"
+                    android:layout_weight="2.80"
                     android:gravity="center_horizontal"
                     android:text="待开发"
-                    android:textSize="10sp" />
+                    android:textSize="8sp" />
             </LinearLayout>
             
             <Button 
                 android:id="@+id/activity_main_btn_rabbit"
                 android:layout_width="80dp"
                 android:layout_height="140dp"
-                android:layout_marginTop="450dp"
-                android:layout_marginLeft="30dp"
+                android:layout_marginTop="460dp"
+                android:layout_marginLeft="40dp"
                 android:background="@null"
                 />
             
@@ -114,8 +114,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="200dp"
-                android:layout_marginTop="450dp"
+                android:layout_marginLeft="178dp"
+                android:layout_marginTop="390dp"
                 android:orientation="horizontal" >
 
                 <ImageView
@@ -137,7 +137,7 @@
                     android:id="@+id/activity_main_iv6"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginLeft="35dp"
+                    android:layout_marginLeft="30dp"
                     android:layout_marginTop="22dp"
                     android:src="@drawable/miao" />
             </LinearLayout>
@@ -145,8 +145,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="155dp"
-                android:layout_marginTop="490dp"
+                android:layout_marginLeft="135dp"
+                android:layout_marginTop="425dp"
                 android:orientation="horizontal" >
 
                 <ImageView

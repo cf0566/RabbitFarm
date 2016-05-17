@@ -13,74 +13,14 @@
         android:background="@drawable/wjxx_bg"
         android:orientation="vertical" >
 
-        <RadioGroup
-            android:id="@+id/popwin_user_info_safe_rg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+        <ImageView 
+            android:layout_width="80dp"
+            android:layout_height="40dp"
             android:layout_marginTop="50dp"
-            android:orientation="horizontal" >
-
-            <RadioButton
-                android:id="@+id/popwin_user_info_safe_rb_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/mine_cbox_id"
-                android:button="@null"
-                android:checked="true" />
-
-            <RadioButton
-                android:id="@+id/popwin_user_info_safe_rb_pwd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/mine_cbox_pwd"
-                android:button="@null" />
-        </RadioGroup>
-
-        <LinearLayout
-            android:id="@+id/popwin_user_info_safe_ll_input"
-            android:layout_width="290dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="15dp"
-            android:orientation="vertical"
-             >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@drawable/gr_tmbj"
-                android:orientation="vertical"
-                android:padding="5dp" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="请填写您的真实信息"
-                    android:textColor="#83521A"
-                    android:textSize="13sp" />
-
-                <EditText
-                    android:id="@+id/popwin_user_info_safe_et_name"
-                    style="@style/userinfo_safe_edit_style"
-                    android:hint="姓名" />
-
-                <EditText
-                    android:id="@+id/popwin_user_info_safe_et_idnum"
-                    style="@style/userinfo_safe_edit_style"
-                    android:hint="身份证号" />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/popwin_user_info_safe_btn_ensure_submit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="3dp"
-                android:layout_marginTop="3dp"
-                android:background="@drawable/mine_btn_ensure_submit" />
-        </LinearLayout>
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/zhifumima"
+            />
+       
 
         <LinearLayout
             android:id="@+id/popwin_user_info_safe_pwd_ll_change"
@@ -89,7 +29,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="15dp"
             android:orientation="vertical"
-            android:visibility="gone" >
+            android:visibility="visible" >
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -7,7 +7,7 @@ package com.cpic.rabbitfarm.utils;
  */
 public class UrlUtils {
 	//请求头
-	public static final String postUrl="http://wx.cpioc.com/rf/index.php?m=Api&c=api&a=";
+	public static final String postUrl="http://tootech.cn/index.php?m=Api&c=Api&a=";
 	//未读消息数量
 	public static final String path_getMessageCount="getMessageCount";
 	//阅读

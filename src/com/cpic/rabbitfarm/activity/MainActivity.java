@@ -53,6 +53,7 @@ import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -78,6 +79,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -123,7 +125,6 @@ public class MainActivity extends BaseActivity {
 	 * 个人中心
 	 */
 	private PopupWindow pwMine;
-
 	/**
 	 * 购买兔币
 	 */
@@ -145,7 +146,6 @@ public class MainActivity extends BaseActivity {
 	private final static int OPEN = 0;
 	private final static int CLOSE = 1;
 	private final static int DOUBLE = 2;
-	private int current_padding = 105;
 	private boolean isClose = true;
 
 	/**
@@ -171,6 +171,7 @@ public class MainActivity extends BaseActivity {
 	private RequestParams params;
 	private Dialog dialog;
 	private String token;
+	private boolean isFirst;
 
 	private int ChuChongCount = 0;
 
@@ -194,10 +195,14 @@ public class MainActivity extends BaseActivity {
 	private Runnable runnable = new Runnable() {
 		@Override
 		public void run() {
-			sv.scrollTo(0, DensityUtil.dip2px(MainActivity.this, 315));// 改变滚动条的位置
+			sv.scrollTo(0, DensityUtil.dip2px(MainActivity.this, 260));// 改变滚动条的位置
 		}
 	};
 	private ImageView ivBg1;
+
+	private PopupWindow pwHelp;
+	private ArrayList<Integer> ivList = new ArrayList<Integer>();
+	private int index = 0;
 
 	@Override
 	protected void getIntentData(Bundle savedInstanceState) {
@@ -248,7 +253,7 @@ public class MainActivity extends BaseActivity {
 		ivBg2 = (ImageView) findViewById(R.id.activity_main_iv_bg2);
 		ivBg1 = (ImageView) findViewById(R.id.activity_main_iv_bg1);
 		btnRabbit = (Button) findViewById(R.id.activity_main_btn_rabbit);
-		
+
 		localImage();
 		dialog = ProgressDialogHandle.getProgressDialog(MainActivity.this, null);
 	}
@@ -257,6 +262,21 @@ public class MainActivity extends BaseActivity {
 	protected void initData() {
 		sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
 		token = sp.getString("token", "");
+
+		ivList.add(R.drawable.num1);
+		ivList.add(R.drawable.num2);
+		ivList.add(R.drawable.num3);
+		ivList.add(R.drawable.num4);
+		ivList.add(R.drawable.num5);
+		ivList.add(R.drawable.num6);
+		ivList.add(R.drawable.num7);
+		ivList.add(R.drawable.num8);
+		ivList.add(R.drawable.num9);
+		ivList.add(R.drawable.num10);
+		ivList.add(R.drawable.num11);
+
+		isFirst = sp.getBoolean("isFirst", true);
+
 		/**
 		 * 获取土地状态
 		 */
@@ -279,6 +299,33 @@ public class MainActivity extends BaseActivity {
 		 * 获取Message的未读消息
 		 */
 		loadUnreadMsg();
+
+		if (isFirst) {
+			final ViewGroup rootLayout;
+			final ViewGroup rootView = (ViewGroup) getWindow().getDecorView();
+			LayoutInflater lf = getLayoutInflater();
+			rootLayout = (ViewGroup) lf.inflate(R.layout.help_popupwindow, null);
+			final ImageView ivIcon = (ImageView) rootLayout.findViewById(R.id.help_iv);
+			rootView.addView(rootLayout);
+
+			ivIcon.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					if (ivList.size() - 1 > index) {
+						index++;
+						ivIcon.setImageResource(ivList.get(index));
+					} else {
+						rootView.removeView(rootLayout);
+						index = 0;
+					}
+				}
+			});
+			Editor editor = sp.edit();
+			editor.putBoolean("isFirst", false);
+			editor.commit();
+		}
+
 	}
 
 	private void localImage() {
@@ -309,7 +356,6 @@ public class MainActivity extends BaseActivity {
 	}
 
 	private void loadDatas() {
-
 		mp = MediaPlayer.create(MainActivity.this, R.raw.test);
 		mp.setLooping(true);
 		mp.start();
@@ -351,7 +397,7 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				loadSeeds(0);
-			
+
 			}
 		});
 		ivChuchong.setOnClickListener(new OnClickListener() {
@@ -493,12 +539,12 @@ public class MainActivity extends BaseActivity {
 				}
 			}
 		});
-		
+
 		/**
 		 * 点击小兔子客服
 		 */
 		btnRabbit.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
@@ -506,9 +552,9 @@ public class MainActivity extends BaseActivity {
 				String userName = sp.getString("customer_alias", "");
 				String userImg = sp.getString("customer_img", "");
 				Intent intent = new Intent();
-				intent.putExtra("userId",userId);
-				intent.putExtra("userNick",userName);
-				intent.putExtra("userImg",userImg);
+				intent.putExtra("userId", userId);
+				intent.putExtra("userNick", userName);
+				intent.putExtra("userImg", userImg);
 				intent.setClass(MainActivity.this, ChatActivity.class);
 				startActivity(intent);
 			}
@@ -529,12 +575,11 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 
-		
 		/**
 		 * 背景双击事件
 		 */
 		ivBg2.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				long currentTime = System.currentTimeMillis();
@@ -554,7 +599,7 @@ public class MainActivity extends BaseActivity {
 		 * 背景双击事件
 		 */
 		ivBg1.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				long currentTime = System.currentTimeMillis();
@@ -597,20 +642,20 @@ public class MainActivity extends BaseActivity {
 					mCurrentPosX = event.getX();
 					mCurrentPosY = event.getY();
 
-					if (mCurrentPosX - mPosX > 20 && Math.abs(mCurrentPosY - mPosY) < 10){
-//						Log.i("oye", "向右");
+					if (mCurrentPosX - mPosX > 20 && Math.abs(mCurrentPosY - mPosY) < 10) {
+						// Log.i("oye", "向右");
 						sv.setVisibility(View.GONE);
 						sv1.setVisibility(View.VISIBLE);
 						sv2.setVisibility(View.GONE);
-					}else if (mCurrentPosX - mPosX < -20 && Math.abs(mCurrentPosY - mPosY) < 10){
-//						Log.i("oye", "向左");
+					} else if (mCurrentPosX - mPosX < -20 && Math.abs(mCurrentPosY - mPosY) < 10) {
+						// Log.i("oye", "向左");
 						sv.setVisibility(View.GONE);
 						sv1.setVisibility(View.GONE);
 						sv2.setVisibility(View.VISIBLE);
-					}else if (mCurrentPosY - mPosY > 0 && Math.abs(mCurrentPosX - mPosX) < 10){
-//						Log.i("oye", "向下");
-					}else if (mCurrentPosY - mPosY < 0 && Math.abs(mCurrentPosX - mPosX) < 10){
-//						Log.i("oye", "向上");
+					} else if (mCurrentPosY - mPosY > 0 && Math.abs(mCurrentPosX - mPosX) < 10) {
+						// Log.i("oye", "向下");
+					} else if (mCurrentPosY - mPosY < 0 && Math.abs(mCurrentPosX - mPosX) < 10) {
+						// Log.i("oye", "向上");
 					}
 					break;
 				// 拿起
@@ -627,7 +672,7 @@ public class MainActivity extends BaseActivity {
 		 * 背景1监听左右滑动事件
 		 */
 		ivBg1.setOnTouchListener(new OnTouchListener() {
-			
+
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
@@ -647,27 +692,27 @@ public class MainActivity extends BaseActivity {
 						lastTime = currentTime;
 					}
 					break;
-					// 移动
+				// 移动
 				case MotionEvent.ACTION_MOVE:
 					mCurrentPosX = event.getX();
 					mCurrentPosY = event.getY();
-					
-					if (mCurrentPosX - mPosX > 20 && Math.abs(mCurrentPosY - mPosY) < 10){
-//						Log.i("oye", "向右");
-					}else if (mCurrentPosX - mPosX < -20 && Math.abs(mCurrentPosY - mPosY) < 10){
-//						Log.i("oye", "向左");
+
+					if (mCurrentPosX - mPosX > 20 && Math.abs(mCurrentPosY - mPosY) < 10) {
+						// Log.i("oye", "向右");
+					} else if (mCurrentPosX - mPosX < -20 && Math.abs(mCurrentPosY - mPosY) < 10) {
+						// Log.i("oye", "向左");
 						sv.setVisibility(View.VISIBLE);
 						sv1.setVisibility(View.GONE);
 						sv2.setVisibility(View.GONE);
-					}else if (mCurrentPosY - mPosY > 0 && Math.abs(mCurrentPosX - mPosX) < 10){
-//						Log.i("oye", "向下");
-					}else if (mCurrentPosY - mPosY < 0 && Math.abs(mCurrentPosX - mPosX) < 10){
-//						Log.i("oye", "向上");
+					} else if (mCurrentPosY - mPosY > 0 && Math.abs(mCurrentPosX - mPosX) < 10) {
+						// Log.i("oye", "向下");
+					} else if (mCurrentPosY - mPosY < 0 && Math.abs(mCurrentPosX - mPosX) < 10) {
+						// Log.i("oye", "向上");
 					}
 					break;
-					// 拿起
+				// 拿起
 				case MotionEvent.ACTION_UP:
-					
+
 					break;
 				default:
 					break;
@@ -679,7 +724,7 @@ public class MainActivity extends BaseActivity {
 		 * 监听左右滑动事件
 		 */
 		ivBg2.setOnTouchListener(new OnTouchListener() {
-			
+
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
@@ -699,27 +744,27 @@ public class MainActivity extends BaseActivity {
 						lastTime = currentTime;
 					}
 					break;
-					// 移动
+				// 移动
 				case MotionEvent.ACTION_MOVE:
 					mCurrentPosX = event.getX();
 					mCurrentPosY = event.getY();
-					
-					if (mCurrentPosX - mPosX > 20 && Math.abs(mCurrentPosY - mPosY) < 10){
-//						Log.i("oye", "向右");
+
+					if (mCurrentPosX - mPosX > 20 && Math.abs(mCurrentPosY - mPosY) < 10) {
+						// Log.i("oye", "向右");
 						sv.setVisibility(View.VISIBLE);
 						sv1.setVisibility(View.GONE);
 						sv2.setVisibility(View.GONE);
-					}else if (mCurrentPosX - mPosX < -20 && Math.abs(mCurrentPosY - mPosY) < 10){
-//						Log.i("oye", "向左");
-					}else if (mCurrentPosY - mPosY > 0 && Math.abs(mCurrentPosX - mPosX) < 10){
-//						Log.i("oye", "向下");
-					}else if (mCurrentPosY - mPosY < 0 && Math.abs(mCurrentPosX - mPosX) < 10){
-//						Log.i("oye", "向上");
+					} else if (mCurrentPosX - mPosX < -20 && Math.abs(mCurrentPosY - mPosY) < 10) {
+						// Log.i("oye", "向左");
+					} else if (mCurrentPosY - mPosY > 0 && Math.abs(mCurrentPosX - mPosX) < 10) {
+						// Log.i("oye", "向下");
+					} else if (mCurrentPosY - mPosY < 0 && Math.abs(mCurrentPosX - mPosX) < 10) {
+						// Log.i("oye", "向上");
 					}
 					break;
-					// 拿起
+				// 拿起
 				case MotionEvent.ACTION_UP:
-					
+
 					break;
 				default:
 					break;
@@ -944,7 +989,7 @@ public class MainActivity extends BaseActivity {
 				}
 			}
 		}
-		
+
 		if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
 			if (resultCode == Activity.RESULT_OK) {
 				String result = data.getExtras().getString("pay_result");
@@ -1049,10 +1094,6 @@ public class MainActivity extends BaseActivity {
 		return screenHight;
 	}
 
-	
-	
-	
-	
 	/*********************************************************************************************
 	 * 以下是播种弹出框，由于第一次做功能性弹出框，将第一类弹出框写在了主界面里进行测试，之后的功能模块封装成类放在popwin文件夹下
 	 */
@@ -1121,12 +1162,12 @@ public class MainActivity extends BaseActivity {
 		pwChooseSeed.setOutsideTouchable(false);
 		pwChooseSeed.showAtLocation(view, Gravity.CENTER, 0, 0);
 		pwChooseSeed.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-		
+
 		/**
 		 * 获取土地状态
 		 */
 		loadLandList();
-		
+
 		pwChooseSeed.setOnDismissListener(new OnDismissListener() {
 			@Override
 			public void onDismiss() {
@@ -1142,7 +1183,7 @@ public class MainActivity extends BaseActivity {
 				pwChooseSeed.dismiss();
 			}
 		});
-		
+
 		btnEnsure.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -1162,27 +1203,29 @@ public class MainActivity extends BaseActivity {
 						count += itemCount.get(j);
 					}
 				}
-				
+
 				if (count == 0) {
 					showFaluirePop();
 				} else {
 					int landCount = 0;
 					for (int i = 0; i < landDatas.size(); i++) {
-						if ("1".equals(landDatas.get(i).getIn_user())){
+						if ("1".equals(landDatas.get(i).getIn_user())) {
 							landCount++;
 						}
 					}
 					if (6 - landCount < count) {
 						showFaluirePop();
 					} else {
-//						Log.i("oye", "goodsId:"+goodsId +"---"+"landsId:"+landsId);
+						// Log.i("oye", "goodsId:"+goodsId
+						// +"---"+"landsId:"+landsId);
 						plantSeeds(goodsId, landsId);
-						
+
 					}
 				}
 			}
 		});
 	}
+
 	/**
 	 * 确认播种
 	 */
@@ -1348,7 +1391,7 @@ public class MainActivity extends BaseActivity {
 					for (int j = 0; j < datas.size(); j++) {
 						itemCount.add(0);
 					}
-					
+
 					if (type == 0) {
 						if (datas.size() == 0) {
 							showNoSeedsPop();
@@ -1359,22 +1402,24 @@ public class MainActivity extends BaseActivity {
 							lvSeed.setAdapter(adapter);
 						}
 					}
-					
+
 					if (type == 2) {
-						ChuChongPopwindow pop = new ChuChongPopwindow(pwChuchong, screenWidth, MainActivity.this, ChuChongCount,token);
+						ChuChongPopwindow pop = new ChuChongPopwindow(pwChuchong, screenWidth, MainActivity.this,
+								ChuChongCount, token);
 						if (ChuChongCount == 0) {
 							pop.showNoBanPop();
 						} else {
 							pop.showChooseBanPop();
 						}
 					}
-					
+
 				} else {
 					showShortToast("无法获取数据" + obj.getMsg());
 				}
 			}
 		});
 	}
+
 	public class SeedAdapter extends BaseAdapter {
 
 		private ArrayList<SeedInfo> datas;

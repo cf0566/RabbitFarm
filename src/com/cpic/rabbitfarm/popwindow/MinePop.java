@@ -627,16 +627,12 @@ public class MinePop {
 		pw = new PopupWindow(view, screenWidth, LayoutParams.WRAP_CONTENT);
 		pw.setFocusable(true);
 		sp = PreferenceManager.getDefaultSharedPreferences(activity);
-		String user_name = sp.getString("user_name", "");
-		String identified_card = sp.getString("identified_card", "");
 		final String set_paycode = sp.getString("set_paycode", "");
 
-		llInputId = (LinearLayout) view.findViewById(R.id.popwin_user_info_safe_ll_input);
 		llHaveSet = (LinearLayout) view.findViewById(R.id.popwin_user_info_safe_pwd_ll_change);
 		llInputPwd = (LinearLayout) view.findViewById(R.id.popwin_user_info_safe_set_pwd_ll);
 		
 		btnChangePwd  = (Button) view.findViewById(R.id.popwin_user_info_safe_pwd_btn_change);
-		btnEnsureId = (Button) view.findViewById(R.id.popwin_user_info_safe_btn_ensure_submit);
 		
 		/**
 		 * 设置支付密码接口
@@ -648,20 +644,9 @@ public class MinePop {
 		ivSendCode = (ImageView) view.findViewById(R.id.popwin_user_info_safe_set_pwd_iv_sendcode);
 		btnEnsureChange = (Button) view.findViewById(R.id.popwin_user_info_safe_set_pwd_btn_submit);
 		
-		rg = (RadioGroup) view.findViewById(R.id.popwin_user_info_safe_rg);
-		etIdNum = (EditText) view.findViewById(R.id.popwin_user_info_safe_et_idnum);
-		etName = (EditText) view.findViewById(R.id.popwin_user_info_safe_et_name);
 		ivClose = (ImageView) view.findViewById(R.id.popwin_user_info_safe_iv_close);
 		
-		if (user_name == null || identified_card == null || "".endsWith(user_name) || "".equals(identified_card)) {
-			btnEnsureId.setVisibility(View.VISIBLE);
-		} else {
-			btnEnsureId.setVisibility(View.GONE);
-			etName.setText("姓名：" + user_name);
-			etIdNum.setText("身份证号：" + identified_card);
-			etName.setEnabled(false);
-			etIdNum.setEnabled(false);
-		}
+		
 		WindowManager.LayoutParams params = activity.getWindow().getAttributes();
 		params.alpha = 0.6f;
 		activity.getWindow().setAttributes(params);
@@ -676,31 +661,14 @@ public class MinePop {
 				activity.getWindow().setAttributes(params);
 			}
 		});
-		rg.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				switch (checkedId) {
-				case R.id.popwin_user_info_safe_rb_id:
-					llInputId.setVisibility(View.VISIBLE);
-					llInputPwd.setVisibility(View.GONE);
-					llHaveSet.setVisibility(View.GONE);
-					break;
-				case R.id.popwin_user_info_safe_rb_pwd:
-					if ("1".equals(set_paycode)) {
-						llInputId.setVisibility(View.GONE);
-						llHaveSet.setVisibility(View.VISIBLE);
-					}else{
-						llInputId.setVisibility(View.GONE);
-						llInputPwd.setVisibility(View.VISIBLE);
-					}
-					break;
-
-				default:
-					break;
-				}
-
-			}
-		});
+		if ("1".equals(set_paycode)) {
+			llHaveSet.setVisibility(View.VISIBLE);
+			llInputPwd.setVisibility(View.GONE);
+		}else{
+			llHaveSet.setVisibility(View.GONE);
+			llInputPwd.setVisibility(View.VISIBLE);
+		}
+		
 		
 		btnChangePwd.setOnClickListener(new OnClickListener() {
 			
@@ -711,23 +679,6 @@ public class MinePop {
 			}
 		});
 		
-		btnEnsureId.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if ("".equals(etName.getText().toString())) {
-					Toast.makeText(activity, "姓名不得为空", 0).show();
-					return;
-				}
-				if ("".equals(etIdNum.getText().toString())) {
-					Toast.makeText(activity, "身份证号不得为空", 0).show();
-					return;
-				}
-				uploadIDInfo();
-			}
-
-		});
-
 		ivClose.setOnClickListener(new OnClickListener() {
 
 			@Override
